@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95d78c4e-0bc7-4c09-af16-1bae8511fdff" name="Default" comment="" />
+    <list default="true" id="95d78c4e-0bc7-4c09-af16-1bae8511fdff" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -134,6 +137,7 @@
         <option value="$PROJECT_DIR$/src/Template/test/test" />
         <option value="$PROJECT_DIR$/src/Template/Test/index.ctp" />
         <option value="$PROJECT_DIR$/config/app.php" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -312,12 +316,12 @@
       <workItem from="1491708401788" duration="14837000" />
       <workItem from="1492005840492" duration="1534000" />
       <workItem from="1492336982931" duration="229000" />
-      <workItem from="1492520395681" duration="147000" />
+      <workItem from="1492520395681" duration="868000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17781000" />
+    <option name="totallyTimeSpent" value="18502000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
