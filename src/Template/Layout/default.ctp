@@ -39,7 +39,7 @@
         </ul>
     </div>
 </header>
-
+<?= $this->Flash->render() ?>
 
 <?= $this->fetch('content') ?>
 
