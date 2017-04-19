@@ -34,8 +34,8 @@
         </a>
         <ul>
             <li><a href="<?= $this->Url->build('/') ?>" title="首页">首页</a></li>
-            <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'login']) ?>" title="注册">注册</a></li>
-            <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'logout']) ?>" title="登录">登录</a></li>
+            <li><a href="<?= $this->Url->build(['controller' => 'Register', 'action' => 'index']) ?>" title="注册">注册</a></li>
+            <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'login']) ?>" title="登录">登录</a></li>
         </ul>
     </div>
 </header>
