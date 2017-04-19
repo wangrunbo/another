@@ -5,6 +5,4 @@
 $this->assign('title', '首页')
 ?>
 
-<div id="main">
-    首页内容
-</div>
+首页内容

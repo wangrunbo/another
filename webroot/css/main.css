@@ -1,0 +1,6 @@
+/* @validation errors */
+.validation-error {
+    font-size: small;
+    color: #ff0000;
+}
+/* @end */

@@ -39,9 +39,12 @@
         </ul>
     </div>
 </header>
-<?= $this->Flash->render() ?>
 
-<?= $this->fetch('content') ?>
+<div id="main">
+    <?= $this->Flash->render() ?>
+
+    <?= $this->fetch('content') ?>
+</div>
 
 <footer>
     <div>
