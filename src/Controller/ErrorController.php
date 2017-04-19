@@ -15,6 +15,7 @@
 namespace App\Controller;
 
 use Cake\Event\Event;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Error Handling Controller
@@ -41,6 +42,13 @@ class ErrorController extends AppController
      */
     public function beforeFilter(Event $event)
     {
+        $routes = [
+            '/top/*'
+        ];
+
+        if (in_array($this->request->getParam('_matchedRoute'), $routes)) {
+            throw new NotFoundException();
+        }
     }
 
     /**

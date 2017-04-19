@@ -37,6 +37,19 @@ if (!extension_loaded('mbstring')) {
  * constants
  */
 require __DIR__ . '/paths.php';
+require __DIR__ . '/constants.php';
+require __DIR__ . '/functions.php';
+
+
+/**
+ * parse dotenv
+ *
+ * @see http://book.cakephp.org/3.0/en/development/configuration.html#environment-variables
+ */
+(new \josegonzalez\Dotenv\Loader([
+    ROOT . DS . ".env",
+    ROOT . DS . ".env.default"
+]))->parse()->toServer(true);
 
 /*
  * Bootstrap CakePHP.
@@ -99,7 +112,7 @@ if (Configure::read('debug')) {
  * Set server timezone to UTC. You can change it to another timezone of your
  * choice but using UTC makes time calculations / conversions easier.
  */
-date_default_timezone_set('UTC');
+date_default_timezone_set(env('TIMEZONE', 'UTC'));
 
 /*
  * Configure the mbstring extension to use the correct encoding.

@@ -1,8 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
-
 /**
  * Test Controller
  *
@@ -17,6 +15,9 @@ class TestController extends AppController
      */
     public function index()
     {
+    }
 
+    public function test()
+    {
     }
 }
