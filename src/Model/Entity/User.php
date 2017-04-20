@@ -3,6 +3,7 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use Cake\Auth\DefaultPasswordHasher;
+use Cake\ORM\TableRegistry;
 
 /**
  * User Entity
@@ -45,5 +46,18 @@ class User extends Entity
     protected function _setPassword($password)
     {
         return (new DefaultPasswordHasher)->hash($password);
+    }
+
+    public function updateSecret()
+    {
+        while (true) {
+            $this->secret = random();
+
+            if (TableRegistry::get($this->getSource())->find()->where(['secret' => $this->secret])->isEmpty()) {
+                break;
+            }
+        }
+
+        return $this;
     }
 }

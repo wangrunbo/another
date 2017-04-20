@@ -28,17 +28,17 @@ class TopController extends AppController
 
     public function index()
     {
-        $this->request->allowMethod('GET');
+        $this->request->allowMethod('get');
     }
 
     public function login()
     {
-        $this->request->allowMethod(['GET', 'POST']);
+        $this->request->allowMethod(['get', 'post']);
     }
 
     public function logout()
     {
-        $this->request->allowMethod('GET');
+        $this->request->allowMethod('get');
         $this->autoRender = false;
     }
 }

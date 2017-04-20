@@ -67,7 +67,6 @@ class UsersTable extends Table
             ->notEmpty('password');
 
         $validator
-            ->requirePresence('secret', 'create')
             ->notEmpty('secret')
             ->add('secret', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 

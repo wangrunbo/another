@@ -2,9 +2,11 @@
 /**
  * @var \App\View\AppView $this
  * @var string $field
- * @var string $message
+ * @var array $error
  */
 ?>
-<?php if (!empty($message)): ?>
-    <p class="validation-error" id="<?= h("validation-$field") ?>"><?= h($message) ?></p>
+<?php if (!empty($error)): ?>
+    <?php foreach ($error as $message): ?>
+        <p class="validation-error" id="<?= h("validation-$field") ?>"><?= h($message) ?></p>
+    <?php endforeach; ?>
 <?php endif; ?>
