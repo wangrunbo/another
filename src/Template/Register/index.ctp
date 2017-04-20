@@ -47,5 +47,4 @@ endif;
         </dd>
     </dl>
     <button type="submit">确认</button>
-    <button type="button">返回</button>
 <?= $this->Form->end() ?>

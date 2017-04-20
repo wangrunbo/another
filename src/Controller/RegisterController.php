@@ -47,7 +47,6 @@ class RegisterController extends AppController
 
             if (empty($result['errors'])) {
                 $this->request->session()->write('Input.Register', $result['default']);
-
                 $this->set('data', $result['default']);
                 return $this->render('confirm');
             } else {
@@ -56,8 +55,6 @@ class RegisterController extends AppController
         } else {
             $this->set('default', $this->request->session()->read('Input.Register'));
         }
-
-        $this->request->session()->delete('Input.Register');
     }
 
     public function complete()
