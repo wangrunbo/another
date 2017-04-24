@@ -10,6 +10,7 @@ namespace App\Controller;
 
 
 use Cake\Event\Event;
+use Cake\I18n\Time;
 
 /**
  * Class RegisterController
@@ -46,19 +47,16 @@ class RegisterController extends AppController
             $result = $this->Data->validate($this->request->getData(), $user);
 
             if (empty($result['errors'])) {
-                $this->request->session()->write('Input.Register', $result['default']);
-                $this->set('data', $result['default']);
-                return $this->render('confirm');
-            } else {
-                $this->set($result);
+                $user->created = Time::now();
+                $user->updated = Time::now();
+                if ($this->Users->save($user)) {
+                    return $this->render('complete');
+                } else {
+                    $this->Flash->error(__('The server is busy!! Please try later.'));
+                }
             }
-        } else {
-            $this->set('default', $this->request->session()->read('Input.Register'));
-        }
-    }
 
-    public function complete()
-    {
-        $this->request->allowMethod('post');
+            $this->set($result);
+        }
     }
 }

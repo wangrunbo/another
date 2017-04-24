@@ -4,7 +4,7 @@
  * @var array $errors
  * @var array|null $default
  */
-if (is_null($default)):
+if (!isset($default)):
     $default = [
         'username' => '',
         'email' => ''
@@ -16,7 +16,7 @@ endif;
     <dl>
         <dt>用户名</dt>
         <dd>
-            <input type="text" title="邮箱" name="username" value="<?= $default['username'] ?>" />
+            <input type="text" title="用户名" name="username" value="<?= $default['username'] ?>" />
             <?php if (isset($errors['username'])): ?>
                 <?= $this->element('validation', ['field' => 'username', 'error' => $errors['username']]) ?>
             <?php endif; ?>
