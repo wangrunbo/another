@@ -1,0 +1,3 @@
+#: src/Template/Top/index.ctp:4
+msgid "Top"
+msgstr "首页"

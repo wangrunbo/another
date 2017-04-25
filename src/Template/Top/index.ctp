@@ -2,7 +2,7 @@
 /**
  * @var \App\View\AppView $this
  */
-$this->assign('title', '首页')
+$this->title('Top')
 ?>
 
 首页内容

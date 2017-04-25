@@ -58,7 +58,8 @@ class AppController extends Controller
                 'Basic' => ['userModel' => 'Users'],
                 'Form' => [
                     'userModel' => 'Users',
-                    'fields' => ['username' => 'u', 'password' => 'p']
+                    'fields' => ['username' => 'email', 'password' => 'password'],
+                    'finder' => 'active'
                 ]
             ],
             'ajaxLogin' => false

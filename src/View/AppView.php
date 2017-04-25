@@ -37,4 +37,13 @@ class AppView extends View
     public function initialize()
     {
     }
+
+    public function title($title = null)
+    {
+        if (is_null($title)) {
+            return $this->fetch('title');
+        }
+
+        $this->assign('title', __d('title', $title));
+    }
 }

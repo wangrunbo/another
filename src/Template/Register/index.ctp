@@ -4,12 +4,12 @@
  * @var array $errors
  * @var array|null $default
  */
-if (!isset($default)):
+if (!isset($default)) {
     $default = [
         'username' => '',
         'email' => ''
     ];
-endif;
+}
 ?>
 <h3>用户注册</h3>
 <?= $this->Form->create() ?>

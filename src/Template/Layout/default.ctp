@@ -14,7 +14,7 @@
     <title>
         <?= h(SITE) ?>
         &nbsp;|&nbsp;
-        <?= h($this->fetch('title')) ?>
+        <?= h($this->title()) ?>
     </title>
 
     <link rel="shortcut icon" href="">
