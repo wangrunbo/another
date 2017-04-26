@@ -40,8 +40,7 @@ class RegisterController extends AppController
             $result = $this->Data->validate($this->request->getData(), $user);
 
             if (empty($result['errors'])) {
-                $user->created = Time::now();
-                $user->updated = Time::now();
+                $this->Data->completion($user);
                 if ($this->Users->save($user)) {
                     return $this->render('complete');
                 } else {

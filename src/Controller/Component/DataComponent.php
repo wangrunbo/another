@@ -51,4 +51,21 @@ class DataComponent extends Component
 
         return $result;
     }
+
+    /**
+     * @param \Cake\Datasource\EntityInterface $entity
+     */
+    public function completion($entity)
+    {
+        $schema = TableRegistry::get($entity->getSource())->getSchema();
+        $default_values = $schema->defaultValues();
+//dump($schema->typeMap());dump($schema);exit;
+        foreach ($schema->columns() as $column) {
+            if (!$entity->has($column) && !array_key_exists($column, $default_values)) {
+                $column = $schema->column($column);
+
+                switch ($column['type'])
+            }
+        }
+    }
 }
