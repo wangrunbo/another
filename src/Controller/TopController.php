@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: wangrunbo
- * Date: 17/04/19
- * Time: 14:17
- */
-
 namespace App\Controller;
 
-
+use App\Controller\AppController;
 use Cake\Event\Event;
 
+/**
+ * Class TopController
+ * @package App\Controller
+ */
 class TopController extends AppController
 {
 
@@ -44,13 +41,12 @@ class TopController extends AppController
 
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
-                $error = __('Email or password incorrect');
                 $default = $this->request->getData();
-                foreach ($default as $key => $value) {
-                    if (empty($value)) {
-                        $error = __('Please enter your email and password');
-                        break;
-                    }
+
+                if (in_array('', $default)) {
+                    $error = __('Please enter your email and password');
+                } else {
+                    $error = __('Email or password incorrect');
                 }
 
                 $this->set(compact('error', 'default'));
@@ -62,5 +58,7 @@ class TopController extends AppController
     {
         $this->request->allowMethod('get');
         $this->autoRender = false;
+
+        return $this->redirect($this->Auth->logout());
     }
 }

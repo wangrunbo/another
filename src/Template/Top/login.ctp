@@ -9,6 +9,8 @@ if (!isset($default)) {
         'email' => ''
     ];
 }
+
+$this->title('Login')
 ?>
 <h3>登录</h3>
 

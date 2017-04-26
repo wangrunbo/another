@@ -52,7 +52,7 @@ class AppController extends Controller
             'logoutRedirect' => '/',
             'storage' => [
                 'className' => 'Session',
-                'key' => "Auth.User",
+                'key' => SESSION_LOGIN,
             ],
             'authenticate' => [
                 'Basic' => ['userModel' => 'Users'],
@@ -62,6 +62,7 @@ class AppController extends Controller
                     'finder' => 'active'
                 ]
             ],
+            'authError' => false,
             'ajaxLogin' => false
         ]);
 

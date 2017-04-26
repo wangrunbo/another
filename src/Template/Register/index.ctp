@@ -10,6 +10,8 @@ if (!isset($default)) {
         'email' => ''
     ];
 }
+
+$this->title('Register')
 ?>
 <h3>用户注册</h3>
 <?= $this->Form->create() ?>

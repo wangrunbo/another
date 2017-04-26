@@ -38,6 +38,21 @@ class AppView extends View
     {
     }
 
+    public function renderLayout($content, $layout = null)
+    {
+        $this->start('navi');
+        switch ($this->request->getParam('controller')) {
+            case 'Mypage':
+                echo $this->element('Navi/mypage');
+                break;
+            default:
+                echo '';
+        }
+        $this->end();
+
+        return parent::renderLayout($content, $layout);
+    }
+
     public function title($title = null)
     {
         if (is_null($title)) {

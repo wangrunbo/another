@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: wangrunbo
- * Date: 17/04/19
- * Time: 18:15
- */
-
 namespace App\Controller;
 
-
+use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 

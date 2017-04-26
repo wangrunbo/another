@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var array $data
  */
+$this->title('Register Complete')
 ?>
 <div>
     <h3>注册成功</h3>
