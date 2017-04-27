@@ -11,6 +11,9 @@ use ArrayObject;
 /**
  * Users Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $AccountStatuses
+ * @property \Cake\ORM\Association\HasMany $Addresses
+ *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
@@ -36,11 +39,20 @@ class UsersTable extends Table
         parent::initialize($config);
 
         $this->setTable('users');
-        $this->setDisplayField('id');
+//        $this->setDisplayField('id');
+        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Validation');
+
+        $this->belongsTo('AccountStatuses', [
+            'foreignKey' => 'account_status_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->hasMany('Addresses', [
+            'foreignKey' => 'user_id'
+        ]);
     }
 
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
@@ -146,8 +158,29 @@ class UsersTable extends Table
 
         // 密钥
         $validator
+            ->requirePresence('secret', 'create')
             ->notEmpty('secret')
             ->add('secret', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
+            ->requirePresence('name', 'create')
+            ->notEmpty('name');
+
+        $validator
+            ->dateTime('birthday')
+            ->allowEmpty('birthday');
+
+        $validator
+            ->requirePresence('postcode', 'create')
+            ->notEmpty('postcode');
+
+        $validator
+            ->requirePresence('address', 'create')
+            ->notEmpty('address');
+
+        $validator
+            ->requirePresence('tel', 'create')
+            ->notEmpty('tel');
 
         return $validator;
     }
@@ -164,12 +197,15 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));
         $rules->add($rules->isUnique(['secret']));
+        $rules->add($rules->existsIn(['account_status_id'], 'AccountStatuses'));
 
         return $rules;
     }
 
     public function findActive(Query $query, array $options)
     {
-        return parent::findAll($query, $options);
+        return parent::findAll($query, $options)
+            ->select(['id', 'username', 'email', 'password'])
+            ->where(['Users.account_status_id' => \App\Model\Entity\AccountStatus::STATUS_GENERAL]);
     }
 }

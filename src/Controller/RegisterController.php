@@ -35,14 +35,19 @@ class RegisterController extends AppController
         $this->request->allowMethod(['get', 'post']);
 
         if ($this->request->is('post')) {
-            $user = $this->Users->newEntity()->updateSecret();
+            $user = $this->Users->newEntity();
 
-            $result = $this->Data->validate($this->request->getData(), $user);
+            $result = $this->Data->validate($this->request->getData(), $user, function () use ($user) {
+                $user->updateSecret();
+                $user->account_status_id = \App\Model\Entity\AccountStatus::STATUS_GENERAL;
+                $this->Data->completion($user);
+            });
 
             if (empty($result['errors'])) {
-                $this->Data->completion($user);
                 if ($this->Users->save($user)) {
-                    return $this->render('complete');
+                    $this->Auth->setUser($user->toArray());
+
+                    return $this->render('inactive');
                 } else {
                     $this->Flash->error(__('The server is busy!! Please try later.'));
                 }

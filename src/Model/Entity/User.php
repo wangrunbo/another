@@ -13,8 +13,17 @@ use Cake\ORM\TableRegistry;
  * @property string $email
  * @property string $password
  * @property string $secret
+ * @property string $name
+ * @property \Cake\I18n\Time $birthday
+ * @property string $postcode
+ * @property string $address
+ * @property string $tel
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated
+ * @property int $account_status_id
+ *
+ * @property \App\Model\Entity\AccountStatus $account_status
+ * @property \App\Model\Entity\Address[] $addresses
  */
 class User extends Entity
 {

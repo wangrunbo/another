@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateUsersTable extends AbstractMigration
+class CreateAddressesTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -27,21 +27,15 @@ class CreateUsersTable extends AbstractMigration
      */
     public function change()
     {
-        $users = $this->table('users');
-        $users->addColumn('username', 'string', ['limit' => 20, 'null' => false])
-            ->addColumn('email', 'string', ['limit' => 100, 'null' => false])
-            ->addColumn('password', 'string', ['limit' => 255, 'null' => false])
-            ->addColumn('secret', 'string', ['limit' => 255, 'null' => false])
-            ->addColumn('name', 'string', ['limit' => 20, 'null' => false])
-            ->addColumn('birthday', 'datetime', ['null' => true])
+        $addresses = $this->table('addresses');
+        $addresses->addColumn('name', 'string', ['limit' => 20, 'null' => false])
             ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false])
             ->addColumn('address', 'string', ['limit' => 255, 'null' => false])
             ->addColumn('tel', 'string', ['limit' => 255, 'null' => false])
+            ->addColumn('user_id', 'integer', ['null' => false])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP'])
-            ->addIndex(['username'], ['unique' => true])
-            ->addIndex(['email'], ['unique' => true])
-            ->addIndex(['secret'], ['unique' => true])
+            ->addForeignKey('user_id', 'users', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->create();
     }
 }

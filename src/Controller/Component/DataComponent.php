@@ -2,6 +2,7 @@
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -21,27 +22,34 @@ class DataComponent extends Component
     ];
 
     /**
+     * 数据验证
+     *
      * @param array $data
      * @param \Cake\Datasource\EntityInterface $entity
-     * @param array $option
+     * @param callable|null $callback
+     * @param array $options
      * @return array
      */
-    public function validate($data, $entity, $option = [])
+    public function validate($data, $entity, callable $callback = null, $options = [])
     {
         $result = [
             'errors' => [],
             'default' => $data
         ];
 
-        if (empty($option)) {
-            $option = $this->getConfig();
+        if (empty($options)) {
+            $options = $this->getConfig();
         }
 
-        TableRegistry::get($entity->getSource())->patchEntity($entity, $data, ['validate' => $option['validate']]);
+        TableRegistry::get($entity->getSource())->patchEntity($entity, $data, ['validate' => $options['validate']]);
 
-        $result['errors'] = $entity->errors();
+        if (!is_null($callback)) {
+            $callback();
+        }
 
-        if ($option['correct']) {
+        $result['errors'] = $entity->getErrors();
+
+        if ($options['correct']) {
             foreach (array_keys($data) as $key) {
                 if (!array_key_exists($key, $result['errors']) && $entity->has($key)) {
                     $result['default'][$key] = $entity->get($key);
@@ -53,19 +61,38 @@ class DataComponent extends Component
     }
 
     /**
+     * Entity数据补全
+     *
      * @param \Cake\Datasource\EntityInterface $entity
      */
     public function completion($entity)
     {
         $schema = TableRegistry::get($entity->getSource())->getSchema();
-        $default_values = $schema->defaultValues();
-//dump($schema->typeMap());dump($schema);exit;
         foreach ($schema->columns() as $column) {
-            if (!$entity->has($column) && !array_key_exists($column, $default_values)) {
-                $column = $schema->column($column);
-
-                switch ($column['type'])
+            if (
+                $entity->has($column)
+                || in_array($column, $schema->primaryKey())
+                || array_key_exists($column, $schema->defaultValues())
+                || $schema->isNullable($column)
+            ) {
+                continue;
             }
+
+            switch ($schema->columnType($column)) {
+                case 'string':
+                    $value = '';
+                    break;
+                case 'integer':
+                    $value = 0;
+                    break;
+                case 'datetime':
+                    $value = Time::createFromTimestamp(0);
+                    break;
+                default:
+                    $value = null;
+            }
+
+            $entity->set($column, $value);
         }
     }
 }

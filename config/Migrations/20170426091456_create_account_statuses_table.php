@@ -47,7 +47,7 @@ class CreateAccountStatusesTable extends AbstractMigration
 
         $user = $this->table('users');
         $user
-            ->addColumn('account_status_id', 'integer', ['null' => false])
+            ->addColumn('account_status_id', 'integer', ['null' => false, 'after' => 'tel'])
             ->save();
 
         $this->execute('UPDATE users SET account_status_id=1');
