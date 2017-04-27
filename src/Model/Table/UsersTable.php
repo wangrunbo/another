@@ -202,10 +202,10 @@ class UsersTable extends Table
         return $rules;
     }
 
-    public function findActive(Query $query, array $options)
+    public function findAuth(Query $query, array $options)
     {
         return parent::findAll($query, $options)
-            ->select(['id', 'username', 'email', 'password'])
+            ->select('id')
             ->where(['Users.account_status_id' => \App\Model\Entity\AccountStatus::STATUS_GENERAL]);
     }
 }

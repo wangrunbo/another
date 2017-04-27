@@ -43,6 +43,7 @@ class AppController extends Controller
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
         $this->loadComponent('Auth', [
+            'authorize' => ['Controller'],
             'loginAction' => [
                 'controller' => 'Top',
                 'action' => 'login',
@@ -59,7 +60,7 @@ class AppController extends Controller
                 'Form' => [
                     'userModel' => 'Users',
                     'fields' => ['username' => 'email', 'password' => 'password'],
-                    'finder' => 'active'
+                    'finder' => 'auth'
                 ]
             ],
             'authError' => false,
@@ -84,5 +85,16 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+    }
+
+    public function isAuthorized($user = null)
+    {
+        $this->loadModel('Users');
+
+        if ($this->Users->get($user['id'])->account_status_id === \App\Model\Entity\AccountStatus::STATUS_DELETED) {
+            $this->Auth->logout();
+        }
+
+        return true;
     }
 }
