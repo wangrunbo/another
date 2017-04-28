@@ -55,6 +55,8 @@ class AppView extends View
         return parent::renderLayout($content, $layout);
     }
 
+
+
     /**
      * @param $block
      * @param $css

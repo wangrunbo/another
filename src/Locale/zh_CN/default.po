@@ -3,7 +3,7 @@
 msgid "Home"
 msgstr "首页"
 #: src/Template/Layout/default.ctp:38
-msgid "Mypage"
+msgid "Personal Info"
 msgstr "个人情报"
 #: src/Template/Layout/default.ctp:39
 msgid "Products"
@@ -15,6 +15,7 @@ msgstr "购入履历"
 msgid "Charge Center"
 msgstr "充值中心"
 #: src/Template/Layout/default.ctp:42
+#: src/Template/Element/Navi/mypage.ctp:13
 msgid "Logout"
 msgstr "登出"
 #: src/Template/Layout/default.ctp:44
@@ -40,6 +41,22 @@ msgstr "帮助"
 #: src/Template/Layout/default.ctp:78
 msgid "Contact Us"
 msgstr "联系我们"
+
+#: src/Template/Element/Navi/mypage.ctp:8
+msgid "Mypage"
+msgstr "我的主页"
+#: src/Template/Element/Navi/mypage.ctp:9
+msgid "Base Info"
+msgstr "基本信息"
+#: src/Template/Element/Navi/mypage.ctp:10
+msgid "Addresses"
+msgstr "地址信息"
+#: src/Template/Element/Navi/mypage.ctp:11
+msgid "Private Messages"
+msgstr "私信"
+#: src/Template/Element/Navi/mypage.ctp:12
+msgid "Account Security"
+msgstr "帐号安全"
 
 #: src/Template/Register/index.ctp:19;21
 msgid "username"

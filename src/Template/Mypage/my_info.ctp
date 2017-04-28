@@ -18,17 +18,59 @@ if (!isset($default)) {
 $this->patchDefault($default, $user->toArray());
 ?>
 
-<h3>基本信息</h3>
+<h3><?= h(__('Base Info')) ?></h3>
 <hr>
 
 <div id="block-view" style="display: <?= $this->getStyle('view.display') ?>;">
-    <dl>
-        <dt></dt>
-    </dl>
+    <table>
+        <tr>
+            <th><?= h(__('name')) ?></th>
+            <td><?= h($user->name) ?></td>
+        </tr>
+        <tr>
+            <th><?= h(__('birthday')) ?></th>
+            <td>
+                <?= h(is_null($user->birthday) ? '' : $user->birthday->format(app_config('Display.format.date'))); ?>
+            </td>
+        </tr>
+        <tr>
+            <th><?= h(__('postcode')) ?></th>
+            <td><?= h($user->postcode) ?></td>
+        </tr>
+        <tr>
+            <th><?= h(__('address')) ?></th>
+            <td><?= h($user->address) ?></td>
+        </tr>
+        <tr>
+            <th><?= h(__('tel')) ?></th>
+            <td><?= h($user->tel) ?></td>
+        </tr>
+    </table>
 </div>
 
 <div id="block-input" style="display: <?= $this->getStyle('input.display') ?>;">
-    <dl>
-        <dt></dt>
-    </dl>
+    <table>
+        <tr>
+            <th><?= h(__('name')) ?></th>
+            <td><?= h($user->name) ?></td>
+        </tr>
+        <tr>
+            <th><?= h(__('birthday')) ?></th>
+            <td>
+                <?= h(is_null($user->birthday) ? '' : $user->birthday->format(app_config('Display.format.date'))); ?>
+            </td>
+        </tr>
+        <tr>
+            <th><?= h(__('postcode')) ?></th>
+            <td><?= h($user->postcode) ?></td>
+        </tr>
+        <tr>
+            <th><?= h(__('address')) ?></th>
+            <td><?= h($user->address) ?></td>
+        </tr>
+        <tr>
+            <th><?= h(__('tel')) ?></th>
+            <td><?= h($user->tel) ?></td>
+        </tr>
+    </table>
 </div>

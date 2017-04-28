@@ -5,10 +5,11 @@
 ?>
 <div>
     <ul>
-        <li><a href="<?= $this->Url->build(['action' => 'index']) ?>">我的主页</a></li>
-        <li><a href="<?= $this->Url->build(['action' => 'myInfo']) ?>">基本信息</a></li>
-        <li><a href="<?= $this->Url->build(['action' => 'myAddresses']) ?>">地址</a></li>
-        <li><a href="<?= $this->Url->build(['action' => 'myMessage']) ?>">私信</a></li>
-        <li><a href="<?= $this->Url->build(['action' => 'mySecurity']) ?>">帐号安全</a></li>
+        <li><a href="<?= $this->Url->build(['action' => 'index']) ?>"><?= h(__('Mypage')) ?></a></li>
+        <li><a href="<?= $this->Url->build(['action' => 'myInfo']) ?>"><?= h(__('Base Info')) ?></a></li>
+        <li><a href="<?= $this->Url->build(['action' => 'myAddresses']) ?>"><?= h(__('Addresses')) ?></a></li>
+        <li><a href="<?= $this->Url->build(['action' => 'myMessage']) ?>"><?= h(__('Private Messages')) ?></a></li>
+        <li><a href="<?= $this->Url->build(['action' => 'mySecurity']) ?>"><?= h(__('Account Security')) ?></a></li>
+        <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'logout']) ?>"><?= h(__('Logout')) ?></a></li>
     </ul>
 </div>

@@ -1,5 +1,12 @@
 <?php
 
+if (!function_exists('app_config')) {
+    function app_config($name)
+    {
+        return \Cake\Core\Configure::read($name);
+    }
+}
+
 if (!function_exists('random')) {
     function random($length = 60, $pattern = null)
     {

@@ -345,11 +345,17 @@ return [
     ],
 
     /**
-     * Other configuration
+     * Display configuration
      */
-    'Pagination' => [
-        'default' => [
-            'limit' => 10
+    'Display' => [
+        'pagination' => [
+            'default' => [
+                'limit' => 10
+            ]
+        ],
+        'format' => [
+            'date' => 'Y年m月d日',
+            'datetime' => 'Y年m月d日 H:i:s'
         ]
     ]
 ];

@@ -35,7 +35,7 @@
         <ul>
             <li><a href="<?= $this->Url->build('/') ?>"><?= h(__('Home')) ?></a></li>
             <?php if ($this->request->session()->check(SESSION_LOGIN)): ?>
-                <li><a href="<?= $this->Url->build(['controller' => 'Mypage']) ?>"><?= h(__('Mypage')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Mypage']) ?>"><?= h(__('Personal Info')) ?></a></li>
                 <li><a href="<?= $this->Url->build(['controller' => 'Products']) ?>"><?= h(__('Products')) ?></a></li>
                 <li><a href="<?= $this->Url->build(['controller' => 'History']) ?>"><?= h(__('History')) ?></a></li>
                 <li><a href="<?= $this->Url->build(['controller' => 'Charge']) ?>"><?= h(__('Charge Center')) ?></a></li>
