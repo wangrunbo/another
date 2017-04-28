@@ -205,7 +205,7 @@ class UsersTable extends Table
     public function findAuth(Query $query, array $options)
     {
         return parent::findAll($query, $options)
-            ->select('id')
+            ->select(['id', 'email', 'password'])
             ->where(['Users.account_status_id' => \App\Model\Entity\AccountStatus::STATUS_GENERAL]);
     }
 }

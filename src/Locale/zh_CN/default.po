@@ -1,11 +1,62 @@
-#: src/Controller/TopController.php:47
-msgid "Email or password incorrect"
-msgstr "邮箱或密码错误"
-#: src/Controller/TopController.php:51
-msgid "Please enter your email and password"
-msgstr "请输入您的邮箱和密码"
+#: src/Template/Layout/default.ctp:36
+#: src/Template/Top/index.ctp:4
+msgid "Home"
+msgstr "首页"
+#: src/Template/Layout/default.ctp:38
+msgid "Mypage"
+msgstr "个人情报"
+#: src/Template/Layout/default.ctp:39
+msgid "Products"
+msgstr "商品一览"
+#: src/Template/Layout/default.ctp:40
+msgid "History"
+msgstr "购入履历"
+#: src/Template/Layout/default.ctp:41
+msgid "Charge Center"
+msgstr "充值中心"
+#: src/Template/Layout/default.ctp:42
+msgid "Logout"
+msgstr "登出"
+#: src/Template/Layout/default.ctp:44
+#: src/Template/Register/index.ctp:13;16
+msgid "Register"
+msgstr "会员注册"
+#: src/Template/Layout/default.ctp:45
+#: src/Template/Top/login.ctp:12
+msgid "Login"
+msgstr "会员登录"
+#: src/Template/Layout/default.ctp:49
+msgid "ASIN"
+msgstr "商品ASIN"
+#: src/Template/Layout/default.ctp:50
+msgid "Search"
+msgstr "检索"
+#: src/Template/Layout/default.ctp:53
+msgid "Cart"
+msgstr "购物车"
+#: src/Template/Layout/default.ctp:77
+msgid "Help"
+msgstr "帮助"
+#: src/Template/Layout/default.ctp:78
+msgid "Contact Us"
+msgstr "联系我们"
 
+#: src/Template/Register/index.ctp:19;21
+msgid "username"
+msgstr "用户名"
+#: src/Template/Register/index.ctp:27;29
+msgid "email"
+msgstr "邮箱"
+#: src/Template/Register/index.ctp:35;37
+msgid "password"
+msgstr "密码"
+#: src/Template/Register/index.ctp:43;45
+msgid "password_confirm"
+msgstr "密码确认"
+#: src/Template/Register/index.ctp:51
+msgid "OK"
+msgstr "确认"
 
-#: src/Controller/RegisterController.php:55
-msgid "The server is busy!! Please try later."
-msgstr "服务器忙！！请稍后再试。"
+#: src/Template/Register/inactive.ctp:5;9
+msgid "Register Complete"
+msgstr "注册成功"

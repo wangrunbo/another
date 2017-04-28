@@ -25,6 +25,8 @@ use Cake\View\View;
 class AppView extends View
 {
 
+    protected $_style;
+
     /**
      * Initialization hook method.
      *
@@ -53,12 +55,65 @@ class AppView extends View
         return parent::renderLayout($content, $layout);
     }
 
+    /**
+     * @param $block
+     * @param $css
+     */
+    public function setStyle($block, $css)
+    {
+        $style = &$this->_style;
+        foreach (explode('.', $block) as $part) {
+            $style[$part] = null;
+            $style = &$style[$part];
+        }
+
+        $style = $css;
+    }
+
+    /**
+     * @param null|string $block
+     * @return mixed
+     */
+    public function getStyle($block = null)
+    {
+        $style = $this->_style;
+        if (!is_null($block)) {
+            foreach (explode('.', $block) as $part) {
+                $style = $style[$part];
+            }
+        }
+
+        return $style;
+    }
+
+    /**
+     * @param null $title
+     * @return string
+     */
     public function title($title = null)
     {
         if (is_null($title)) {
             return $this->fetch('title');
         }
 
-        $this->assign('title', __d('title', $title));
+        $this->assign('title', $title);
+    }
+
+    /**
+     * 补全输入框默认值
+     *
+     * @param array $default
+     * @param array $data
+     * @param array $options
+     */
+    public function patchDefault(&$default, $data, $options = [])
+    {
+        if (isset($options['ignore'])) {
+            foreach ((array)$options['ignore'] as $key) {
+                unset($data[$key]);
+            }
+        }
+
+        $default += $data;
     }
 }

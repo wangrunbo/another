@@ -10,7 +10,7 @@ if (!isset($default)) {
     ];
 }
 
-$this->title('Login')
+$this->title(__('Login'))
 ?>
 <h3>登录</h3>
 

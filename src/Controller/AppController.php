@@ -21,6 +21,7 @@ use Cake\Core\Configure;
 /**
  * Application Controller
  * @property \App\Controller\Component\DataComponent $Data
+ * @property \App\Model\Table\UsersTable Users
  */
 class AppController extends Controller
 {
@@ -37,6 +38,8 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
+
+        $this->loadModel('Users');
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
@@ -87,10 +90,14 @@ class AppController extends Controller
         }
     }
 
+    /**
+     * 权限控制
+     *
+     * @param null|array $user
+     * @return bool
+     */
     public function isAuthorized($user = null)
     {
-        $this->loadModel('Users');
-
         if ($this->Users->get($user['id'])->account_status_id === \App\Model\Entity\AccountStatus::STATUS_DELETED) {
             $this->Auth->logout();
         }

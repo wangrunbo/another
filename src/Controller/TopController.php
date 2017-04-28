@@ -44,9 +44,9 @@ class TopController extends AppController
                 $default = $this->request->getData();
 
                 if (in_array('', $default)) {
-                    $error = __('Please enter your email and password');
+                    $error = __d('message', 'Please enter your email and password');
                 } else {
-                    $error = __('Email or password incorrect');
+                    $error = __d('message', 'Email or password incorrect');
                 }
 
                 $this->set(compact('error', 'default'));

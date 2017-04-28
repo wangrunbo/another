@@ -33,24 +33,24 @@
             <img src="<?= $this->Url->image('logo.png') ?>" alt="<?= h(SITE) ?>" height="60px" title="<?= h(SITE) ?>">
         </a>
         <ul>
-            <li><a href="<?= $this->Url->build('/') ?>" title="首页">首页</a></li>
+            <li><a href="<?= $this->Url->build('/') ?>"><?= h(__('Home')) ?></a></li>
             <?php if ($this->request->session()->check(SESSION_LOGIN)): ?>
-                <li><a href="<?= $this->Url->build(['controller' => 'Mypage']) ?>" title="个人情报">个人情报</a></li>
-                <li><a href="<?= $this->Url->build(['controller' => 'Products']) ?>" title="商品一览">商品一览</a></li>
-                <li><a href="<?= $this->Url->build(['controller' => 'History']) ?>" title="购买记录">购入履历</a></li>
-                <li><a href="<?= $this->Url->build(['controller' => 'Charge']) ?>" title="充值中心">充值中心</a></li>
-                <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'logout']) ?>" title="登出">登出</a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Mypage']) ?>"><?= h(__('Mypage')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Products']) ?>"><?= h(__('Products')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'History']) ?>"><?= h(__('History')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Charge']) ?>"><?= h(__('Charge Center')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'logout']) ?>"><?= h(__('Logout')) ?></a></li>
             <?php else: ?>
-                <li><a href="<?= $this->Url->build(['controller' => 'Register']) ?>" title="注册">会员注册</a></li>
-                <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'login']) ?>" title="登录">会员登录</a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Register']) ?>"><?= h(__('Register')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'login']) ?>"><?= h(__('Login')) ?></a></li>
             <?php endif; ?>
             <li>
                 <?= $this->Form->create(null, ['url' => ['controller' => 'Products', 'action' => 'search'], 'type' => 'get']) ?>
-                    <input type="text" placeholder="商品ASIN" />
-                    <button type="submit">检索</button>
+                    <input type="text" placeholder="<?= h(__('ASIN')) ?>" />
+                    <button type="submit"><?= h(__('search')) ?></button>
                 <?= $this->Form->end(); ?>
             </li>
-            <li><a href="<?= $this->Url->build(['controller' => 'Cart']) ?>" title="购物车">购物车</a></li>
+            <li><a href="<?= $this->Url->build(['controller' => 'Cart']) ?>"><?= h(__('cart')) ?></a></li>
         </ul>
     </div>
 </header>
@@ -74,8 +74,8 @@
         <ul>
             <li>NO Copyright ©2017 No Rights Reserved</li>
             <li><a href="http://www.baidu.com">百度</a></li>
-            <li><a href="<?= $this->Url->build(['controller' => 'Help']) ?>">帮助</a></li>
-            <li><a href="<?= $this->Url->build(['controller' => 'Contact']) ?>">联系我们</a></li>
+            <li><a href="<?= $this->Url->build(['controller' => 'Help']) ?>"><?= h(__('Help')) ?></a></li>
+            <li><a href="<?= $this->Url->build(['controller' => 'Contact']) ?>"><?= h(__('Contact Us')) ?></a></li>
         </ul>
     </div>
 </footer>

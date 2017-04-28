@@ -8,7 +8,6 @@ use Cake\I18n\Time;
 /**
  * Class RegisterController
  * @package App\Controller
- * @property \App\Model\Table\UsersTable $Users
  */
 class RegisterController extends AppController
 {
@@ -16,8 +15,6 @@ class RegisterController extends AppController
     public function initialize()
     {
         parent::initialize();
-
-        $this->loadModel('Users');
     }
 
     public function beforeFilter(Event $event)
@@ -49,7 +46,7 @@ class RegisterController extends AppController
 
                     return $this->render('inactive');
                 } else {
-                    $this->Flash->error(__('The server is busy!! Please try later.'));
+                    $this->Flash->error(__d('message', 'The server is busy!! Please try later.'));
                 }
             }
 
