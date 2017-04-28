@@ -12,7 +12,7 @@ if (!isset($default)) {
 
 $this->title(__('Login'))
 ?>
-<h3>登录</h3>
+<h3><?= h(__('Login')) ?></h3>
 
 <?php if (isset($error)): ?>
     <div>
@@ -21,16 +21,7 @@ $this->title(__('Login'))
 <?php endif; ?>
 
 <?= $this->Form->create() ?>
-    <dl>
-        <dt>邮箱</dt>
-        <dd>
-            <input type="text" title="邮箱" name="email" value="<?= $default['email'] ?>" />
-        </dd>
-
-        <dt>密码</dt>
-        <dd>
-            <input type="password" title="密码" name="password" value="" />
-        </dd>
-    </dl>
-    <button type="submit">登录</button>
+    <?= $this->Form->control('email', ['type' => 'text', 'value' => $default['email'], 'placeholder' => __('email'), 'label' => false]) ?>
+    <?= $this->Form->control('password', ['type' => 'password', 'value' => "", 'placeholder' => __('password'), 'label' => false]) ?>
+    <button type="submit"><?= h(__('login')) ?></button>
 <?= $this->Form->end() ?>

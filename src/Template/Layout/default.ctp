@@ -46,11 +46,11 @@
             <?php endif; ?>
             <li>
                 <?= $this->Form->create(null, ['url' => ['controller' => 'Products', 'action' => 'search'], 'type' => 'get']) ?>
-                    <input type="text" placeholder="<?= h(__('ASIN')) ?>" />
+                    <input name="search" type="text" placeholder="<?= h(__('ASIN')) ?>" />
                     <button type="submit"><?= h(__('search')) ?></button>
                 <?= $this->Form->end(); ?>
             </li>
-            <li><a href="<?= $this->Url->build(['controller' => 'Cart']) ?>"><?= h(__('cart')) ?></a></li>
+            <li><a href="<?= $this->Url->build(['controller' => 'Cart']) ?>"><?= h(__('Cart')) ?></a></li>
         </ul>
     </div>
 </header>

@@ -9,5 +9,7 @@ $this->title(__('Register Complete'))
     <h3><?= h(__('Register Complete')) ?></h3>
     <p>请妥善保管您的帐号与密码</p>
     <p>如有疑问，请<a href="<?= $this->Url->build(['controller' => 'contact', 'action' => 'index']) ?>">点击这里</a></p>
-    <a href="<?= $this->Url->build(['controller' => 'Mypage', 'action' => 'index']) ?>">我的首页</a>
+    <p>
+        请<a href="<?= $this->Url->build(['controller' => 'Mypage', 'action' => 'myInfo']) ?>">前往个人主页</a>完善您的个人信息
+    </p>
 </div>

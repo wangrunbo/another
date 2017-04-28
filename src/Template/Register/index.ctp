@@ -18,7 +18,7 @@ $this->title(__('Register'))
     <dl>
         <dt><?= h(__('username')) ?></dt>
         <dd>
-            <input type="text" title="<?= h(__('username')) ?>" name="username" value="<?= $default['username'] ?>" />
+            <?= $this->Form->control('username', ['type' => 'text', 'value' => $default['username'], 'label' => false]) ?>
             <?php if (isset($errors['username'])): ?>
                 <?= $this->element('validation', ['field' => 'username', 'error' => $errors['username']]) ?>
             <?php endif; ?>
@@ -26,7 +26,7 @@ $this->title(__('Register'))
 
         <dt><?= h(__('email')) ?></dt>
         <dd>
-            <input type="text" title="<?= h(__('email')) ?>" name="email" value="<?= $default['email'] ?>" />
+            <?= $this->Form->control('email', ['type' => 'text', 'value' => $default['email'], 'label' => false]) ?>
             <?php if (isset($errors['email'])): ?>
                 <?= $this->element('validation', ['field' => 'email', 'error' => $errors['email']]) ?>
             <?php endif; ?>
@@ -34,7 +34,7 @@ $this->title(__('Register'))
 
         <dt><?= h(__('password')) ?></dt>
         <dd>
-            <input type="password" title="<?= h(__('password')) ?>" name="password" value="" />
+            <?= $this->Form->control('password', ['type' => 'password', 'value' => '', 'label' => false]) ?>
             <?php if (isset($errors['password'])): ?>
                 <?= $this->element('validation', ['field' => 'password', 'error' => $errors['password']]) ?>
             <?php endif; ?>
@@ -42,7 +42,7 @@ $this->title(__('Register'))
 
         <dt><?= h(__('password_confirm')) ?></dt>
         <dd>
-            <input type="password" title="<?= h(__('password_confirm')) ?>" name="password_confirm" value="" />
+            <?= $this->Form->control('password_confirm', ['type' => 'password', 'value' => '', 'label' => false]) ?>
             <?php if (isset($errors['password_confirm'])): ?>
                 <?= $this->element('validation', ['field' => 'password_confirm', 'error' => $errors['password_confirm']]) ?>
             <?php endif; ?>

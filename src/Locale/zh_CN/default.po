@@ -23,7 +23,7 @@ msgstr "登出"
 msgid "Register"
 msgstr "会员注册"
 #: src/Template/Layout/default.ctp:45
-#: src/Template/Top/login.ctp:12
+#: src/Template/Top/login.ctp:12;15
 msgid "Login"
 msgstr "会员登录"
 #: src/Template/Layout/default.ctp:49
@@ -58,22 +58,29 @@ msgstr "私信"
 msgid "Account Security"
 msgstr "帐号安全"
 
-#: src/Template/Register/index.ctp:19;21
+#: src/Template/Register/index.ctp:19
 msgid "username"
 msgstr "用户名"
-#: src/Template/Register/index.ctp:27;29
+#: src/Template/Register/index.ctp:27
+#: src/Template/Top/login.ctp:24
 msgid "email"
 msgstr "邮箱"
-#: src/Template/Register/index.ctp:35;37
+#: src/Template/Register/index.ctp:35
+#: src/Template/Top/login.ctp:25
 msgid "password"
 msgstr "密码"
-#: src/Template/Register/index.ctp:43;45
+#: src/Template/Register/index.ctp:43
 msgid "password_confirm"
 msgstr "密码确认"
 #: src/Template/Register/index.ctp:51
+#: src/Template/Mypage/my_info.ctp:81
 msgid "OK"
-msgstr "确认"
+msgstr "确定"
 
 #: src/Template/Register/inactive.ctp:5;9
 msgid "Register Complete"
 msgstr "注册成功"
+
+#: src/Template/Top/login.ctp:26
+msgid "login"
+msgstr "登录"
