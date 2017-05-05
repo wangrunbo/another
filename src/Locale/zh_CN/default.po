@@ -50,6 +50,7 @@ msgstr "我的主页"
 msgid "Base Info"
 msgstr "基本信息"
 #: src/Template/Element/Navi/mypage.ctp:10
+#: src/Template/Mypage/my_address.ctp:6
 msgid "Addresses"
 msgstr "地址信息"
 #: src/Template/Element/Navi/mypage.ctp:11
@@ -74,8 +75,8 @@ msgstr "密码"
 msgid "password_confirm"
 msgstr "密码确认"
 #: src/Template/Register/index.ctp:51
-#: src/Template/Mypage/my_info.ctp:81
-#: src/Template/Mypage/my_info.ctp:126
+#: src/Template/Mypage/my_info.ctp:81;126
+#: src/Template/Mypage/my_addresses.ctp:75;164
 msgid "OK"
 msgstr "确定"
 
@@ -88,6 +89,7 @@ msgid "login"
 msgstr "登录"
 
 #: src/Template/Mypage/my_info.ctp:35;69
+#: src/Template/Mypage/my_addresses.ctp:38;91;127
 msgid "name"
 msgstr "姓名"
 #: src/Template/Mypage/my_info.ctp:39;78
@@ -97,16 +99,20 @@ msgstr "性别"
 msgid "birthday"
 msgstr "生日"
 #: src/Template/Mypage/my_info.ctp:49;98
+#: src/Template/Mypage/my_addresses.ctp:47;95;136
 msgid "postcode"
 msgstr "邮政编码"
 #: src/Template/Mypage/my_info.ctp:53;107
+#: src/Template/Mypage/my_addresses.ctp:56;99;145
 msgid "address"
 msgstr "地址"
 #: src/Template/Mypage/my_info.ctp:57;116
+#: src/Template/Mypage/my_addresses.ctp:65;103;154
 msgid "tel"
 msgstr "电话号码"
-#: src/Template/Mypage/my_info.ctp:63
-msgid "edit"
+#: src/Template/Mypage/my_info.ctp:61
+#: src/Template/Mypage/my_addresses.ctp:108
+msgid "Edit"
 msgstr "编辑"
 #: src/Template/Mypage/my_info.ctp:89
 msgid "year"
@@ -118,5 +124,19 @@ msgstr "月"
 msgid "day"
 msgstr "日"
 #: src/Template/Mypage/my_info.ctp:127
-msgid "cancel"
+#: src/Template/Mypage/my_addresses.ctp:77;165
+msgid "Cancel"
 msgstr "取消"
+
+#: src/Template/Mypage/my_addresses.ctp:21
+msgid "New"
+msgstr "新建"
+#: src/Template/Mypage/my_addresses.ctp:29;118
+msgid "label"
+msgstr "标签"
+#: src/Template/Mypage/my_addresses.ctp:31
+msgid "new address"
+msgstr "新地址"
+#: src/Template/Mypage/my_addresses.ctp:110
+msgid "Delete"
+msgstr "删除"

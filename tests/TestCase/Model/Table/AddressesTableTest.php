@@ -25,7 +25,9 @@ class AddressesTableTest extends TestCase
      */
     public $fixtures = [
         'app.addresses',
-        'app.users'
+        'app.users',
+        'app.sex',
+        'app.account_statuses'
     ];
 
     /**

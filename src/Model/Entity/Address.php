@@ -7,6 +7,7 @@ use Cake\ORM\Entity;
  * Address Entity
  *
  * @property int $id
+ * @property string $label
  * @property string $name
  * @property string $postcode
  * @property string $address

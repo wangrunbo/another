@@ -29,6 +29,7 @@ msgstr "请再次输入密码！"
 msgid "The twice entered password is inconsistent!"
 msgstr "两次输入的密码不一致！"
 #: src/Model/Table/UsersTable.php:239
+#: src/Model/Table/AddressesTable.php:138
 msgid "Name cannot be longer then {length} words!"
 msgstr "姓名须少于{length}字符！"
 #: src/Model/Table/UsersTable.php:244
@@ -38,11 +39,33 @@ msgstr "请选择您的性别！"
 msgid "Invalid date format!"
 msgstr "日期格式错误！"
 #: src/Model/Table/UsersTable.php:266
+#: src/Model/Table/AddressesTable.php:147
 msgid "Please enter 6-digit half-size number!"
 msgstr "请输入6位半角数字！"
 #: src/Model/Table/UsersTable.php:266
+#: src/Model/Table/AddressesTable.php:156
 msgid "Address cannot be longer then {length} words!"
 msgstr "地址须少于{length}字符！"
 #: src/Model/Table/UsersTable.php:286
+#: src/Model/Table/AddressesTable.php:165
 msgid "Invalid tel format!"
 msgstr "电话号码格式错误！"
+
+#: src/Model/Table/AddressesTable.php:125
+msgid "Label cannot be left empty!"
+msgstr "请命名一个标签！"
+#: src/Model/Table/AddressesTable.php:129
+msgid "Label cannot be longer then {length} words!"
+msgstr "标签须少于{length}字符！"
+#: src/Model/Table/AddressesTable.php:134
+msgid "Name cannot be left empty!"
+msgstr "姓名不能为空！"
+#: src/Model/Table/AddressesTable.php:143
+msgid "Postcode cannot be left empty!"
+msgstr "邮编不能为空！"
+#: src/Model/Table/AddressesTable.php:152
+msgid "Address cannot be left empty!"
+msgstr "地址不能为空！"
+#: src/Model/Table/AddressesTable.php:161
+msgid "Tel cannot be left empty!"
+msgstr "电话号码不能为空！"

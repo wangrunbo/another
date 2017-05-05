@@ -32,7 +32,7 @@ function resetForm(form, fields) {
     if (fields === undefined) {
         $.each($(form).serializeArray(), function (index, object) {
             if ($.inArray(object.name, TOKEN_FIELDS) === -1) {
-                var field = $("[name='" + object.name + "']");
+                var field = $(form).find("[name='" + object.name + "']");
                 switch (field.attr('type')) {
                     case 'radio':
                         field.filter("[value='" + field.data('default') + "']").prop('checked', true);
@@ -49,7 +49,7 @@ function resetForm(form, fields) {
             if ($.isFunction(callback)) {
                 callback()
             } else {
-                var field = $("[name='" + name + "']");
+                var field = $(form).find("[name='" + name + "']");
                 field.val(field.data('default'))
             }
         })

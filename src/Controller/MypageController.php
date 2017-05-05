@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\I18n\Time;
+use Cake\Network\Exception\BadRequestException;
 use function PHPSTORM_META\type;
 
 /**
@@ -54,17 +55,81 @@ class MypageController extends AppController
 
     public function myAddresses($id = null)
     {
-        $this->request->allowMethod(['get', 'post']);
-
+        $this->request->allowMethod(['get', 'post', 'put']);
         $this->loadModel('Addresses');
+
+        if ($this->request->is(['post', 'put'])) {
+            $data = $this->request->getData();
+
+            if (is_null($id)) {
+                // 新建地址
+                $address = $this->Addresses->newEntity();
+            } else {
+                // 地址编辑
+                $address = $this->Addresses->find('all', [
+                    'conditions' => [
+                        'Addresses.id' => $id,
+                        'Addresses.user_id' => $this->Auth->user('id')
+                    ]
+                ])->first();
+
+                if (is_null($address)) {
+                    throw new BadRequestException();
+                }
+
+                $this->set('target', $address->id);
+            }
+
+            $result = $this->Data->validate($data, $address, function () use ($address, $data) {
+                if ($address->isNew()) {
+                    $address->user_id = $this->Auth->user('id');
+                    $this->Data->completion($address, [
+                        'ignore' => array_keys($data)
+                    ]);
+                }
+            });
+
+            if (empty($result['errors'])) {
+                $this->Addresses->save($address);
+                return $this->redirect(['action' => 'myAddresses']);
+            } else {
+                $this->set($result);
+            }
+        }
 
         $addresses = $this->Addresses->find('all', [
             'conditions' => [
                 'Addresses.user_id' => $this->Auth->user('id')
             ],
-            'select' => ['name', 'postcode', 'address', 'tel']
+            'select' => ['label', 'name', 'postcode', 'address', 'tel']
         ])->toArray();
 
         $this->set(compact('addresses'));
+    }
+
+    public function deleteAddress($id = null)
+    {
+        $this->request->allowMethod('put');
+        $this->autoRender = false;
+        $this->loadModel('Addresses');
+
+        if (is_null($id)) {
+            throw new BadRequestException();
+        }
+
+        $address = $this->Addresses->find('all', [
+            'conditions' => [
+                'Addresses.id' => $id,
+                'Addresses.user_id' => $this->Auth->user('id')
+            ]
+        ])->first();
+
+        if (is_null($address)) {
+            throw new BadRequestException();
+        }
+
+        $this->Addresses->delete($address);
+
+        return $this->redirect(['action' => 'myAddresses']);
     }
 }

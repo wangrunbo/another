@@ -28,7 +28,9 @@ class CreateAddressesTable extends AbstractMigration
     public function change()
     {
         $addresses = $this->table('addresses');
-        $addresses->addColumn('name', 'string', ['limit' => 20, 'null' => false])
+        $addresses
+            ->addColumn('label', 'string', ['limit' => 20, 'null' => false])
+            ->addColumn('name', 'string', ['limit' => 20, 'null' => false])
             ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false])
             ->addColumn('address', 'string', ['limit' => 100, 'null' => false])
             ->addColumn('tel', 'string', ['limit' => 20, 'null' => false])

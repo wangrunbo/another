@@ -26,7 +26,7 @@ if (!isset($default)) {
 $this->patchDefault($default, $user->toArray());
 ?>
 <h3><?= h(__('Base Info')) ?></h3>
-<hr>
+<hr />
 
 <div id="block-view" style="display: <?= $this->getStyle('view.display') ?>;">
     <table>
@@ -58,7 +58,7 @@ $this->patchDefault($default, $user->toArray());
         </tr>
     </table>
 
-    <button type="button" onclick="switchMode('input')"><?= h(__('edit')) ?></button>
+    <button type="button" onclick="switchMode('input')"><?= h(__('Edit')) ?></button>
 </div>
 
 <div id="block-input" style="display: <?= $this->getStyle('input.display') ?>;">
@@ -123,6 +123,6 @@ $this->patchDefault($default, $user->toArray());
         </table>
 
         <button type="submit"><?= h(__('OK')) ?></button>
-        <button type="button" onclick="switchMode('view'); resetForm($(this).closest('form')); clearValidationErrors($(this).closest('form'));"><?= h(__('cancel')) ?></button>
+        <button type="button" onclick="switchMode('view'); resetForm($(this).closest('form')); clearValidationErrors($(this).closest('form'));"><?= h(__('Cancel')) ?></button>
     <?= $this->Form->end() ?>
 </div>

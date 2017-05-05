@@ -41,7 +41,6 @@ class UsersTable extends Table
         parent::initialize($config);
 
         $this->setTable('users');
-//        $this->setDisplayField('id');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
@@ -91,7 +90,7 @@ class UsersTable extends Table
                 'tel' => [
                     'format' => '/^\d{1,20}$/'
                 ],
-                'account_status' => [],
+                'account_status' => []
             ]);
         }
 

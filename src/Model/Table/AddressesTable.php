@@ -1,10 +1,13 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use ArrayObject;
 
 /**
  * Addresses Model
@@ -20,6 +23,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Address findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \App\Model\Behavior\ValidationBehavior
  */
 class AddressesTable extends Table
 {
@@ -39,11 +43,69 @@ class AddressesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Validation');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        if ($options['validate']) {
+            $this->setValidationConfig([
+                'label' => [
+                    'maxLength' => 20
+                ],
+                'name' => [
+                    'maxLength' => 20
+                ],
+                'postcode' => [
+                    'format' => '/^\d{6}$/'
+                ],
+                'address' => [
+                    'maxLength' => 100
+                ],
+                'tel' => [
+                    'format' => '/^\d{1,20}$/'
+                ]
+            ]);
+        }
+
+        // 标签
+        if (array_key_exists('label', $data)) {
+
+        }
+
+        // 姓名
+        if (array_key_exists('name', $data)) {
+            // 全角字母空格转半角
+            $data['name'] = mb_convert_kana($data['name'], "rs");
+        }
+
+        // 邮政编码
+        if (array_key_exists('postcode', $data)) {
+            // 全角数字转半角
+            $data['postcode'] = mb_convert_kana($data['postcode'], "n");
+
+            // 短横杠、空格删除
+            $data['postcode'] = preg_replace('/[-\s]/', '', $data['postcode']);
+        }
+
+        // 地址
+        if (array_key_exists('address', $data)) {
+
+        }
+
+        // 电话号码
+        if (array_key_exists('tel', $data)) {
+            // 全角数字转半角
+            $data['tel'] = mb_convert_kana($data['tel'], "n");
+
+            // 短横杠、空格删除
+            $data['tel'] = preg_replace('/[-\s]/', '', $data['tel']);
+        }
     }
 
     /**
@@ -59,20 +121,49 @@ class AddressesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
+            ->requirePresence('label', 'create')
+            ->notEmpty('label', __d($this->getValidationConfig('locale'), 'Label cannot be left empty!'))
+            ->add('label', 'maxLength', [
+                'rule' => ['maxLength', $this->getValidationConfig('label.maxLength')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Label cannot be longer then {length} words!', ['length' => $this->getValidationConfig('label.maxLength')])
+            ]);
+
+        $validator
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->notEmpty('name', __d($this->getValidationConfig('locale'), 'Name cannot be left empty!'))
+            ->add('name', 'maxLength', [
+                'rule' => ['maxLength', $this->getValidationConfig('name.maxLength')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Name cannot be longer then {length} words!', ['length' => $this->getValidationConfig('name.maxLength')])
+            ]);
 
         $validator
             ->requirePresence('postcode', 'create')
-            ->notEmpty('postcode');
+            ->notEmpty('postcode', __d($this->getValidationConfig('locale'), 'Postcode cannot be left empty!'))
+            ->add('postcode', 'format', [
+                'rule' => ['custom', $this->getValidationConfig('postcode.format')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Please enter 6-digit half-size number!')
+            ]);
 
         $validator
             ->requirePresence('address', 'create')
-            ->notEmpty('address');
+            ->notEmpty('address', __d($this->getValidationConfig('locale'), 'Address cannot be left empty!'))
+            ->add('address', 'maxLength', [
+                'rule' => ['maxLength', $this->getValidationConfig('address.maxLength')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Address cannot be longer then {length} words!', ['length' => $this->getValidationConfig('address.maxLength')])
+            ]);
 
         $validator
             ->requirePresence('tel', 'create')
-            ->notEmpty('tel');
+            ->notEmpty('tel', __d($this->getValidationConfig('locale'), 'Tel cannot be left empty!'))
+            ->add('tel', 'format', [
+                'rule' => ['custom', $this->getValidationConfig('tel.format')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Invalid tel format!')
+            ]);
 
         return $validator;
     }

@@ -65,7 +65,9 @@ class AppView extends View
     {
         $style = &$this->_style;
         foreach (explode('.', $block) as $part) {
-            $style[$part] = null;
+            if (!isset($style[$part])) {
+                $style[$part] = null;
+            }
             $style = &$style[$part];
         }
 
