@@ -25,7 +25,6 @@ if (!isset($default)) {
 
 $this->patchDefault($default, $user->toArray());
 ?>
-
 <h3><?= h(__('Base Info')) ?></h3>
 <hr>
 
@@ -68,7 +67,7 @@ $this->patchDefault($default, $user->toArray());
             <tr>
                 <th><?= h(__('name')) ?></th>
                 <td>
-                    <?= $this->Form->control('name', ['type' => 'text', 'value' => $default['name'], 'data-default' => $default['name']]) ?>
+                    <?= $this->Form->control('name', ['type' => 'text', 'value' => $default['name'], 'data-default' => $user->name]) ?>
                     <?php if (isset($errors['name'])): ?>
                         <?= $this->element('validation', ['field' => 'name', 'error' => $errors['name']]) ?>
                     <?php endif; ?>
@@ -77,7 +76,7 @@ $this->patchDefault($default, $user->toArray());
             <tr>
                 <th><?= h(__('sex')) ?></th>
                 <td>
-                    <?= $this->Form->radio('sex', $sex, ['value' => $default['sex'], 'data-default' => $default['sex'], 'hiddenField' => false, 'required' => false]) ?>
+                    <?= $this->Form->radio('sex', $sex, ['value' => $default['sex'], 'data-default' => $user->sex_id, 'hiddenField' => false, 'required' => false]) ?>
                     <?php if (isset($errors['sex'])): ?>
                         <?= $this->element('validation', ['field' => 'sex', 'error' => $errors['sex']]) ?>
                     <?php endif; ?>
@@ -86,9 +85,9 @@ $this->patchDefault($default, $user->toArray());
             <tr>
                 <th><?= h(__('birthday')) ?></th>
                 <td>
-                    <?= $this->Form->control('birthday[year]', ['type' => 'text', 'value' => $default['birthday']['year'], 'data-default' => $default['birthday']['year'], 'placeholder' => __('year')]) ?>
-                    <?= $this->Form->control('birthday[month]', ['type' => 'text', 'value' => $default['birthday']['month'], 'data-default' => $default['birthday']['month'], 'placeholder' => __('month')]) ?>
-                    <?= $this->Form->control('birthday[day]', ['type' => 'text', 'value' => $default['birthday']['day'], 'data-default' => $default['birthday']['day'], 'placeholder' => __('day')]) ?>
+                    <?= $this->Form->control('birthday[year]', ['type' => 'text', 'value' => $default['birthday']['year'], 'data-default' => is_null($user->birthday)? '' : $user->birthday->year, 'placeholder' => __('year')]) ?>
+                    <?= $this->Form->control('birthday[month]', ['type' => 'text', 'value' => $default['birthday']['month'], 'data-default' => is_null($user->birthday)? '' : $user->birthday->month, 'placeholder' => __('month')]) ?>
+                    <?= $this->Form->control('birthday[day]', ['type' => 'text', 'value' => $default['birthday']['day'], 'data-default' => is_null($user->birthday)? '' : $user->birthday->day, 'placeholder' => __('day')]) ?>
                     <?php if (isset($errors['birthday'])): ?>
                         <?= $this->element('validation', ['field' => 'birthday', 'error' => $errors['birthday']]) ?>
                     <?php endif; ?>
@@ -97,7 +96,7 @@ $this->patchDefault($default, $user->toArray());
             <tr>
                 <th><?= h(__('postcode')) ?></th>
                 <td>
-                    <?= $this->Form->control('postcode', ['type' => 'text', 'value' => $default['postcode'], 'data-default' => $default['postcode']]) ?>
+                    <?= $this->Form->control('postcode', ['type' => 'text', 'value' => $default['postcode'], 'data-default' => $user->postcode]) ?>
                     <?php if (isset($errors['postcode'])): ?>
                         <?= $this->element('validation', ['field' => 'postcode', 'error' => $errors['postcode']]) ?>
                     <?php endif; ?>
@@ -106,7 +105,7 @@ $this->patchDefault($default, $user->toArray());
             <tr>
                 <th><?= h(__('address')) ?></th>
                 <td>
-                    <?= $this->Form->control('address', ['type' => 'text', 'value' => $default['address'], 'data-default' => $default['address']]) ?>
+                    <?= $this->Form->control('address', ['type' => 'text', 'value' => $default['address'], 'data-default' => $user->address]) ?>
                     <?php if (isset($errors['address'])): ?>
                         <?= $this->element('validation', ['field' => 'address', 'error' => $errors['address']]) ?>
                     <?php endif; ?>
@@ -115,7 +114,7 @@ $this->patchDefault($default, $user->toArray());
             <tr>
                 <th><?= h(__('tel')) ?></th>
                 <td>
-                    <?= $this->Form->control('tel', ['type' => 'text', 'value' => $default['tel'], 'data-default' => $default['tel']]) ?>
+                    <?= $this->Form->control('tel', ['type' => 'text', 'value' => $default['tel'], 'data-default' => $user->tel]) ?>
                     <?php if (isset($errors['tel'])): ?>
                         <?= $this->element('validation', ['field' => 'tel', 'error' => $errors['tel']]) ?>
                     <?php endif; ?>
@@ -124,6 +123,6 @@ $this->patchDefault($default, $user->toArray());
         </table>
 
         <button type="submit"><?= h(__('OK')) ?></button>
-        <button type="button" onclick="switchMode('view'); resetForm($(this).closest('form'));"><?= h(__('cancel')) ?></button>
+        <button type="button" onclick="switchMode('view'); resetForm($(this).closest('form')); clearValidationErrors($(this).closest('form'));"><?= h(__('cancel')) ?></button>
     <?= $this->Form->end() ?>
 </div>

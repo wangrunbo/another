@@ -55,3 +55,17 @@ function resetForm(form, fields) {
         })
     }
 }
+
+function clearValidationErrors(form, fields) {
+    if (form === undefined) {
+        form = $('body');
+    }
+
+    if (fields === undefined) {
+        $(form).find('.validation-error').remove()
+    } else {
+        $.each(fields, function (index, name) {
+            $(form).find('#validation-' + name + '.validation-error').remove()
+        })
+    }
+}
