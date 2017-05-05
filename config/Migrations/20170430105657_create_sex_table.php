@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateAddressesTable extends AbstractMigration
+class CreateSexTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -27,15 +27,32 @@ class CreateAddressesTable extends AbstractMigration
      */
     public function change()
     {
-        $addresses = $this->table('addresses');
-        $addresses->addColumn('name', 'string', ['limit' => 20, 'null' => false])
-            ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false])
-            ->addColumn('address', 'string', ['limit' => 100, 'null' => false])
-            ->addColumn('tel', 'string', ['limit' => 20, 'null' => false])
-            ->addColumn('user_id', 'integer', ['null' => false])
+        $sex = $this->table('sex');
+        $sex
+            ->addColumn('name', 'string', ['limit' => 255, 'null' => false])
+            ->addColumn('sort', 'integer', ['limit' => 11, 'null' => false])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP'])
-            ->addForeignKey('user_id', 'users', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->addColumn('deleted', 'timestamp', ['null' => true, 'default' => null])
+            ->addIndex(['name'], ['unique' => true])
+            ->addIndex(['sort'], ['unique' => true])
             ->create();
+
+        $sex->insert([
+            ['name' => '未设定', 'sort' => 1],
+            ['name' => '男', 'sort' => 2],
+            ['name' => '女', 'sort' => 3]
+        ])->save();
+
+        $user = $this->table('users');
+        $user
+            ->addColumn('sex_id', 'integer', ['null' => false, 'after' => 'name'])
+            ->save();
+
+        $this->execute('UPDATE users SET sex_id=1');
+
+        $user
+            ->addForeignKey('sex_id', 'sex', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->save();
     }
 }

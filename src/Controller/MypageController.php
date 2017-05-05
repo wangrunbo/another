@@ -2,11 +2,14 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\I18n\Time;
+use function PHPSTORM_META\type;
 
 /**
  * Class MypageController
  * @package App\Controller
  * @property \App\Model\Table\AddressesTable $Addresses
+ * @property \App\Model\Table\SexTable $Sex
  */
 class MypageController extends AppController
 {
@@ -22,22 +25,31 @@ class MypageController extends AppController
 
     public function myInfo()
     {
-        $this->request->allowMethod(['get', 'post']);
+        $this->request->allowMethod(['get', 'put']);
+        $this->loadModel('Sex');
 
-        $user = $this->Users->get($this->Auth->user('id'));
+        $user = $this->Users->get($this->Auth->user('id'), [
+            'contain' => ['Sex' => ['fields' => ['name']]]
+        ]);
 
-        if ($this->request->is('post')) {
-            $result = $this->Data->validate($this->request->getData(), $user);
+        if ($this->request->is('put')) {
+            $data = $this->request->getData();
+            $data['birthday'] = $data['birthday']['year'].$data['birthday']['month'].$data['birthday']['day'];
+
+            $result = $this->Data->validate($data, $user);
 
             if (empty($result['errors'])) {
                 $this->Users->save($user);
                 return $this->redirect(['action' => 'myInfo']);
             } else {
+                $result['default']['birthday'] = $this->request->getData('birthday');
+
                 $this->set($result);
             }
         }
 
-        $this->set(compact('user'));
+        $sex = $this->Sex->find('active')->select(['id', 'name'])->combine('id', 'name')->toArray();
+        $this->set(compact('user', 'sex'));
     }
 
     public function myAddresses($id = null)

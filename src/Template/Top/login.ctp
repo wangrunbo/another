@@ -21,7 +21,7 @@ $this->title(__('Login'))
 <?php endif; ?>
 
 <?= $this->Form->create() ?>
-    <?= $this->Form->control('email', ['type' => 'text', 'value' => $default['email'], 'placeholder' => __('email'), 'label' => false]) ?>
-    <?= $this->Form->control('password', ['type' => 'password', 'value' => "", 'placeholder' => __('password'), 'label' => false]) ?>
+    <?= $this->Form->control('email', ['type' => 'text', 'value' => $default['email'], 'placeholder' => __('email')]) ?>
+    <?= $this->Form->control('password', ['type' => 'password', 'value' => "", 'placeholder' => __('password')]) ?>
     <button type="submit"><?= h(__('login')) ?></button>
 <?= $this->Form->end() ?>

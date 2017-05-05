@@ -1,0 +1,7 @@
+#: src/Model/Behavior/SoftDeleteBehavior.php:33
+msgid "This record dose not exist."
+msgstr ""
+
+#: src/Model/Behavior/SoftDeleteBehavior.php:48
+msgid "Soft delete field dose not exist."
+msgstr ""

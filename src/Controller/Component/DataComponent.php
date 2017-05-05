@@ -17,8 +17,13 @@ class DataComponent extends Component
      * @var array
      */
     protected $_defaultConfig = [
-        'validate' => true,
-        'correct' => false
+        'validate' => [
+            'validate' => true,
+            'correct' => false,
+        ],
+        'completion' => [
+            'ignore' => []
+        ]
     ];
 
     /**
@@ -38,7 +43,7 @@ class DataComponent extends Component
         ];
 
         if (empty($options)) {
-            $options = $this->getConfig();
+            $options = $this->getConfig('validate');
         }
 
         TableRegistry::get($entity->getSource())->patchEntity($entity, $data, ['validate' => $options['validate']]);
@@ -64,13 +69,19 @@ class DataComponent extends Component
      * Entity数据补全
      *
      * @param \Cake\Datasource\EntityInterface $entity
+     * @param array $options
      */
-    public function completion($entity)
+    public function completion($entity, $options = [])
     {
+        if (empty($options)) {
+            $options = $this->getConfig('completion');
+        }
+
         $schema = TableRegistry::get($entity->getSource())->getSchema();
         foreach ($schema->columns() as $column) {
             if (
                 $entity->has($column)
+                || in_array($column, (array)$options['ignore'])
                 || in_array($column, $schema->primaryKey())
                 || array_key_exists($column, $schema->defaultValues())
                 || $schema->isNullable($column)

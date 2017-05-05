@@ -1,31 +1,48 @@
-#: src/Model/Table/UsersTable.php:93
+#: src/Model/Table/UsersTable.php:173
 msgid "Username cannot be left empty!"
 msgstr "用户名不能为空！"
-#: src/Model/Table/UsersTable.php:97
+#: src/Model/Table/UsersTable.php:177
 msgid "Username cannot be longer then {length} words!"
 msgstr "用户名须少于{length}字符！"
-#: src/Model/Table/UsersTable.php:103
+#: src/Model/Table/UsersTable.php:183
 msgid "This username had been used!"
 msgstr "该用户名已存在！"
-#: src/Model/Table/UsersTable.php:108
+#: src/Model/Table/UsersTable.php:189
 msgid "Email cannot be left empty!"
 msgstr "邮箱不能为空！"
-#: src/Model/Table/UsersTable.php:112
+#: src/Model/Table/UsersTable.php:193
 msgid "Email cannot be longer then {length} words!"
 msgstr "邮箱须少于{length}字符！"
-#: src/Model/Table/UsersTable.php:119
-#: src/Model/Table/UsersTable.php:125
+#: src/Model/Table/UsersTable.php:198;204
 msgid "This email cannot be used!"
 msgstr "无法使用该邮箱！"
-#: src/Model/Table/UsersTable.php:131
+#: src/Model/Table/UsersTable.php:210
 msgid "Password cannot be left empty!"
 msgstr "密码不能为空！"
-#: src/Model/Table/UsersTable.php:135
+#: src/Model/Table/UsersTable.php:214
 msgid "Please enter 8~20-digit half-size alphanumeric characters! At least one alphabet and one numeral should be contained!"
 msgstr "请输入8～20位半角英数字！至少包含１位字母与１位数字！"
-#: src/Model/Table/UsersTable.php:140
+#: src/Model/Table/UsersTable.php:219
 msgid "Please entry the password again!"
 msgstr "请再次输入密码！"
-#: src/Model/Table/UsersTable.php:144
+#: src/Model/Table/UsersTable.php:223
 msgid "The twice entered password is inconsistent!"
 msgstr "两次输入的密码不一致！"
+#: src/Model/Table/UsersTable.php:239
+msgid "Name cannot be longer then {length} words!"
+msgstr "姓名须少于{length}字符！"
+#: src/Model/Table/UsersTable.php:244
+msgid "Please select your sex!"
+msgstr "请选择您的性别！"
+#: src/Model/Table/UsersTable.php:251;256
+msgid "Invalid date format!"
+msgstr "日期格式错误！"
+#: src/Model/Table/UsersTable.php:266
+msgid "Please enter 6-digit half-size number!"
+msgstr "请输入6位半角数字！"
+#: src/Model/Table/UsersTable.php:266
+msgid "Address cannot be longer then {length} words!"
+msgstr "地址须少于{length}字符！"
+#: src/Model/Table/UsersTable.php:286
+msgid "Invalid tel format!"
+msgstr "电话号码格式错误！"

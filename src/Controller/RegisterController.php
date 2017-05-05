@@ -36,8 +36,11 @@ class RegisterController extends AppController
 
             $result = $this->Data->validate($this->request->getData(), $user, function () use ($user) {
                 $user->updateSecret();
+                $user->sex_id = \App\Model\Entity\Sex::NOT_SET;
                 $user->account_status_id = \App\Model\Entity\AccountStatus::STATUS_GENERAL;
-                $this->Data->completion($user);
+                $this->Data->completion($user, [
+                    'ignore' => array_keys($this->request->getData())
+                ]);
             });
 
             if (empty($result['errors'])) {

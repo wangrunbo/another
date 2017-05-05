@@ -14,14 +14,16 @@ use Cake\ORM\TableRegistry;
  * @property string $password
  * @property string $secret
  * @property string $name
+ * @property int $sex_id
  * @property \Cake\I18n\Time $birthday
  * @property string $postcode
  * @property string $address
  * @property string $tel
+ * @property int $account_status_id
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated
- * @property int $account_status_id
  *
+ * @property \App\Model\Entity\Sex $sex
  * @property \App\Model\Entity\AccountStatus $account_status
  * @property \App\Model\Entity\Address[] $addresses
  */
