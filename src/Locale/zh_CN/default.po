@@ -46,6 +46,7 @@ msgstr "联系我们"
 msgid "Mypage"
 msgstr "我的主页"
 #: src/Template/Element/Navi/mypage.ctp:9
+#: src/Template/Mypage/my_info.ctp:29
 msgid "Base Info"
 msgstr "基本信息"
 #: src/Template/Element/Navi/mypage.ctp:10
@@ -74,6 +75,7 @@ msgid "password_confirm"
 msgstr "密码确认"
 #: src/Template/Register/index.ctp:51
 #: src/Template/Mypage/my_info.ctp:81
+#: src/Template/Mypage/my_info.ctp:126
 msgid "OK"
 msgstr "确定"
 
@@ -84,3 +86,37 @@ msgstr "注册成功"
 #: src/Template/Top/login.ctp:26
 msgid "login"
 msgstr "登录"
+
+#: src/Template/Mypage/my_info.ctp:35;69
+msgid "name"
+msgstr "姓名"
+#: src/Template/Mypage/my_info.ctp:39;78
+msgid "sex"
+msgstr "性别"
+#: src/Template/Mypage/my_info.ctp:43;87
+msgid "birthday"
+msgstr "生日"
+#: src/Template/Mypage/my_info.ctp:49;98
+msgid "postcode"
+msgstr "邮政编码"
+#: src/Template/Mypage/my_info.ctp:53;107
+msgid "address"
+msgstr "地址"
+#: src/Template/Mypage/my_info.ctp:57;116
+msgid "tel"
+msgstr "电话号码"
+#: src/Template/Mypage/my_info.ctp:63
+msgid "edit"
+msgstr "编辑"
+#: src/Template/Mypage/my_info.ctp:89
+msgid "year"
+msgstr "年"
+#: src/Template/Mypage/my_info.ctp:90
+msgid "month"
+msgstr "月"
+#: src/Template/Mypage/my_info.ctp:91
+msgid "day"
+msgstr "日"
+#: src/Template/Mypage/my_info.ctp:127
+msgid "cancel"
+msgstr "取消"
