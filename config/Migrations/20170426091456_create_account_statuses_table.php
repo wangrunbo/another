@@ -1,5 +1,6 @@
 <?php
 
+use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
 class CreateAccountStatusesTable extends AbstractMigration
@@ -27,8 +28,9 @@ class CreateAccountStatusesTable extends AbstractMigration
      */
     public function change()
     {
-        $account_statuses = $this->table('account_statuses');
+        $account_statuses = $this->table('account_statuses', ['comment' => 'MTB.会员状态', 'id' => false, 'primary_key' => 'id']);
         $account_statuses
+            ->addColumn('id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'identity' => true])
             ->addColumn('name', 'string', ['limit' => 255, 'null' => false])
             ->addColumn('sort', 'integer', ['limit' => 11, 'null' => false])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP'])
@@ -37,23 +39,5 @@ class CreateAccountStatusesTable extends AbstractMigration
             ->addIndex(['name'], ['unique' => true])
             ->addIndex(['sort'], ['unique' => true])
             ->create();
-
-        $account_statuses->insert([
-            ['name' => '未激活', 'sort' => 1],
-            ['name' => '一般会员', 'sort' => 2],
-            ['name' => '锁定', 'sort' => 3],
-            ['name' => '删除', 'sort' => 4]
-        ])->save();
-
-        $user = $this->table('users');
-        $user
-            ->addColumn('account_status_id', 'integer', ['null' => false, 'after' => 'tel'])
-            ->save();
-
-        $this->execute('UPDATE users SET account_status_id=1');
-
-        $user
-            ->addForeignKey('account_status_id', 'account_statuses', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
-            ->save();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Phinx\Migration\AbstractMigration;
+use Phinx\Db\Adapter\MysqlAdapter;
 
 class CreateUsersTable extends AbstractMigration
 {
@@ -27,21 +28,26 @@ class CreateUsersTable extends AbstractMigration
      */
     public function change()
     {
-        $users = $this->table('users');
-        $users->addColumn('username', 'string', ['limit' => 20, 'null' => false])
-            ->addColumn('email', 'string', ['limit' => 100, 'null' => false])
-            ->addColumn('password', 'string', ['limit' => 255, 'null' => false])
-            ->addColumn('secret', 'string', ['limit' => 255, 'null' => false])
-            ->addColumn('name', 'string', ['limit' => 20, 'null' => false])
-            ->addColumn('birthday', 'datetime', ['null' => true])
-            ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false])
-            ->addColumn('address', 'string', ['limit' => 100, 'null' => false])
-            ->addColumn('tel', 'string', ['limit' => 20, 'null' => false])
-            ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP'])
-            ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP'])
+        $users = $this->table('users', ['comment' => '会员']);
+        $users
+            ->addColumn('username', 'string', ['limit' => 100, 'null' => false, 'comment' => '会员名'])
+            ->addColumn('email', 'string', ['limit' => 100, 'null' => false, 'comment' => '邮箱'])
+            ->addColumn('target_email', 'string', ['limit' => 100, 'null' => true, 'comment' => '待修改邮箱'])
+            ->addColumn('password', 'string', ['limit' => 20, 'null' => false, 'comment' => '密码'])
+            ->addColumn('secret_key', 'string', ['limit' => 255, 'null' => false, 'comment' => '密钥'])
+            ->addColumn('tel_cert_code', 'string', ['limit' => 6, 'null' => true, 'comment' => '手机验证码'])
+            ->addColumn('name', 'string', ['limit' => 100, 'null' => true, 'comment' => '姓名'])
+            ->addColumn('sex_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.性别'])
+            ->addColumn('birthday', 'datetime', ['null' => true, 'comment' => '生日'])
+            ->addColumn('postcode', 'string', ['limit' => 6, 'null' => true, 'comment' => '邮编'])
+            ->addColumn('address', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'comment' => '地址'])
+            ->addColumn('tel', 'string', ['limit' => 20, 'null' => true, 'comment' => '手机'])
+            ->addColumn('account_status_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'comment' => 'FK.会员状态'])
+            ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
+            ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
             ->addIndex(['username'], ['unique' => true])
             ->addIndex(['email'], ['unique' => true])
-            ->addIndex(['secret'], ['unique' => true])
+            ->addIndex(['secret_key'], ['unique' => true])
             ->create();
     }
 }

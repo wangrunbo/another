@@ -1,9 +1,8 @@
 <?php
 
 use Phinx\Migration\AbstractMigration;
-use Phinx\Db\Adapter\MysqlAdapter;
 
-class CreateAddressesTable extends AbstractMigration
+class CreateProductsTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,18 +27,21 @@ class CreateAddressesTable extends AbstractMigration
      */
     public function change()
     {
-        $addresses = $this->table('addresses', ['comment' => '地址信息']);
-        $addresses
-            ->addColumn('label', 'string', ['limit' => 20, 'null' => false, 'comment' => '地址标签'])
-            ->addColumn('name', 'string', ['limit' => 100, 'null' => false, 'comment' => '收件人'])
-            ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false, 'comment' => '邮编'])
-            ->addColumn('address', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => false, 'comment' => '地址'])
-            ->addColumn('tel', 'string', ['limit' => 20, 'null' => false, 'comment' => '联系电话'])
-            ->addColumn('user_id', 'integer', ['limit' => 11, 'null' => false, 'comment' => 'FK.会员'])
+        $users = $this->table('products', ['comment' => '商品']);
+        $users
+            ->addColumn('asin', 'string', ['limit' => 10, 'null' => false, 'comment' => 'ASIN code'])
+            ->addColumn('name', 'string', ['limit' => 255, 'null' => false, 'comment' => '商品名'])
+            ->addColumn('price', 'integer', ['limit' => 11, 'null' => false, 'comment' => '商品Amazon价格'])
+            ->addColumn('type', 'integer', ['limit' => \Phinx\Db\Adapter\MysqlAdapter::INT_SMALL, 'null' => false, 'comment' => 'FK.商品类型'])
+            ->addColumn('sale_start_date', 'datetime', ['null' => true, 'comment' => '贩卖开始日期'])
+            ->addColumn('stock_flg', 'boolean', ['null' => false, 'comment' => '库存状态'])
+            ->addColumn('standard', 'text', ['limit' => \Phinx\Db\Adapter\MysqlAdapter::TEXT_REGULAR, 'null' => true, 'comment' => '商品规格'])
+            ->addColumn('info', 'text', ['limit' => \Phinx\Db\Adapter\MysqlAdapter::TEXT_REGULAR, 'null' => true, 'comment' => '商品信息'])
+
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
             ->addColumn('deleted', 'timestamp', ['null' => true, 'default' => null, 'comment' => 'FLG.已删除'])
-            ->addForeignKey('user_id', 'users', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->addIndex(['asin'], ['unique' => true])
             ->create();
     }
 }
