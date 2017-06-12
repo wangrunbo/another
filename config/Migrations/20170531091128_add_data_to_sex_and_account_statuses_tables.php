@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class AddDataToMtb extends AbstractMigration
+class AddDataToSexAndAccountStatusesTables extends AbstractMigration
 {
     /**
      * Migrate Up.

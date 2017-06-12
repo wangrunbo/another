@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class AddForeignKeyToTables extends AbstractMigration
+class AddForeignKeyToTables1 extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,6 +28,7 @@ class AddForeignKeyToTables extends AbstractMigration
     public function change()
     {
         $user = $this->table('users');
+
         $this->execute('UPDATE users SET account_status_id=1, sex_id=1;');
 
         $user

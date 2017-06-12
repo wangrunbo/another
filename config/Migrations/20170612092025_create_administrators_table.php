@@ -1,9 +1,9 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
+use Phinx\Migration\AbstractMigration;
 
-class CreateUsersTable extends AbstractMigration
+class CreateAdministratorsTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,30 +28,21 @@ class CreateUsersTable extends AbstractMigration
      */
     public function change()
     {
-        $users = $this->table('users', ['comment' => '会员']);
-        $users
-            ->addColumn('uid', 'string', ['limit' => 12, 'null' => false, 'comment' => 'UID'])
-            ->addColumn('username', 'string', ['limit' => 100, 'null' => false, 'comment' => '会员名'])
-            ->addColumn('email', 'string', ['limit' => 100, 'null' => false, 'comment' => '邮箱'])
-            ->addColumn('target_email', 'string', ['limit' => 100, 'null' => true, 'comment' => '待修改邮箱'])
+        $administrators = $this->table('administrators', ['comment' => '管理员']);
+        $administrators
             ->addColumn('password', 'string', ['limit' => 20, 'null' => false, 'comment' => '密码'])
-            ->addColumn('secret_key', 'string', ['limit' => 255, 'null' => false, 'comment' => '密钥'])
-            ->addColumn('tel_cert_code', 'string', ['limit' => 6, 'null' => true, 'comment' => '手机验证码'])
             ->addColumn('name', 'string', ['limit' => 100, 'null' => true, 'comment' => '姓名'])
+            ->addColumn('email', 'string', ['limit' => 100, 'null' => false, 'comment' => '邮箱'])
             ->addColumn('sex_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.性别'])
             ->addColumn('birthday', 'datetime', ['null' => true, 'comment' => '生日'])
             ->addColumn('postcode', 'string', ['limit' => 6, 'null' => true, 'comment' => '邮编'])
             ->addColumn('address', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'comment' => '地址'])
             ->addColumn('tel', 'string', ['limit' => 20, 'null' => true, 'comment' => '手机'])
-            ->addColumn('account_status_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'comment' => 'FK.会员状态'])
             ->addColumn('note', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'default' => null, 'comment' => '备注'])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
-            ->addColumn('modifier_id', 'integer', ['limit' => 11, 'null' => true, 'default' => null, 'comment' => 'FK.最近更新者'])
-            ->addIndex(['uid'], ['unique' => true])
-            ->addIndex(['username'], ['unique' => true])
-            ->addIndex(['email'], ['unique' => true])
-            ->addIndex(['secret_key'], ['unique' => true])
+            ->addColumn('deleted', 'timestamp', ['null' => true, 'default' => null, 'comment' => 'FLG.已删除'])
+            ->addForeignKey('sex_id', 'sex', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->create();
     }
 }
