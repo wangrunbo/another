@@ -3,7 +3,7 @@
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-class CreateAccountStatusesTable extends AbstractMigration
+class CreateUserStatusesTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,8 +28,8 @@ class CreateAccountStatusesTable extends AbstractMigration
      */
     public function change()
     {
-        $account_statuses = $this->table('account_statuses', ['comment' => 'MTB.会员状态', 'id' => false, 'primary_key' => 'id']);
-        $account_statuses
+        $user_statuses = $this->table('user_statuses', ['comment' => 'MTB.会员状态', 'id' => false, 'primary_key' => 'id']);
+        $user_statuses
             ->addColumn('id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'identity' => true])
             ->addColumn('name', 'string', ['limit' => 255, 'null' => false])
             ->addColumn('sort', 'integer', ['limit' => 11, 'null' => false])

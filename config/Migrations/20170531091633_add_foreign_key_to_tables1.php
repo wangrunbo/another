@@ -29,10 +29,10 @@ class AddForeignKeyToTables1 extends AbstractMigration
     {
         $user = $this->table('users');
 
-        $this->execute('UPDATE users SET account_status_id=1, sex_id=1;');
+        $this->execute('UPDATE users SET user_status_id=1, sex_id=1;');
 
         $user
-            ->addForeignKey('account_status_id', 'account_statuses', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->addForeignKey('user_status_id', 'user_statuses', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->addForeignKey('sex_id', 'sex', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->update();
     }
