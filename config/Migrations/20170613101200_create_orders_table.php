@@ -3,7 +3,7 @@
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-class CreateAmazonAccountsTable extends AbstractMigration
+class CreateOrdersTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,20 +28,20 @@ class CreateAmazonAccountsTable extends AbstractMigration
      */
     public function change()
     {
-        $amazon_accounts = $this->table('amazon_accounts', ['comment' => '亚马逊帐号']);
-        $amazon_accounts
-            ->addColumn('email', 'string', ['limit' => '30', 'null' => false, 'comment' => '帐号'])
-            ->addColumn('password', 'string', ['limit' => 100, 'null' => false, 'comment' => '密码'])
-            ->addColumn('balance', 'integer', ['limit' => 11, 'null' => false, 'default' => 0, 'comment' => '余额'])
-            ->addColumn('amazon_account_status_id', 'integer', ['limit' => \Phinx\Db\Adapter\MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.帐号状态'])
-            ->addColumn('creator_id', 'integer', ['limit' => 11, 'null' => true, 'comment' => 'FK.添加者（管理员ID）'])
+        $orders = $this->table('orders', ['comment' => '交易信息']);
+        $orders
+            ->addColumn('user_id', 'integer', ['limit' => 11, 'null' => false, 'comment' => 'FK.会员'])
+            ->addColumn('name', 'string', ['limit' => 100, 'null' => false, 'comment' => '收件人'])
+            ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false, 'comment' => '邮编'])
+            ->addColumn('address', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => false, 'comment' => '地址'])
+            ->addColumn('tel', 'string', ['limit' => 20, 'null' => false, 'comment' => '联系电话'])
+            ->addColumn('order_status_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.交易状态'])
             ->addColumn('note', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'default' => null, 'comment' => '备注'])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
             ->addColumn('modifier_id', 'integer', ['limit' => 11, 'null' => true, 'default' => null, 'comment' => 'FK.最近更新者'])
-            ->addForeignKey('creator_id', 'administrators', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->addColumn('deleted', 'timestamp', ['null' => true, 'default' => null, 'comment' => 'FLG.已删除'])
             ->addForeignKey('modifier_id', 'administrators', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
-            ->addIndex(['email'], ['unique' => true])
             ->create();
     }
 }

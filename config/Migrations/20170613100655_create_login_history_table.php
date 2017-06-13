@@ -3,7 +3,7 @@
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-class CreateAmazonAccountsTable extends AbstractMigration
+class CreateLoginHistoryTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,20 +28,21 @@ class CreateAmazonAccountsTable extends AbstractMigration
      */
     public function change()
     {
-        $amazon_accounts = $this->table('amazon_accounts', ['comment' => '亚马逊帐号']);
-        $amazon_accounts
-            ->addColumn('email', 'string', ['limit' => '30', 'null' => false, 'comment' => '帐号'])
-            ->addColumn('password', 'string', ['limit' => 100, 'null' => false, 'comment' => '密码'])
-            ->addColumn('balance', 'integer', ['limit' => 11, 'null' => false, 'default' => 0, 'comment' => '余额'])
-            ->addColumn('amazon_account_status_id', 'integer', ['limit' => \Phinx\Db\Adapter\MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.帐号状态'])
-            ->addColumn('creator_id', 'integer', ['limit' => 11, 'null' => true, 'comment' => 'FK.添加者（管理员ID）'])
+        $login_history = $this->table('login_history', ['comment' => '登录历史']);
+        $login_history
+            ->addColumn('user_id', 'integer', ['limit' => 11, 'null' => false, 'comment' => 'FK.会员'])
+            ->addColumn('time', 'timestamp', ['null' => false, 'comment' => '登录时间'])
+            ->addColumn('ip', 'timestamp', ['null' => false, 'comment' => '登录IP'])
+            ->addColumn('os', 'timestamp', ['null' => false, 'comment' => '登录设备'])
+            ->addColumn('browser', 'timestamp', ['null' => false, 'comment' => '使用浏览器'])
+            ->addColumn('language', 'timestamp', ['null' => false, 'comment' => '浏览器语言'])
             ->addColumn('note', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'default' => null, 'comment' => '备注'])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
             ->addColumn('modifier_id', 'integer', ['limit' => 11, 'null' => true, 'default' => null, 'comment' => 'FK.最近更新者'])
-            ->addForeignKey('creator_id', 'administrators', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->addColumn('deleted', 'timestamp', ['null' => true, 'default' => null, 'comment' => 'FLG.已删除'])
+            ->addForeignKey('user_id', 'users', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->addForeignKey('modifier_id', 'administrators', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
-            ->addIndex(['email'], ['unique' => true])
             ->create();
     }
 }
