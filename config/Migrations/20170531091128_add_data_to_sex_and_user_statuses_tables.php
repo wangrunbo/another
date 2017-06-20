@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class AddDataToSexAndAccountStatusesTables extends AbstractMigration
+class AddDataToSexAndUserStatusesTables extends AbstractMigration
 {
     /**
      * Migrate Up.
@@ -16,7 +16,7 @@ class AddDataToSexAndAccountStatusesTables extends AbstractMigration
             ['name' => '女', 'sort' => 3]
         ])->saveData();
 
-        $account_statuses = $this->table('account_statuses');
+        $account_statuses = $this->table('user_statuses');
         $account_statuses->insert([
             ['name' => '未激活', 'sort' => 1],
             ['name' => '一般会员', 'sort' => 2],
@@ -30,6 +30,6 @@ class AddDataToSexAndAccountStatusesTables extends AbstractMigration
      */
     public function down()
     {
-        $this->execute('DELETE sex.*, account_statuses.* FROM sex, account_statuses;');
+        $this->execute('DELETE sex.*, user_statuses.* FROM sex, user_statuses;');
     }
 }

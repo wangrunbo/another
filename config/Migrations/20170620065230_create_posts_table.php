@@ -3,7 +3,7 @@
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-class CreateLoginHistoryTable extends AbstractMigration
+class CreatePostsTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,21 +28,24 @@ class CreateLoginHistoryTable extends AbstractMigration
      */
     public function change()
     {
-        $login_history = $this->table('login_history', ['comment' => '登录历史']);
-        $login_history
-            ->addColumn('user_id', 'integer', ['limit' => 11, 'null' => false, 'comment' => 'FK.会员'])
-            ->addColumn('time', 'timestamp', ['null' => false, 'comment' => '登录时间'])
-            ->addColumn('ip', 'string', ['limit' => 15, 'null' => false, 'comment' => '登录IP'])
-            ->addColumn('os', 'string', ['limit' => 45, 'null' => false, 'comment' => '登录设备'])
-            ->addColumn('browser', 'string', ['limit' => 45, 'null' => false, 'comment' => '使用浏览器'])
-            ->addColumn('language', 'string', ['limit' => 45, 'null' => false, 'comment' => '浏览器语言'])
+        $posts = $this->table('posts', ['comment' => '邮寄信息']);
+        $posts
+            ->addColumn('number', 'string', ['limit' => 13, 'null' => false, 'comment' => '邮单号'])
+            ->addColumn('delivery_type_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'comment' => 'FK.邮寄方法'])
+            ->addColumn('postage', 'integer', ['limit' => 11, 'null' => false, 'comment' => '邮费'])
+            ->addColumn('name', 'string', ['limit' => 100, 'null' => false, 'comment' => '收件人'])
+            ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false, 'comment' => '邮编'])
+            ->addColumn('address', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => false, 'comment' => '地址'])
+            ->addColumn('tel', 'string', ['limit' => 20, 'null' => false, 'comment' => '联系电话'])
+            ->addColumn('image', 'string', ['limit' => 20, 'null' => false, 'comment' => '邮单照片文件名'])
             ->addColumn('note', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'default' => null, 'comment' => '备注'])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
             ->addColumn('modifier_id', 'integer', ['limit' => 11, 'null' => true, 'default' => null, 'comment' => 'FK.最近更新者'])
             ->addColumn('deleted', 'timestamp', ['null' => true, 'default' => null, 'comment' => 'FLG.已删除'])
-            ->addForeignKey('user_id', 'users', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->addForeignKey('delivery_type_id', 'delivery_types', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->addForeignKey('modifier_id', 'administrators', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+            ->addIndex(['number'], ['unique' => true])
             ->create();
     }
 }

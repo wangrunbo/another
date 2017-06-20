@@ -35,12 +35,16 @@ class CreateOrdersTable extends AbstractMigration
             ->addColumn('postcode', 'string', ['limit' => 6, 'null' => false, 'comment' => '邮编'])
             ->addColumn('address', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => false, 'comment' => '地址'])
             ->addColumn('tel', 'string', ['limit' => 20, 'null' => false, 'comment' => '联系电话'])
+            ->addColumn('total_price', 'integer', ['limit' => 11, 'null' => false, 'comment' => 'Amazon付款总价（包含运费）'])
+            ->addColumn('amazon_postage', 'integer', ['limit' => 11, 'null' => false, 'default' => 0, 'comment' => 'Amazon运费'])
             ->addColumn('order_status_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.交易状态'])
+            ->addColumn('post_id', 'integer', ['limit' => 11, 'null' => true, 'comment' => 'FK.邮寄信息'])
             ->addColumn('note', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'default' => null, 'comment' => '备注'])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
             ->addColumn('modifier_id', 'integer', ['limit' => 11, 'null' => true, 'default' => null, 'comment' => 'FK.最近更新者'])
             ->addColumn('deleted', 'timestamp', ['null' => true, 'default' => null, 'comment' => 'FLG.已删除'])
+            ->addForeignKey('user_id', 'users', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->addForeignKey('modifier_id', 'administrators', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
             ->create();
     }
