@@ -52,3 +52,5 @@ custom styles.
 
 # Steps
 composer install
+
+copy .env.default to .env
