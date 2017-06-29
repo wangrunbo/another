@@ -18,8 +18,6 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\AccountStatus patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\AccountStatus[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\AccountStatus findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AccountStatusesTable extends Table
 {
@@ -37,8 +35,6 @@ class AccountStatusesTable extends Table
         $this->setTable('account_statuses');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-
-        $this->addBehavior('Timestamp');
 
         $this->hasMany('Users', [
             'foreignKey' => 'account_status_id'

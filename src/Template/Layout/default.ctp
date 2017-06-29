@@ -46,7 +46,7 @@
             <?php endif; ?>
             <li>
                 <?= $this->Form->create(null, ['url' => ['controller' => 'Products', 'action' => 'search'], 'type' => 'get']) ?>
-                    <input name="search" type="text" placeholder="<?= h(__('ASIN')) ?>" />
+                    <input name="s" type="text" placeholder="<?= h(__('ASIN')) ?>" />
                     <button type="submit"><?= h(__('search')) ?></button>
                 <?= $this->Form->end(); ?>
             </li>

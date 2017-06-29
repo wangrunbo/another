@@ -61,6 +61,20 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/top/*', ['controller' => 'Error']);
 
     /**
+     * Other routes configures
+     */
+    $routes->connect(
+        '/products/:asin/view',
+        ['controller' => 'Products', 'action' => 'view'],
+        ['asin' => '[A-Z0-9]{10}', 'pass' => ['asin']]
+    );
+
+    /**
+     * Disabled routes
+     */
+    $routes->connect('/products/view/*', ['controller' => 'Error']);
+
+    /**
      * Connect catchall routes for all controllers.
      *
      * Using the argument `DashedRoute`, the `fallbacks` method is a shortcut for

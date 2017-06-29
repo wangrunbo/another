@@ -104,7 +104,7 @@ class ValidationBehavior extends Behavior
         foreach ((array)$value as $v) {
             if (TableRegistry::get($table)
                 ->find($find, $options)
-                ->where(["$table.$column" => $v])
+                ->where(["{$table}.{$column}" => $v])
                 ->isEmpty()
             ) {
                 return false;

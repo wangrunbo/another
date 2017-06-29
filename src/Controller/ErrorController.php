@@ -43,7 +43,8 @@ class ErrorController extends AppController
     public function beforeFilter(Event $event)
     {
         $routes = [
-            '/top/*'
+            '/top/*',
+            '/products/view/*'
         ];
 
         if (in_array($this->request->getParam('_matchedRoute'), $routes)) {

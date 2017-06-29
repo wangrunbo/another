@@ -19,7 +19,6 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Sex[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Sex findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \App\Model\Behavior\SoftDeleteBehavior
  */
 class SexTable extends Table
@@ -39,7 +38,6 @@ class SexTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
         $this->addBehavior('SoftDelete');
 
         $this->hasMany('Users', [

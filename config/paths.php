@@ -83,3 +83,13 @@ define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'c
  */
 define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
 define('CAKE', CORE_PATH . 'src' . DS);
+
+/**
+ * 文件存储路径
+ */
+define('DOCS', CONFIG . 'docs' . DS);
+
+/**
+ * Amazon Crul用Cookie保存路径
+ */
+define('AMAZON_COOKIE', DOCS.'amazon_cookie');

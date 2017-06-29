@@ -4,6 +4,11 @@
  */
 const SITE = 'お兄ちゃんの萌屋';
 
+/**
+ * Amazon信息
+ */
+define('AMAZON_PRODUCT_PAGE_1', 'https://www.amazon.co.jp/dp/');
+define('AMAZON_PRODUCT_PAGE_2', '/ref=twister_dp_update?_encoding=UTF8&psc=1');
 
 /**
  * Session信息

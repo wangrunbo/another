@@ -24,7 +24,6 @@ use ArrayObject;
  * @method \App\Model\Entity\User[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\User findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \App\Model\Behavior\ValidationBehavior
  */
 class UsersTable extends Table
@@ -44,7 +43,6 @@ class UsersTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
         $this->addBehavior('Validation');
 
         $this->belongsTo('Sex', [
