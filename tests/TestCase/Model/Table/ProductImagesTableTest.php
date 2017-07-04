@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ProductsTable;
+use App\Model\Table\ProductImagesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ProductsTable Test Case
+ * App\Model\Table\ProductImagesTable Test Case
  */
-class ProductsTableTest extends TestCase
+class ProductImagesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ProductsTable
+     * @var \App\Model\Table\ProductImagesTable
      */
-    public $Products;
+    public $ProductImages;
 
     /**
      * Fixtures
@@ -24,6 +24,7 @@ class ProductsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.product_images',
         'app.products',
         'app.product_types',
         'app.users',
@@ -34,7 +35,6 @@ class ProductsTableTest extends TestCase
         'app.cart',
         'app.favourites',
         'app.order_details',
-        'app.product_images',
         'app.product_info'
     ];
 
@@ -46,8 +46,8 @@ class ProductsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Products') ? [] : ['className' => 'App\Model\Table\ProductsTable'];
-        $this->Products = TableRegistry::get('Products', $config);
+        $config = TableRegistry::exists('ProductImages') ? [] : ['className' => 'App\Model\Table\ProductImagesTable'];
+        $this->ProductImages = TableRegistry::get('ProductImages', $config);
     }
 
     /**
@@ -57,7 +57,7 @@ class ProductsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Products);
+        unset($this->ProductImages);
 
         parent::tearDown();
     }
@@ -78,16 +78,6 @@ class ProductsTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test validationCurl method
-     *
-     * @return void
-     */
-    public function testValidationCurl()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

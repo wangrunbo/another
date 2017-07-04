@@ -73,11 +73,9 @@ class DataComponent extends Component
      */
     public function completion($entity, $options = [])
     {
-        if (empty($options)) {
-            $options = $this->getConfig('completion');
-        }
+        $options += $this->getConfig('completion');
 
-        $schema = TableRegistry::get($entity->getSource())->getSchema();
+        $schema = TableRegistry::get((string)$entity->getSource())->getSchema();
         foreach ($schema->columns() as $column) {
             if (
                 $entity->has($column)
@@ -91,12 +89,17 @@ class DataComponent extends Component
 
             switch ($schema->columnType($column)) {
                 case 'string':
+                case 'text':
                     $value = '';
                     break;
                 case 'integer':
                     $value = 0;
                     break;
+                case 'boolean':
+                    $value = true;
+                    break;
                 case 'datetime':
+                case 'timestamp':
                     $value = Time::createFromTimestamp(0);
                     break;
                 default:

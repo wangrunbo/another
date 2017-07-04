@@ -7,11 +7,20 @@ use Cake\ORM\TableRegistry;
 
 /**
  * Amazon component
+ *
+ * @property \App\Controller\Component\DataComponent $Data
  */
 class AmazonComponent extends Component
 {
 
     const AMAZON_PRODUCT_SOLD_OUT = ['在庫切れ。'];
+
+    /**
+     * The other component used
+     *
+     * @var array
+     */
+    public $components = ['Data'];
 
     /**
      * Default configuration.
@@ -43,25 +52,29 @@ class AmazonComponent extends Component
      */
     public function get($asin)
     {
-        $html = $this->curl($asin);
+        $html = $this->_curl($asin);
 
         // 404 Not Found
         if (!$html || preg_match($this->getConfig('pattern.404'), $html)) {
             return null;
         }
-//        dump($html);exit;
+        dump($html);exit;
         /** @var \App\Model\Entity\Product $product */
         $product = TableRegistry::get('Products')->newEntity();
 
         $product->asin = $asin;
-//        $product->name = $this->extract($html, 'name');
-//        $product->price = $this->extract($html, 'price');
-//        $product->standard = $this->extract($html, 'standard');
-//        $product->image = $this->extract($html, 'image');
+        $product->name = $this->_extract($html, 'name');
+        $product->price = $this->_extract($html, 'price');
+        $product->standard = $this->_extract($html, 'standard');
         $product->product_type_id = 1; // TODO
         $product->sale_start_date = null; // TODO
-//        $product->stock_flg = !in_array($this->extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT);
-//        $product->info =
+        $product->stock_flg = !in_array($this->_extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT);
+        $product->description = '';  // TODO
+
+        $product->product_images = []; //TODO
+        $product->product_info = [];  // TODO
+
+        $this->Data->completion($product);
 
         return $product;
     }
@@ -72,7 +85,7 @@ class AmazonComponent extends Component
      * @param string|array $asins
      * @return string|array
      */
-    private function curl($asins)
+    protected function _curl($asins)
     {
         $curl = [];
         $html = [];
@@ -126,7 +139,7 @@ class AmazonComponent extends Component
      * @param string $part
      * @return mixed
      */
-    private function extract($html, $part)
+    protected function _extract($html, $part)
     {
         preg_match_all($this->getConfig("pattern.{$part}"), $html, $matches);
 
@@ -138,12 +151,14 @@ class AmazonComponent extends Component
                 }
                 break;
             case 'standard':
-                $result = @"{$matches[1][0]}&nbsp;{$matches[2][0]}";
+                $result = @"{$matches[1][0]} {$matches[2][0]}";
                 break;
             default:
                 $result = @$matches[1][0];
         }
-//dump($matches);exit;
+if ($part === 'description') {
+    dump($matches);exit;
+}
         return $result;
     }
 }

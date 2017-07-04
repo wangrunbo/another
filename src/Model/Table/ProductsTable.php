@@ -15,6 +15,8 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $Cart
  * @property \Cake\ORM\Association\HasMany $Favourites
  * @property \Cake\ORM\Association\HasMany $OrderDetails
+ * @property \Cake\ORM\Association\HasMany $ProductImages
+ * @property \Cake\ORM\Association\HasMany $ProductInfo
  *
  * @method \App\Model\Entity\Product get($primaryKey, $options = [])
  * @method \App\Model\Entity\Product newEntity($data = null, array $options = [])
@@ -69,6 +71,12 @@ class ProductsTable extends Table
         $this->hasMany('OrderDetails', [
             'foreignKey' => 'product_id'
         ]);
+        $this->hasMany('ProductImages', [
+            'foreignKey' => 'product_id'
+        ]);
+        $this->hasMany('ProductInfo', [
+            'foreignKey' => 'product_id'
+        ]);
     }
 
     /**
@@ -101,9 +109,6 @@ class ProductsTable extends Table
             ->allowEmpty('standard');
 
         $validator
-            ->allowEmpty('image');
-
-        $validator
             ->dateTime('sale_start_date')
             ->allowEmpty('sale_start_date');
 
@@ -113,10 +118,10 @@ class ProductsTable extends Table
             ->notEmpty('stock_flg');
 
         $validator
-            ->allowEmpty('info');
+            ->allowEmpty('description');
 
         $validator
-            ->allowEmpty('description');
+            ->allowEmpty('introduction');
 
         $validator
             ->boolean('blacklist_flg')

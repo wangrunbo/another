@@ -11,12 +11,11 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property int $price
  * @property string $standard
- * @property string $image
  * @property int $product_type_id
  * @property \Cake\I18n\Time $sale_start_date
  * @property bool $stock_flg
- * @property string $info
  * @property string $description
+ * @property string $introduction
  * @property int $searcher_id
  * @property int $creator_id
  * @property bool $blacklist_flg
@@ -35,6 +34,8 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Cart[] $cart
  * @property \App\Model\Entity\Favourite[] $favourites
  * @property \App\Model\Entity\OrderDetail[] $order_details
+ * @property \App\Model\Entity\ProductImage[] $product_images
+ * @property \App\Model\Entity\ProductInfo[] $product_info
  */
 class Product extends Entity
 {

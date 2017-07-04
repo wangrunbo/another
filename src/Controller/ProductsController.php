@@ -52,6 +52,7 @@ class ProductsController extends AppController
             dump($product);exit;
 
             if (!is_null($product)) {
+                $product->searcher_id = $this->Auth->user('id') ?? null;
                 $result = $this->Products->save($product, ['validate' => 'curl']);
 
                 if ($result === false) {
