@@ -31,7 +31,8 @@ class CreateProductImagesTable extends AbstractMigration
         $product_images = $this->table('product_images', ['comment' => '商品图像']);
         $product_images
             ->addColumn('product_id', 'integer', ['limit' => 11, 'null' => false, 'comment' => 'FK.商品'])
-            ->addColumn('src', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => false, 'comment' => '图像路径'])
+            ->addColumn('main', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => false, 'comment' => '大图像路径'])
+            ->addColumn('sub', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => false, 'comment' => '小图像路径'])
             ->addColumn('note', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'default' => null, 'comment' => '备注'])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])

@@ -8,7 +8,8 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $product_id
- * @property string $src
+ * @property string $main
+ * @property string $sub
  * @property string $note
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated

@@ -63,8 +63,12 @@ class ProductImagesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('src', 'create')
-            ->notEmpty('src');
+            ->requirePresence('main', 'create')
+            ->notEmpty('main');
+
+        $validator
+            ->requirePresence('sub', 'create')
+            ->notEmpty('sub');
 
         $validator
             ->allowEmpty('note');
