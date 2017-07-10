@@ -30,12 +30,16 @@ class AmazonComponent extends Component
     protected $_defaultConfig = [
         'pattern' => [
             '404' => '{<title>404 - ドキュメントが見つかりません。</title>}',
-            'name' => '{<title>Amazon \| (.+?) \|.*</title>}',
+            'name' => '{^<title>Amazon \| (.+?) \|.*</title>$}m',
             'price' => '{<span id="priceblock_ourprice" class="a-size-medium a-color-price">￥ (\d+,?[0-9,]+)</span>}',
-            'standard' => '{<div id="twisterContainer"(?:.|\n)*?<form id="twister"(?:.|\n)*?<div class="a-row">[\s\n]*<label>[\s\n]*(.+?)[\s\n]*</label>[\s\n]*<span class="selection">[\s\n]*(.+?)[\s\n]*</span>[\s\n]*</div>}',
+//            'standard' => '{<div id="twisterContainer"(?:.|\n)*?<form id="twister"(?:.|\n)*?<div class="a-row">[\s\n]*<label>[\s\n]*(.+?)[\s\n]*</label>[\s\n]*<span class="selection">[\s\n]*(.+?)[\s\n]*</span>[\s\n]*</div>}',  // TODO
+            'standard' => '{<div id="twisterContainer".*?<form id="twister".*?<div class="a-row">[\s\n]*?<label>[\s\n]*(.+?)[\s\n]*?</label>[\s\n]*?<span class="selection">[\s\n]*(.+?)[\s\n]*?</span>[\s\n]*?</div>}s',  // TODO
+            'product_type' => '',
+            'sale_start_date' => '',
             'image' => '{<div id="main-image-container"(?:.|\n)*?<li class=".*?itemNo0.*?selected.*?"(?:.|\n)*?<div id="imgTagWrapperId"(?:.|\n)*?<img .*? src="(.*?)" .*?>}',
-            'stock' => '{<div id="availability"(?:.|\n)*?<span.*?>[\s\n]*(.+?)[\s\n]*</span>(?=[\s\n]*<span.*?在庫状況</a>について</span>)}',
-//            'info' =>
+            'stock' => '{<div id="availability".*?<span.*?>[\s\n]*(.+?)[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
+            'description' => '{<div id="productDescription".*?<p>(.*?)[\n\t\s]*?</p>}s',
+            'info' => ''
         ]
     ];
 
@@ -58,7 +62,7 @@ class AmazonComponent extends Component
         if (!$html || preg_match($this->getConfig('pattern.404'), $html)) {
             return null;
         }
-        dump($html);exit;
+//        dump($html);exit;
         /** @var \App\Model\Entity\Product $product */
         $product = TableRegistry::get('Products')->newEntity();
 
@@ -69,7 +73,8 @@ class AmazonComponent extends Component
         $product->product_type_id = 1; // TODO
         $product->sale_start_date = null; // TODO
         $product->stock_flg = !in_array($this->_extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT);
-        $product->description = '';  // TODO
+        $product->description = $this->_extract($html, 'description');
+        dump($product);exit;
 
         $product->product_images = []; //TODO
         $product->product_info = [];  // TODO
@@ -151,14 +156,18 @@ class AmazonComponent extends Component
                 }
                 break;
             case 'standard':
-                $result = @"{$matches[1][0]} {$matches[2][0]}";
+                if (empty($matches[0])) {
+                    $result = null;
+                } else {
+                    $result = @"{$matches[1][0]} {$matches[2][0]}";
+                }
                 break;
             default:
                 $result = @$matches[1][0];
         }
-if ($part === 'description') {
-    dump($matches);exit;
-}
+//if ($part === 'stock') {
+//    dump($matches);exit;
+//}
         return $result;
     }
 }
