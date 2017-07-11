@@ -10,6 +10,7 @@ use Cake\Validation\Validator;
  * ProductInfo Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Products
+ * @property \Cake\ORM\Association\BelongsTo $ProductInfoTypes
  * @property \Cake\ORM\Association\BelongsTo $Administrators
  *
  * @method \App\Model\Entity\ProductInfo get($primaryKey, $options = [])
@@ -43,6 +44,10 @@ class ProductInfoTable extends Table
 
         $this->belongsTo('Products', [
             'foreignKey' => 'product_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('ProductInfoTypes', [
+            'foreignKey' => 'product_info_type_id',
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('Administrators', [
@@ -90,6 +95,7 @@ class ProductInfoTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['product_id'], 'Products'));
+        $rules->add($rules->existsIn(['product_info_type_id'], 'ProductInfoTypes'));
         $rules->add($rules->existsIn(['modifier_id'], 'Administrators'));
 
         return $rules;

@@ -4,24 +4,25 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * ProductInfo Entity
+ * Administrator Entity
  *
  * @property int $id
- * @property int $product_id
- * @property int $product_info_type_id
- * @property string $label
- * @property string $content
+ * @property string $password
+ * @property string $name
+ * @property string $email
+ * @property int $sex_id
+ * @property \Cake\I18n\Time $birthday
+ * @property string $postcode
+ * @property string $address
+ * @property string $tel
  * @property string $note
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated
- * @property int $modifier_id
  * @property \Cake\I18n\Time $deleted
  *
- * @property \App\Model\Entity\Product $product
- * @property \App\Model\Entity\ProductInfoType $product_info_type
- * @property \App\Model\Entity\Administrator $administrator
+ * @property \App\Model\Entity\Sex $sex
  */
-class ProductInfo extends Entity
+class Administrator extends Entity
 {
 
     /**
@@ -36,5 +37,14 @@ class ProductInfo extends Entity
     protected $_accessible = [
         '*' => true,
         'id' => false
+    ];
+
+    /**
+     * Fields that are excluded from JSON versions of the entity.
+     *
+     * @var array
+     */
+    protected $_hidden = [
+        'password'
     ];
 }

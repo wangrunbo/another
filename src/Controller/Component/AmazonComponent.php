@@ -13,7 +13,11 @@ use Cake\ORM\TableRegistry;
 class AmazonComponent extends Component
 {
 
+    /** 商品无法购买的情况 */
     const AMAZON_PRODUCT_SOLD_OUT = ['在庫切れ。'];
+
+    /** 不提取的商品信息 */
+    const AMAZON_IGNORE_INFO = ['おすすめ度', 'Amazon 売れ筋ランキング'];
 
     /**
      * The other component used
@@ -39,7 +43,10 @@ class AmazonComponent extends Component
             'image' => '{<div id="main-image-container"(?:.|\n)*?<li class=".*?itemNo0.*?selected.*?"(?:.|\n)*?<div id="imgTagWrapperId"(?:.|\n)*?<img .*? src="(.*?)" .*?>}',
             'stock' => '{<div id="availability".*?<span.*?>[\s\n]*(.+?)[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
             'description' => '{<div id="productDescription".*?<p>(.*?)[\n\t\s]*?</p>}s',
-            'info' => ''
+            'info' => [
+                '{<div class="column col\d+ ">.*?<div class="section techD">[\s\n]*?<div class="secHeader">[\s\n]*?<span>(.*?)</span>.*?(<table.*?>.*?</table>)(?:(?!<div id="prodDetails">).)*?(?=<div class="column col\d+ ">|<h2)(?!.*<div id="prodDetails">)}s',
+                '{<tr.*?>[\s\n]*?<td class=[\'"]label[\'"]>(.+?)</td>[\s\n]*?<td class=[\'"]value[\'"]>(.+?)</td>[\s\n]*?</tr>}s'
+            ]
         ]
     ];
 
@@ -66,21 +73,39 @@ class AmazonComponent extends Component
         /** @var \App\Model\Entity\Product $product */
         $product = TableRegistry::get('Products')->newEntity();
 
-        $product->asin = $asin;
-        $product->name = $this->_extract($html, 'name');
-        $product->price = $this->_extract($html, 'price');
-        $product->standard = $this->_extract($html, 'standard');
-        $product->product_type_id = 1; // TODO
-        $product->sale_start_date = null; // TODO
-        $product->stock_flg = !in_array($this->_extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT);
-        $product->description = $this->_extract($html, 'description');
-        dump($product);exit;
+        $product->asin = $asin;  // ASIN CODE
+        $product->name = $this->_extract($html, 'name');  // 商品名
+        $product->price = $this->_extract($html, 'price');  // 商品价格
+        $product->standard = $this->_extract($html, 'standard');  // 商品规格
+        $product->product_type_id = 1; // TODO 商品类型
+        $product->sale_start_date = null; // TODO 开始贩卖日
+        $product->stock_flg = !in_array($this->_extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT);  // 是否在库
+        $product->description = $this->_extract($html, 'description');  // 商品介绍
 
-        $product->product_images = []; //TODO
-        $product->product_info = [];  // TODO
+        // 商品情报
+        $product_info = [];
+        foreach ($this->_extract($html, 'info') as $type => $info) {
+            $product_info_type = TableRegistry::get('ProductInfoTypes')->find('active')->where(['name' => $type])->first();
+            if (is_null($product_info_type)) {
+                $product_info_type = TableRegistry::get('ProductInfoTypes')->newEntity(['name' => $type]);
+                $this->Data->completion($product_info_type);
+            }
+
+            foreach ($info as $label => $content) {
+                $product_info[] = [
+                    'label' => $label,
+                    'content' => $content,
+                    'product_info_type' => $product_info_type->toArray()
+                ];
+            }
+        }
+
+        $product->product_images = [];  // TODO
+        $product->product_info = TableRegistry::get('ProductInfo')->newEntities($product_info); //TODO
+
 
         $this->Data->completion($product);
-
+        dump($product);exit;
         return $product;
     }
 
@@ -142,11 +167,11 @@ class AmazonComponent extends Component
      *
      * @param string $html
      * @param string $part
-     * @return mixed
+     * @return string|array
      */
     protected function _extract($html, $part)
     {
-        preg_match_all($this->getConfig("pattern.{$part}"), $html, $matches);
+        preg_match_all(((array)$this->getConfig("pattern.{$part}"))[0], $html, $matches);
 
         switch ($part) {
             case 'price':
@@ -162,10 +187,25 @@ class AmazonComponent extends Component
                     $result = @"{$matches[1][0]} {$matches[2][0]}";
                 }
                 break;
+            case 'info':
+                $result = [];
+                if (($c = count($matches[1])) === count($matches[2])) {
+                    for ($i = 0; $i < $c; $i++) {
+                        preg_match_all($this->getConfig("pattern.info")[1], $matches[2][$i], $info);
+                        $result[$matches[1][$i]] = @array_combine($info[1], $info[2]);
+
+                        foreach (self::AMAZON_IGNORE_INFO as $ignore) {
+                            if (array_key_exists($ignore, $result[$matches[1][$i]])) {
+                                unset($result[$matches[1][$i]][$ignore]);
+                            }
+                        }
+                    }
+                }
+                break;
             default:
                 $result = @$matches[1][0];
         }
-//if ($part === 'stock') {
+//if ($part === 'info') {
 //    dump($matches);exit;
 //}
         return $result;

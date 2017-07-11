@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ProductInfoTable;
+use App\Model\Table\AdministratorsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ProductInfoTable Test Case
+ * App\Model\Table\AdministratorsTable Test Case
  */
-class ProductInfoTableTest extends TestCase
+class AdministratorsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ProductInfoTable
+     * @var \App\Model\Table\AdministratorsTable
      */
-    public $ProductInfo;
+    public $Administrators;
 
     /**
      * Fixtures
@@ -24,19 +24,11 @@ class ProductInfoTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.product_info',
-        'app.products',
-        'app.product_types',
-        'app.users',
-        'app.sex',
-        'app.account_statuses',
-        'app.addresses',
         'app.administrators',
-        'app.cart',
-        'app.favourites',
-        'app.order_details',
-        'app.product_images',
-        'app.product_info_types'
+        'app.sex',
+        'app.users',
+        'app.account_statuses',
+        'app.addresses'
     ];
 
     /**
@@ -47,8 +39,8 @@ class ProductInfoTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('ProductInfo') ? [] : ['className' => 'App\Model\Table\ProductInfoTable'];
-        $this->ProductInfo = TableRegistry::get('ProductInfo', $config);
+        $config = TableRegistry::exists('Administrators') ? [] : ['className' => 'App\Model\Table\AdministratorsTable'];
+        $this->Administrators = TableRegistry::get('Administrators', $config);
     }
 
     /**
@@ -58,7 +50,7 @@ class ProductInfoTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->ProductInfo);
+        unset($this->Administrators);
 
         parent::tearDown();
     }

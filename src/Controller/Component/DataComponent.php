@@ -16,15 +16,7 @@ class DataComponent extends Component
      *
      * @var array
      */
-    protected $_defaultConfig = [
-        'validate' => [
-            'validate' => true,
-            'correct' => false,
-        ],
-        'completion' => [
-            'ignore' => []
-        ]
-    ];
+    protected $_defaultConfig = [];
 
     /**
      * 数据验证
@@ -37,16 +29,17 @@ class DataComponent extends Component
      */
     public function validate($data, $entity, callable $callback = null, $options = [])
     {
+        $options += [
+            'validate' => true,
+            'correct' => false,
+        ];
+
         $result = [
             'errors' => [],
             'default' => $data
         ];
 
-        if (empty($options)) {
-            $options = $this->getConfig('validate');
-        }
-
-        TableRegistry::get($entity->getSource())->patchEntity($entity, $data, ['validate' => $options['validate']]);
+        TableRegistry::get((string)$entity->getSource())->patchEntity($entity, $data, ['validate' => $options['validate']]);
 
         if (!is_null($callback)) {
             $callback();
@@ -73,7 +66,14 @@ class DataComponent extends Component
      */
     public function completion($entity, $options = [])
     {
-        $options += $this->getConfig('completion');
+        $options += [
+            'ignore' => [],
+            'sort' => null
+        ];
+
+        if ($options['sort'] === true || (is_null($options['sort']) && $entity->isNew())) {
+            $this->autoSort($entity);
+        }
 
         $schema = TableRegistry::get((string)$entity->getSource())->getSchema();
         foreach ($schema->columns() as $column) {
@@ -107,6 +107,28 @@ class DataComponent extends Component
             }
 
             $entity->set($column, $value);
+        }
+    }
+
+    /**
+     * Entity自动排序
+     *
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param array $options
+     */
+    public function autoSort($entity, $options = [])
+    {
+        $table = TableRegistry::get((string)$entity->getSource());
+
+        if (method_exists($table, 'autoSort')) {
+            $table->autoSort($entity, $options);
+        } else {
+            $options += [];
+
+            if (!is_null($table->getSchema()->column('sort'))) {
+                $last = $table->find()->select('sort')->orderDesc('sort')->first()->sort;
+                $entity->set('sort', $last + 1);
+            }
         }
     }
 }

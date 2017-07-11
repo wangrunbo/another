@@ -37,6 +37,8 @@ class ProductsController extends AppController
 
     public function search()
     {
+//        dump($this->Products->newEntities([['name' => 'a'], ['name' => 'b']]));exit;
+
         $this->request->allowMethod('get');
         $this->autoRender = false;
         $this->loadComponent('Amazon');

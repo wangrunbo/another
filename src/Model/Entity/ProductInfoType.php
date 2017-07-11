@@ -4,24 +4,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * ProductInfo Entity
+ * ProductInfoType Entity
  *
  * @property int $id
- * @property int $product_id
- * @property int $product_info_type_id
- * @property string $label
- * @property string $content
- * @property string $note
+ * @property string $name
+ * @property int $sort
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated
- * @property int $modifier_id
  * @property \Cake\I18n\Time $deleted
  *
- * @property \App\Model\Entity\Product $product
- * @property \App\Model\Entity\ProductInfoType $product_info_type
- * @property \App\Model\Entity\Administrator $administrator
+ * @property \App\Model\Entity\ProductInfo[] $product_info
  */
-class ProductInfo extends Entity
+class ProductInfoType extends Entity
 {
 
     /**
