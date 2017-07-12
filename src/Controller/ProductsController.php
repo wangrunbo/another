@@ -37,7 +37,9 @@ class ProductsController extends AppController
 
     public function search()
     {
-//        dump($this->Products->newEntities([['name' => 'a'], ['name' => 'b']]));exit;
+//        $s = 'bbele0bbbbbsfrfrfrele1bkbkbkele2rfififiobbbbbele9bbb';
+//        preg_match_all("/(?<=s|ele\d)(?:(?!s).)*?(ele\d).*?(?=ele\d|o)/s", $s, $m);
+//        dump($m);exit;
 
         $this->request->allowMethod('get');
         $this->autoRender = false;
