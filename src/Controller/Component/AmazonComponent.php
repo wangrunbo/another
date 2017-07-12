@@ -43,7 +43,6 @@ class AmazonComponent extends Component
             'stock' => '{<div id="availability".*?<span.*?>[\s\n]*(.+?)[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
             'description' => '{<div id="productDescription".*?<p>(.*?)[\n\t\s]*?</p>}s',
             'images' => [
-                /**'container' => '{<script type="text/javascript">[\s\n]*maintainHeight = function\(\)\{.*?P\.when\(\'A\'\)\.register\("ImageBlockATF", function\(A\)\{[\s\n]*var data = \{[\s\n]*\'colorImages\': \{ \'initial\': \[(.*?)\]\},[\s\n]*\'colorToAsin\'</script>}s'**/
                 'container' => '{<script type="text/javascript">[\s\n]*maintainHeight = function\(\)\{.*?P\.when\(\'A\'\)\.register\("ImageBlockATF", function\(A\)\{[\s\n]*var data = \{[\s\n]*\'colorImages\': \{ \'initial\': \[(.*?)\]\},[\s\n]*\'colorToAsin\'.*?</script>}s'
             ],
             'info' => [
