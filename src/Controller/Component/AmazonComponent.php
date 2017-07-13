@@ -31,36 +31,46 @@ class AmazonComponent extends Component
      *
      * @var array
      */
-    protected $_defaultConfig = [
-        'pattern' => [
-            '404' => '{<title>404 - ドキュメントが見つかりません。</title>}',
-            'name' => '{^<title>Amazon \| (.+?) \|.*</title>$}m',
-            'price' => '{<span id="priceblock_ourprice" class="a-size-medium a-color-price">￥ (\d+,?[0-9,]+)</span>}',
-            'standard' => '{<div id="twisterContainer".*?<form id="twister".*?<div class="a-row">[\s\n]*?<label>[\s\n]*(.+?)[\s\n]*?</label>[\s\n]*?<span class="selection">[\s\n]*(.+?)[\s\n]*?</span>[\s\n]*?</div>}s',  // TODO
-            'product_type' => '',
-            'sale_start_date' => '',
-            'image' => '{<div id="main-image-container"(?:.|\n)*?<li class=".*?itemNo0.*?selected.*?"(?:.|\n)*?<div id="imgTagWrapperId"(?:.|\n)*?<img .*? src="(.*?)" .*?>}',
-            'stock' => '{<div id="availability".*?<span.*?>[\s\n]*(.+?)[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
-            'description' => '{<div id="productDescription".*?<p>(.*?)[\n\t\s]*?</p>}s',
-            'images' => [
-                'container' => '{<script type="text/javascript">[\s\n]*maintainHeight = function\(\)\{.*?P\.when\(\'A\'\)\.register\("ImageBlockATF", function\(A\)\{[\s\n]*var data = \{[\s\n]*\'colorImages\': \{ \'initial\': \[(.*?)\]\},[\s\n]*\'colorToAsin\'.*?</script>}s'
+    protected $_defaultConfig = [];
+
+    /**
+     * Amazon Element Pattern
+     *
+     * @var array
+     */
+    protected $_pattern = [
+        '404' => '{<title>404 - ドキュメントが見つかりません。</title>}',
+        'name' => '{^<title>Amazon \| (.+?) \|.*</title>$}m',
+        'price' => '{<span id="priceblock_ourprice" class="a-size-medium a-color-price">￥ (\d+,?[0-9,]+)</span>}',
+        'standard' => '{<div id="twisterContainer".*?<form id="twister".*?<div class="a-row">[\s\n]*?<label>[\s\n]*(.+?)[\s\n]*?</label>[\s\n]*?<span class="selection">[\s\n]*(.+?)[\s\n]*?</span>[\s\n]*?</div>}s',  // TODO
+        'product_type' => '',
+        'sale_start_date' => '',
+        'image' => '{<div id="main-image-container"(?:.|\n)*?<li class=".*?itemNo0.*?selected.*?"(?:.|\n)*?<div id="imgTagWrapperId"(?:.|\n)*?<img .*? src="(.*?)" .*?>}',
+        'stock' => '{<div id="availability".*?<span.*?>[\s\n]*(.+?)[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
+        'description' => '{<div id="productDescription".*?<p>(.*?)[\n\t\s]*?</p>}s',
+        'images' => [
+            'container' => '{<script type="text/javascript">.*?P\.when\(\'A\'\)\.register\("ImageBlockATF", function\(A\)\{[\s\n]*var data = \{[\s\n]*\'colorImages\': \{ \'initial\': \[(.*?)\]\},[\s\n]*\'colorToAsin\'.*?</script>}s',
+            'hiRes' => '/"hiRes":"?(.*?|null)"?(?=,(?=".*?":)|})/',
+            'thumb' => '/"thumb":"?(.*?|null)"?(?=,(?=".*?":)|})/',
+            'large' => '/"large":"?(.*?|null)"?(?=,(?=".*?":)|})/',
+            'main' => '/"main":({.*?}|null)(?=,(?=".*?":)|})/',
+            'pixels' => '/(?<={|,)"(.*?)":(\[\d+,\d+\])(?=,(?=".*?":)|})/'
+        ],
+        'info' => [
+            'container' => [
+                '{<div id="prodDetails">.*?<h2>商品の情報</h2>.*?<h2}s',
+                '{<div id="technicalSpecifications_feature_div".*?<h2>商品の詳細</h2>.*?<h2}s',
+                '{<div id="detail_bullets_id">.*?</table>.*?<h2}s'
             ],
-            'info' => [
-                'container' => [
-                    '{<div id="prodDetails">.*?<h2>商品の情報</h2>.*?<h2}s',
-                    '{<div id="technicalSpecifications_feature_div".*?<h2>商品の詳細</h2>.*?<h2}s',
-                    '{<div id="detail_bullets_id">.*?</table>.*?<h2}s'
-                ],
-                'section' => [
-                    '{<div class="column col\d+ ">.*?<div class="section techD">[\s\n]*?<div class="secHeader">[\s\n]*?<span>(.*?)</span>.*?(<table.*?>.*?</table>)}s',
-                    '{<div class="a-column.*?<h5.*?>(.*?)</h5>.*?(<table id="technicalSpecifications_section_\d+".*?</table>)}s',
-                    '{<table.*?<h2>(登録情報)[\r\s\n]*?</h2>.*?<div class="content">.*?<ul>(.*?)</ul>.*?</table>}s'
-                ],
-                'detail' => [
-                    '{<tr.*?>[\s\n]*?<td class=[\'"]label[\'"]>(.+?)</td>[\s\n]*?<td class=[\'"]value[\'"]>(.+?)</td>[\s\n]*?</tr>}s',
-                    '{<tr>[\s\n]*<th.*?>[\s\n]*(.*?)[\s\n]*</th>[\s\n]*<td.*?>[\s\n]*(.*?)[\s\n]*</td>[\s\n]*</tr>}s',
-                    '{<li><b>\s*(.*?)\s*(?:：|:)\s*</b>\s*(.*?)\s*</li>}s'
-                ]
+            'section' => [
+                '{<div class="column col\d+ ">.*?<div class="section techD">[\s\n]*?<div class="secHeader">[\s\n]*?<span>(.*?)</span>.*?(<table.*?>.*?</table>)}s',
+                '{<div class="a-column.*?<h5.*?>(.*?)</h5>.*?(<table id="technicalSpecifications_section_\d+".*?</table>)}s',
+                '{<table.*?<h2>(登録情報)[\r\s\n]*?</h2>.*?<div class="content">.*?<ul>(.*?)</ul>.*?</table>}s'
+            ],
+            'detail' => [
+                '{<tr.*?>[\s\n]*?<td class=[\'"]label[\'"]>(.+?)</td>[\s\n]*?<td class=[\'"]value[\'"]>(.+?)</td>[\s\n]*?</tr>}s',
+                '{<tr>[\s\n]*<th.*?>[\s\n]*(.*?)[\s\n]*</th>[\s\n]*<td.*?>[\s\n]*(.*?)[\s\n]*</td>[\s\n]*</tr>}s',
+                '{<li><b>\s*(.*?)\s*(?:：|:)\s*</b>\s*(.*?)\s*</li>}s'
             ]
         ]
     ];
@@ -78,13 +88,15 @@ class AmazonComponent extends Component
      */
     public function get($asin)
     {
-        $html = $this->_curl($asin);
+        $curl = $this->_curl($asin);
+        $http_code = $curl['http_code'];
+        $html = $curl['html'];
 
         // 404 Not Found
-        if (!$html || preg_match($this->getConfig('pattern.404'), $html)) {
+        if ($http_code !== 200 || !$html || preg_match($this->_pattern['404'], $html)) {
             return null;
         }
-//        dump($html);exit;
+
         /** @var \App\Model\Entity\Product $product */
         $product = TableRegistry::get('Products')->newEntity();
 
@@ -98,7 +110,16 @@ class AmazonComponent extends Component
         $product->description = $this->_extract($html, 'description');  // 商品介绍
 
         // 商品图像
-        $this->_extract($html, 'images');
+        $product_images = [];
+        $src = $this->_extract($html, 'images');
+        for ($i = 0; $i < count($src['main']); $i++) {
+            $product_image_data = [
+                'main' => $src['main'][$i] === 'null'? null : $src['main'][$i],
+                'sub' => $src['sub'][$i] === 'null'? null : $src['sub'][$i]
+            ];
+
+            $product_images[] = $this->Data->completion($product_image_data, ['table' => 'ProductImages']);
+        }
 
         // 商品情报
         $product_info = [];
@@ -113,20 +134,21 @@ class AmazonComponent extends Component
             }
 
             foreach ($info as $label => $content) {
-                $product_info[] = [
+                $product_info_data = [
                     'label' => $label,
                     'content' => $content,
                     'product_info_type_id' => $product_info_type->id
                 ];
+
+                $product_info[] = $this->Data->completion($product_info_data, ['table' => 'ProductInfo']);
             }
         }
 
-        $product->product_images = [];  // TODO
-        $product->product_info = TableRegistry::get('ProductInfo')->newEntities($product_info); //TODO
+        $product->product_images = TableRegistry::get('ProductImages')->newEntities($product_images);
+        $product->product_info = TableRegistry::get('ProductInfo')->newEntities($product_info);
 
         $this->Data->completion($product);
-//        dump(TableRegistry::get('Products')->save($product));exit;
-        dump($product);exit;
+
         return $product;
     }
 
@@ -134,12 +156,12 @@ class AmazonComponent extends Component
      * 使用ASIN CODE抓取Amazon商品页面
      *
      * @param string|array $asins
-     * @return string|array
+     * @return array
      */
     protected function _curl($asins)
     {
         $curl = [];
-        $html = [];
+        $result = [];
 
         $mh = curl_multi_init();
 
@@ -169,9 +191,15 @@ class AmazonComponent extends Component
 
         foreach ($curl as $asin => $ch) {
             if (is_array($asins)) {
-                $html[$asin] = curl_multi_getcontent($ch);
+                $result[$asin] = [
+                    'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+                    'html' => curl_multi_getcontent($ch)
+                ];
             } else {
-                $html = curl_multi_getcontent($ch);
+                $result = [
+                    'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+                    'html' => curl_multi_getcontent($ch)
+                ];
             }
 
             curl_multi_remove_handle($mh, $ch);
@@ -180,7 +208,7 @@ class AmazonComponent extends Component
 
         curl_multi_close($mh);
 
-        return $html;
+        return $result;
     }
 
     /**
@@ -194,7 +222,7 @@ class AmazonComponent extends Component
     {
         switch ($part) {
             case 'price':
-                preg_match_all($this->getConfig("pattern.price"), $html, $matches);
+                preg_match_all($this->_pattern['price'], $html, $matches);
 
                 $result = @$matches[1][0];
                 if (!is_null($result)) {
@@ -202,7 +230,7 @@ class AmazonComponent extends Component
                 }
                 break;
             case 'standard':
-                preg_match_all($this->getConfig("pattern.standard"), $html, $matches);
+                preg_match_all($this->_pattern['standard'], $html, $matches);
 
                 if (empty($matches[0])) {
                     $result = null;
@@ -211,17 +239,30 @@ class AmazonComponent extends Component
                 }
                 break;
             case 'images':
-                preg_match_all($this->getConfig("pattern.images.container"), $html, $matches);
+                preg_match_all($this->_pattern['images']['container'], $html, $container);
+                preg_match_all($this->_pattern['images']['large'], @$container[1][0], $main);
+                preg_match_all($this->_pattern['images']['thumb'], @$container[1][0], $sub);
 
+                if (count($main[1]) === count($sub[1])) {
+                    $result = [
+                        'main' => $main[1],
+                        'sub' => $sub[1]
+                    ];
+                } else {
+                    $result = [
+                        'main' => [],
+                        'sub' => []
+                    ];
+                }
                 break;
             case 'info':
                 $result = [];
-                for ($index = 0; $index < count($this->getConfig("pattern.info.container")); $index++) {
-                    $match = preg_match($this->getConfig("pattern.info.container")[$index], $html, $container);
+                for ($index = 0; $index < count($this->_pattern['info']['container']); $index++) {
+                    $match = preg_match($this->_pattern['info']['container'][$index], $html, $container);
                     if ($match) {
-                        $match = preg_match_all($this->getConfig("pattern.info.section")[$index], $container[0], $sections);
+                        $match = preg_match_all($this->_pattern['info']['section'][$index], $container[0], $sections);
                         for ($i = 0; $i < $match; $i++) {
-                            preg_match_all($this->getConfig("pattern.info.detail")[$index], $sections[2][$i], $info);
+                            preg_match_all($this->_pattern['info']['detail'][$index], $sections[2][$i], $info);
                             $result[$sections[1][$i]] = array_combine($info[1], $info[2]);
 
                             foreach (self::AMAZON_IGNORE_INFO as $ignore) {
@@ -234,13 +275,11 @@ class AmazonComponent extends Component
                 }
                 break;
             default:
-                preg_match_all($this->getConfig("pattern.{$part}"), $html, $matches);
+                preg_match_all($this->_pattern[$part], $html, $matches);
 
                 $result = @$matches[1][0];
         }
-if ($part === 'images') {
-    dump($matches);exit;
-}
+
         return $result;
     }
 }

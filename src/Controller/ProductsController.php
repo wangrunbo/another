@@ -24,39 +24,61 @@ class ProductsController extends AppController
 
     public function index()
     {
-        return $this->redirect(['action' => 'view', 'QWERASDFZX']);
+        return $this->render('not_exist');
     }
 
+    /**
+     * 商品检索结果
+     *
+     * @param string|null $asin
+     * @return \Cake\Http\Response
+     */
     public function view($asin = null)
     {
         $this->request->allowMethod('get');
         if (is_null($asin)) throw new NotFoundException();
 
-        dump($asin);exit;
+        $Product = $this->Products->find('active')
+            ->where(['asin' => $asin])
+            ->contain(['ProductTypes', 'ProductImages', 'ProductInfo' => ['ProductInfoTypes']]);
+
+        if ($Product->isEmpty()) {
+            $this->set(compact('asin'));
+
+            return $this->render('not_exist');
+        }
+
+        /** @var \App\Model\Entity\Product $product */
+        $product = $Product->first();
+
+        $product->searched_times += 1;
+
+        $this->Products->save($product);
+
+        $this->set(compact('product'));
     }
 
     public function search()
     {
-//        $s = 'bbele0bbbbbsfrfrfrele1bkbkbkele2rfififiobbbbbele9bbb';
-//        preg_match_all("/(?<=s|ele\d)(?:(?!s).)*?(ele\d).*?(?=ele\d|o)/s", $s, $m);
-//        dump($m);exit;
-
         $this->request->allowMethod('get');
         $this->autoRender = false;
         $this->loadComponent('Amazon');
 
         $search = $this->request->getQuery('s');
-        $asin = $search;
+        $asin = strtoupper($search);
+
+        if (empty($asin)) {
+            return $this->redirect(['action' => 'index']);
+        }
 
         $Product = $this->Products->find('active')->where(['Products.asin' => $asin]);
 
         if ($Product->isEmpty()) {
-            // achive amazon
+            // 访问Amazon搜索商品
             $product = $this->Amazon->get($asin);
-            dump($product);exit;
 
             if (!is_null($product)) {
-                $product->searcher_id = $this->Auth->user('id') ?? null;
+                $product->searcher_id = $this->Auth->user('id');
                 $result = $this->Products->save($product, ['validate' => 'curl']);
 
                 if ($result === false) {

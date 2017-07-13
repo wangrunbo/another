@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 use Cake\Controller\Component;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
+use Symfony\Component\Config\Definition\Exception\UnsetKeyException;
 
 /**
  * Data component
@@ -61,15 +62,28 @@ class DataComponent extends Component
     /**
      * Entity数据补全
      *
-     * @param \Cake\Datasource\EntityInterface $entity
+     * @param array|\Cake\Datasource\EntityInterface $entity
      * @param array $options
+     * @return array|\Cake\Datasource\EntityInterface
+     * @throws UnsetKeyException
      */
-    public function completion($entity, $options = [])
+    public function completion(&$entity, $options = [])
     {
         $options += [
+            'table' => null,
             'ignore' => [],
             'sort' => null
         ];
+
+        $is_array = is_array($entity);
+
+        if ($is_array) {
+            if (is_null($options['table'])) {
+                throw new UnsetKeyException(__d('exception', 'Missing argument "table" in your options.'));
+            }
+
+            $entity = TableRegistry::get($options['table'])->newEntity($entity, ['validate' => false]);
+        }
 
         if ($options['sort'] === true || (is_null($options['sort']) && $entity->isNew())) {
             $this->autoSort($entity);
@@ -81,6 +95,7 @@ class DataComponent extends Component
                 $entity->has($column)
                 || in_array($column, (array)$options['ignore'])
                 || in_array($column, $schema->primaryKey())
+                || in_array($column, $schema->indexes())  // 避免自动插入外键
                 || array_key_exists($column, $schema->defaultValues())
                 || $schema->isNullable($column)
             ) {
@@ -108,6 +123,12 @@ class DataComponent extends Component
 
             $entity->set($column, $value);
         }
+
+        if ($is_array) {
+            $entity = $entity->toArray();
+        }
+
+        return $entity;
     }
 
     /**

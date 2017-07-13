@@ -5,3 +5,7 @@ msgstr ""
 #: src/Model/Behavior/SoftDeleteBehavior.php:48
 msgid "Soft delete field dose not exist."
 msgstr ""
+
+#: src/Controller/Component/DataComponent.php:80
+msgid "Missing argument \"table\" in your options."
+msgstr ""

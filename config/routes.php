@@ -66,7 +66,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect(
         '/products/:asin/view',
         ['controller' => 'Products', 'action' => 'view'],
-        ['asin' => '[A-Z0-9]{10}', 'pass' => ['asin']]
+        ['pass' => ['asin']]
     );
 
     /**
