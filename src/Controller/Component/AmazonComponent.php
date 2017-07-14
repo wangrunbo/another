@@ -3,6 +3,7 @@ namespace App\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -43,8 +44,11 @@ class AmazonComponent extends Component
         'name' => '{^<title>Amazon \| (.+?) \|.*</title>$}m',
         'price' => '{<span id="priceblock_ourprice" class="a-size-medium a-color-price">￥ (\d+,?[0-9,]+)</span>}',
         'standard' => '{<div id="twisterContainer".*?<form id="twister".*?<div class="a-row">[\s\n]*?<label>[\s\n]*(.+?)[\s\n]*?</label>[\s\n]*?<span class="selection">[\s\n]*(.+?)[\s\n]*?</span>[\s\n]*?</div>}s',  // TODO
-        'product_type' => '',
-        'sale_start_date' => '',
+        'product_type' => [
+            'add-on' => '{<div id="addOnItem_feature_div".*?<i class="a-icon a-icon-addon">あわせ買い対象商品</i>}s',
+            'pre-sell' => '{<input id="add-to-cart-button".*?value="予約注文する".*?>}s'
+        ],
+        'sale_start_date' => '{<div id="availability".*?<span.*?>[\s\n]*発売予定日は(\d+年\d+月\d+日)です。[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
         'image' => '{<div id="main-image-container"(?:.|\n)*?<li class=".*?itemNo0.*?selected.*?"(?:.|\n)*?<div id="imgTagWrapperId"(?:.|\n)*?<img .*? src="(.*?)" .*?>}',
         'stock' => '{<div id="availability".*?<span.*?>[\s\n]*(.+?)[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
         'description' => '{<div id="productDescription".*?<p>(.*?)[\n\t\s]*?</p>}s',
@@ -104,8 +108,8 @@ class AmazonComponent extends Component
         $product->name = $this->_extract($html, 'name');  // 商品名
         $product->price = $this->_extract($html, 'price');  // 商品价格
         $product->standard = $this->_extract($html, 'standard');  // 商品规格
-        $product->product_type_id = 1; // TODO 商品类型
-        $product->sale_start_date = null; // TODO 开始贩卖日
+        $product->product_type_id = $this->_extract($html, 'product_type'); // 商品类型
+        $product->sale_start_date = $this->_extract($html, 'sale_start_date'); // 开始贩卖日
         $product->stock_flg = !in_array($this->_extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT);  // 是否在库
         $product->description = $this->_extract($html, 'description');  // 商品介绍
 
@@ -237,6 +241,26 @@ class AmazonComponent extends Component
                 } else {
                     $result = @"{$matches[1][0]} {$matches[2][0]}";
                 }
+                break;
+            case 'product_type':
+                if (preg_match($this->_pattern['product_type']['add-on'], $html)) {
+                    $result = \App\Model\Entity\ProductType::ADD_ON;
+                } elseif (preg_match($this->_pattern['product_type']['pre-sell'], $html)) {
+                    $result = \App\Model\Entity\ProductType::PRE_SELL;
+                } else {
+                    $result = \App\Model\Entity\ProductType::NORMAL;
+                }
+
+                break;
+            case 'sale_start_date':
+                preg_match_all($this->_pattern['sale_start_date'], $html, $matches);
+
+                if (empty($matches[1])) {
+                    $result = null;
+                } else {
+                    $result = Time::createFromFormat('Y年m月d日', $matches[1][0])->setTime(0, 0, 0);
+                }
+
                 break;
             case 'images':
                 preg_match_all($this->_pattern['images']['container'], $html, $container);

@@ -18,34 +18,48 @@
     </div>
 
     <div>
-        商品名：<?= $product->name ?>
-        ASIN：<?= $product->asin ?>
-        价格：<?= $product->price ?>日元
+        <p>商品名：<?= $product->name ?></p>
+        <p>ASIN：<?= $product->asin ?></p>
+        <p>价格：<?= $product->price ?>日元</p>
+        <p>商品类型：<?= $product->product_type->name ?></p>
+
+        <?php if (!is_null($product->sale_start_date)): ?>
+            <p>开始贩卖日：<?= $product->sale_start_date->format(app_config('Display.format.date')) ?></p>
+        <?php endif; ?>
 
         <?php if (!is_null($product->standard)): ?>
-            <?= $product->standard ?>
+            <p><?= $product->standard ?></p>
         <?php endif; ?>
 
         <?php if (!empty($product->product_info)): ?>
-            商品信息：
-            <table>
-                <?php foreach ($product->product_info as $product_info): ?>
-                    <tr>
-                        <th><?= $product_info->label ?></th>
-                        <td><?= $product_info->content ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </table>
+            <hr />
+            商品信息：<br />
+            <?php foreach ($product->grouped_info as $info_type => $info_details): ?>
+                <?= $info_type ?>
+                <table>
+                    <?php foreach ($info_details as $product_info): ?>
+                        <tr>
+                            <th><?= $product_info->label ?></th>
+                            <td><?= $product_info->content ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endforeach; ?>
         <?php endif; ?>
 
         <?php if (!is_null($product->description)): ?>
-            商品介绍：<?= $product->description ?>
+            <hr />
+            商品介绍：<br />
+            <?= $product->description ?>
         <?php endif; ?>
 
         <?php if (!is_null($product->introduction)): ?>
+            <hr />
             推荐：<?= $product->introduction ?>
         <?php endif; ?>
     </div>
 
-    <a href="<?= AMAZON_PRODUCT_PAGE_1.$product->asin.AMAZON_PRODUCT_PAGE_2 ?>">去Amazon确认</a>
+    <hr />
+
+    <a href="<?= AMAZON_PRODUCT_PAGE_1.$product->asin.AMAZON_PRODUCT_PAGE_2 ?>" target="_blank">去Amazon确认</a>
 </div>

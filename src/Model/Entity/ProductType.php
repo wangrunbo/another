@@ -2,31 +2,27 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 
 /**
- * ProductInfo Entity
+ * ProductType Entity
  *
  * @property int $id
- * @property int $product_id
- * @property int $product_info_type_id
- * @property string $label
- * @property string $content
- * @property string $note
+ * @property string $name
+ * @property int $sort
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated
- * @property int $modifier_id
  * @property \Cake\I18n\Time $deleted
  *
- * @property \App\Model\Entity\Product $product
- * @property \App\Model\Entity\ProductInfoType $product_info_type
- * @property \App\Model\Entity\Administrator $administrator
- *
- * @property string $type
+ * @property \App\Model\Entity\OrderDetail[] $order_details
+ * @property \App\Model\Entity\Product[] $products
  */
-class ProductInfo extends Entity
+class ProductType extends Entity
 {
 
+    const NORMAL = 1;  // 通常商品
+    const PRE_SELL = 2;  // 预约商品
+    const ADD_ON = 3;  // あわせ買い商品
+    
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -40,9 +36,4 @@ class ProductInfo extends Entity
         '*' => true,
         'id' => false
     ];
-
-    protected function _getType()
-    {
-        return TableRegistry::get('ProductInfoTypes')->get($this->product_info_type_id)->name;
-    }
 }

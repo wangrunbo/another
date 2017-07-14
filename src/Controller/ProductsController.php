@@ -40,7 +40,7 @@ class ProductsController extends AppController
 
         $Product = $this->Products->find('active')
             ->where(['asin' => $asin])
-            ->contain(['ProductTypes', 'ProductImages', 'ProductInfo' => ['ProductInfoTypes']]);
+            ->contain(['ProductTypes', 'ProductImages', 'ProductInfo']);
 
         if ($Product->isEmpty()) {
             $this->set(compact('asin'));

@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * Product Entity
@@ -36,6 +37,8 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\OrderDetail[] $order_details
  * @property \App\Model\Entity\ProductImage[] $product_images
  * @property \App\Model\Entity\ProductInfo[] $product_info
+ *
+ * @property array $grouped_info
  */
 class Product extends Entity
 {
@@ -53,4 +56,25 @@ class Product extends Entity
         '*' => true,
         'id' => false
     ];
+
+    /**
+     * 将商品情报以商品情报类型进行分组
+     */
+    protected function _getGroupedInfo()
+    {
+        if (!$this->has('product_info')) {
+            TableRegistry::get('Products')->loadInto($this, ['ProductInfo']);
+        }
+
+        $info = [];
+        foreach ($this->product_info as $product_info) {
+            if (!array_key_exists($product_info->type, $info)) {
+                $info[$product_info->type] = [];
+            }
+
+            $info[$product_info->type][] = $product_info;
+        }
+
+        return $info;
+    }
 }
