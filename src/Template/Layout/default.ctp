@@ -18,11 +18,11 @@
     </title>
 
     <link rel="shortcut icon" href="">
-    <?= $this->Html->css('main.css') ?>
+    <?= $this->Html->css('style') ?>
     <?= $this->fetch('css') ?>
 
     <?= $this->Html->script('https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js') ?>
-    <?= $this->Html->script('main') ?>
+    <?= $this->Html->script('script') ?>
     <?= $this->fetch('script') ?>
 </head>
 

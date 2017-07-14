@@ -41,7 +41,7 @@ class AmazonComponent extends Component
      */
     protected $_pattern = [
         '404' => '{<title>404 - ドキュメントが見つかりません。</title>}',
-        'name' => '{^<title>Amazon \| (.+?) \|.*</title>$}m',
+        'name' => '{^<title>(?:Amazon|Amazon\.co\.jp)\s*(?:：|:|\|)\s*(.+?)\s*(?:：|:|\|).*</title>$}m',
         'price' => '{<span id="priceblock_ourprice" class="a-size-medium a-color-price">￥ (\d+,?[0-9,]+)</span>}',
         'standard' => '{<div id="twisterContainer".*?<form id="twister".*?<div class="a-row">[\s\n]*?<label>[\s\n]*(.+?)[\s\n]*?</label>[\s\n]*?<span class="selection">[\s\n]*(.+?)[\s\n]*?</span>[\s\n]*?</div>}s',  // TODO
         'product_type' => [

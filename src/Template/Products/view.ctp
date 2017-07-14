@@ -3,28 +3,36 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Product $product
  */
+$this->title($product->name);
+$this->Html->script('Products/view', ['block' => true]);
 ?>
 <div>
     <div>
-        <?php foreach ($product->product_images as $product_image): ?>
-            <div>
-                <img src="<?= $product_image->sub ?>" />
-            </div>
+        <ul>
+            <?php foreach ($product->product_images as $index => $product_image): ?>
+                <div>
+                    <img src="<?= $product_image->sub ?>" onclick="switchImage(<?= $index ?>)" />
+                </div>
+            <?php endforeach; ?>
+        </ul>
 
-            <div>
+        <div>
+        <?php foreach ($product->product_images as $index => $product_image): ?>
+
                 <img src="<?= $product_image->main ?>" />
-            </div>
+
         <?php endforeach; ?>
+        </div>
     </div>
 
     <div>
-        <p>商品名：<?= $product->name ?></p>
-        <p>ASIN：<?= $product->asin ?></p>
-        <p>价格：<?= $product->price ?>日元</p>
-        <p>商品类型：<?= $product->product_type->name ?></p>
+        <p>商品名：<?= h($product->name) ?></p>
+        <p>ASIN：<?= h($product->asin) ?></p>
+        <p>价格：<?= h($product->price) ?>日元</p>
+        <p>商品类型：<?= h($product->product_type->name) ?></p>
 
         <?php if (!is_null($product->sale_start_date)): ?>
-            <p>开始贩卖日：<?= $product->sale_start_date->format(app_config('Display.format.date')) ?></p>
+            <p>开始贩卖日：<?= h($product->sale_start_date->format(app_config('Display.format.date'))) ?></p>
         <?php endif; ?>
 
         <?php if (!is_null($product->standard)): ?>
