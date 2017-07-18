@@ -93,6 +93,7 @@ class DataComponent extends Component
         foreach ($schema->columns() as $column) {
             if (
                 $entity->has($column)
+                || !empty($entity->getError($column))
                 || in_array($column, (array)$options['ignore'])
                 || in_array($column, $schema->primaryKey())
                 || in_array($column, $schema->indexes())  // 避免自动插入外键

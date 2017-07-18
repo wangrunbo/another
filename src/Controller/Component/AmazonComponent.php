@@ -41,9 +41,12 @@ class AmazonComponent extends Component
      */
     protected $_pattern = [
         '404' => '{<title>404 - ドキュメントが見つかりません。</title>}',
-        'name' => '{^<title>(?:Amazon|Amazon\.co\.jp)\s*(?:：|:|\|)\s*(.+?)\s*(?:：|:|\|).*</title>$}m',
-        'price' => '{<span id="priceblock_ourprice" class="a-size-medium a-color-price">￥ (\d+,?[0-9,]+)</span>}',
-        'standard' => '{<div id="twisterContainer".*?<form id="twister".*?<div class="a-row">[\s\n]*?<label>[\s\n]*(.+?)[\s\n]*?</label>[\s\n]*?<span class="selection">[\s\n]*(.+?)[\s\n]*?</span>[\s\n]*?</div>}s',  // TODO
+        'name' => '{<h1 id="title" .*?<span id="productTitle" .*?>[\s\n]*(.*?)[\s\n]*</span>.*?</h1>}s',
+        'price' => [
+            '{<span id="priceblock_ourprice" class="a-size-medium a-color-price">￥ (\d+,?[0-9,]+)</span>}',
+            '{<div id="buybox".*?<span class=".*?offer-price.*?">￥ (\d+,?[0-9,]+)</span>}s'
+        ],
+        'standard' => '{<div id="twisterContainer".*?<form id="twister".*?<div class="a-row">[\s\n]*?<label>[\s\n]*(.+?)[\s\n]*?</label>[\s\n]*?<span class="selection">[\s\n]*(.+?)[\s\n]*?</span>[\s\n]*?</div>}s',
         'product_type' => [
             'add-on' => '{<div id="addOnItem_feature_div".*?<i class="a-icon a-icon-addon">あわせ買い対象商品</i>}s',
             'pre-sell' => '{<input id="add-to-cart-button".*?value="予約注文する".*?>}s'
@@ -53,12 +56,19 @@ class AmazonComponent extends Component
         'stock' => '{<div id="availability".*?<span.*?>[\s\n]*(.+?)[\s\n]*?</span>(?=[\s\n]*?<span.*?在庫状況</a>について</span>)}s',
         'description' => '{<div id="productDescription".*?<p>(.*?)[\n\t\s]*?</p>}s',
         'images' => [
-            'container' => '{<script type="text/javascript">.*?P\.when\(\'A\'\)\.register\("ImageBlockATF", function\(A\)\{[\s\n]*var data = \{[\s\n]*\'colorImages\': \{ \'initial\': \[(.*?)\]\},[\s\n]*\'colorToAsin\'.*?</script>}s',
-            'hiRes' => '/"hiRes":"?(.*?|null)"?(?=,(?=".*?":)|})/',
-            'thumb' => '/"thumb":"?(.*?|null)"?(?=,(?=".*?":)|})/',
-            'large' => '/"large":"?(.*?|null)"?(?=,(?=".*?":)|})/',
-            'main' => '/"main":({.*?}|null)(?=,(?=".*?":)|})/',
-            'pixels' => '/(?<={|,)"(.*?)":(\[\d+,\d+\])(?=,(?=".*?":)|})/'
+            [
+                'container' => '{<script type="text/javascript">.*?P\.when\(\'A\'\)\.register\("ImageBlockATF", function\(A\)\{[\s\n]*var data = \{[\s\n]*\'colorImages\': \{ \'initial\': \[(.*?)\]\},[\s\n]*\'colorToAsin\'.*?</script>}s',
+                'hiRes' => '/"hiRes":"?(.*?|null)"?(?=,(?=".*?":)|})/',
+                'thumb' => '/"thumb":"?(.*?|null)"?(?=,(?=".*?":)|})/',
+                'large' => '/"large":"?(.*?|null)"?(?=,(?=".*?":)|})/',
+                'main' => '/"main":({.*?}|null)(?=,(?=".*?":)|})/',
+                'pixels' => '/(?<={|,)"(.*?)":(\[\d+,\d+\])(?=,(?=".*?":)|})/'
+            ],
+            [
+                'container' => '{<script type="text/javascript">.*?P\.when\(\'A\'\)\.register\("ImageBlockATF", function\(A\)\{.*?var data = \{.*?\'imageGalleryData\' : \[(.*?)\],[\s\n]*\'centerColMargin\'.*?</script>}s',
+                'main' => '/"mainUrl":"?(.*?|null)"?(?=,(?=".*?":)|})/',
+                'thumb' => '/"thumbUrl":"?(.*?|null)"?(?=,(?=".*?":)|})/'
+            ]
         ],
         'info' => [
             'container' => [
@@ -101,20 +111,19 @@ class AmazonComponent extends Component
             return null;
         }
 
-        /** @var \App\Model\Entity\Product $product */
-        $product = TableRegistry::get('Products')->newEntity();
-
-        $product->asin = $asin;  // ASIN CODE
-        $product->name = $this->_extract($html, 'name');  // 商品名
-        $product->price = $this->_extract($html, 'price');  // 商品价格
-        $product->standard = $this->_extract($html, 'standard');  // 商品规格
-        $product->product_type_id = $this->_extract($html, 'product_type'); // 商品类型
-        $product->sale_start_date = $this->_extract($html, 'sale_start_date'); // 开始贩卖日
-        $product->stock_flg = !in_array($this->_extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT);  // 是否在库
-        $product->description = $this->_extract($html, 'description');  // 商品介绍
+        $product_data = [
+            'asin' => $asin,  // ASIN CODE
+            'name' => $this->_extract($html, 'name'),  // 商品名
+            'price' => $this->_extract($html, 'price'),  // 商品价格
+            'standard' => $this->_extract($html, 'standard'),  // 商品规格
+            'product_type_id' => $this->_extract($html, 'product_type'), // 商品类型
+            'sale_start_date' => $this->_extract($html, 'sale_start_date'), // 开始贩卖日
+            'stock_flg' => !in_array($this->_extract($html, 'stock'), self::AMAZON_PRODUCT_SOLD_OUT),  // 是否在库
+            'description' => $this->_extract($html, 'description'),  // 商品介绍
+        ];
 
         // 商品图像
-        $product_images = [];
+        $product_data['product_images'] = [];
         $src = $this->_extract($html, 'images');
         for ($i = 0; $i < count($src['main']); $i++) {
             $product_image_data = [
@@ -122,11 +131,11 @@ class AmazonComponent extends Component
                 'sub' => $src['sub'][$i] === 'null'? null : $src['sub'][$i]
             ];
 
-            $product_images[] = $this->Data->completion($product_image_data, ['table' => 'ProductImages']);
+            $product_data['product_images'][] = $this->Data->completion($product_image_data, ['table' => 'ProductImages']);
         }
 
         // 商品情报
-        $product_info = [];
+        $product_data['product_info'] = [];
         $ProductInfoTypesTable = TableRegistry::get('ProductInfoTypes');
         foreach ($this->_extract($html, 'info') as $type => $info) {
             $product_info_type = $ProductInfoTypesTable->find('active')->where(['name' => $type])->first();
@@ -144,13 +153,11 @@ class AmazonComponent extends Component
                     'product_info_type_id' => $product_info_type->id
                 ];
 
-                $product_info[] = $this->Data->completion($product_info_data, ['table' => 'ProductInfo']);
+                $product_data['product_info'][] = $this->Data->completion($product_info_data, ['table' => 'ProductInfo']);
             }
         }
 
-        $product->product_images = TableRegistry::get('ProductImages')->newEntities($product_images);
-        $product->product_info = TableRegistry::get('ProductInfo')->newEntities($product_info);
-
+        $product = TableRegistry::get('Products')->newEntity($product_data, ['validate' => 'curl']);
         $this->Data->completion($product);
 
         return $product;
@@ -225,13 +232,25 @@ class AmazonComponent extends Component
     protected function _extract($html, $part)
     {
         switch ($part) {
+            case 'name':
+                preg_match_all($this->_pattern[$part], $html, $matches);
+
+                $result = html_entity_decode(@$matches[1][0]);
+
+                break;
             case 'price':
-                preg_match_all($this->_pattern['price'], $html, $matches);
+                $matches = null;
+                foreach ($this->_pattern['price'] as $format => $pattern) {
+                    if (preg_match_all($pattern, $html, $matches)) {
+                        break;
+                    }
+                }
 
                 $result = @$matches[1][0];
                 if (!is_null($result)) {
                     $result = (int)preg_replace('/,/', '', $result);
                 }
+
                 break;
             case 'standard':
                 preg_match_all($this->_pattern['standard'], $html, $matches);
@@ -241,6 +260,7 @@ class AmazonComponent extends Component
                 } else {
                     $result = @"{$matches[1][0]} {$matches[2][0]}";
                 }
+
                 break;
             case 'product_type':
                 if (preg_match($this->_pattern['product_type']['add-on'], $html)) {
@@ -263,9 +283,24 @@ class AmazonComponent extends Component
 
                 break;
             case 'images':
-                preg_match_all($this->_pattern['images']['container'], $html, $container);
-                preg_match_all($this->_pattern['images']['large'], @$container[1][0], $main);
-                preg_match_all($this->_pattern['images']['thumb'], @$container[1][0], $sub);
+                $main = null;
+                $sub = null;
+                foreach ($this->_pattern['images'] as $index => $pattern) {
+                    if (preg_match_all($pattern['container'], $html, $container)) {
+                        switch ($index) {
+                            case 1:
+                                preg_match_all($pattern['main'], @$container[1][0], $main);
+                                preg_match_all($pattern['thumb'], @$container[1][0], $sub);
+                                break;
+                            case 0:
+                            default:
+                                preg_match_all($pattern['large'], @$container[1][0], $main);
+                                preg_match_all($pattern['thumb'], @$container[1][0], $sub);
+                        }
+
+                        break;
+                    }
+                }
 
                 if (count($main[1]) === count($sub[1])) {
                     $result = [
@@ -278,6 +313,7 @@ class AmazonComponent extends Component
                         'sub' => []
                     ];
                 }
+
                 break;
             case 'info':
                 $result = [];
@@ -297,6 +333,7 @@ class AmazonComponent extends Component
                         }
                     }
                 }
+
                 break;
             default:
                 preg_match_all($this->_pattern[$part], $html, $matches);

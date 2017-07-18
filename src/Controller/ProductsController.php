@@ -79,7 +79,7 @@ class ProductsController extends AppController
 
             if (!is_null($product)) {
                 $product->searcher_id = $this->Auth->user('id');
-                $result = $this->Products->save($product, ['validate' => 'curl']);
+                $result = $this->Products->save($product);
 
                 if ($result === false) {
                     // TODO send mail

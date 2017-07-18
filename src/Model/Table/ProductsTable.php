@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use ArrayObject;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -31,6 +33,12 @@ use Cake\Validation\Validator;
  */
 class ProductsTable extends Table
 {
+
+    protected $_rules = [
+        'price' => [
+            'min' => 0
+        ]
+    ];
 
     /**
      * Initialize method
@@ -79,6 +87,15 @@ class ProductsTable extends Table
         ]);
     }
 
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        $this->setValidationConfig([
+            'price' => [
+                'min' => 0
+            ]
+        ]);
+    }
+
     /**
      * Default validation rules.
      *
@@ -92,17 +109,14 @@ class ProductsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('asin', 'create')
             ->notEmpty('asin')
             ->add('asin', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->requirePresence('name', 'create')
             ->notEmpty('name');
 
         $validator
             ->integer('price')
-            ->requirePresence('price', 'create')
             ->notEmpty('price');
 
         $validator
@@ -114,7 +128,6 @@ class ProductsTable extends Table
 
         $validator
             ->boolean('stock_flg')
-            ->requirePresence('stock_flg', 'create')
             ->notEmpty('stock_flg');
 
         $validator
@@ -125,22 +138,18 @@ class ProductsTable extends Table
 
         $validator
             ->boolean('blacklist_flg')
-            ->requirePresence('blacklist_flg', 'create')
             ->notEmpty('blacklist_flg');
 
         $validator
             ->integer('bought_times')
-            ->requirePresence('bought_times', 'create')
             ->notEmpty('bought_times');
 
         $validator
             ->integer('searched_times')
-            ->requirePresence('searched_times', 'create')
             ->notEmpty('searched_times');
 
         $validator
             ->boolean('restrict_flg')
-            ->requirePresence('restrict_flg', 'create')
             ->notEmpty('restrict_flg');
 
         $validator
