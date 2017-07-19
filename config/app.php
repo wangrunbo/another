@@ -352,6 +352,9 @@ return [
         'pagination' => [
             'default' => [
                 'limit' => 10
+            ],
+            'products' => [
+                'limit' => 20
             ]
         ],
         'format' => [

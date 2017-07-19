@@ -15,6 +15,13 @@ use Cake\Network\Exception\NotFoundException;
 class ProductsController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->paginate = app_config('Display.pagination.products');
+    }
+
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow(['index', 'search', 'view']);

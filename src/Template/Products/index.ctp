@@ -13,4 +13,6 @@
             </p>
         </div>
     <?php endforeach; ?>
+
+    <?= $this->element('Pagination/products') ?>
 </div>
