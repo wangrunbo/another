@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * AccountStatus Entity
+ * UserStatus Entity
  *
  * @property int $id
  * @property string $name
@@ -15,7 +15,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\User[] $users
  */
-class AccountStatus extends Entity
+class UserStatus extends Entity
 {
 
     /**

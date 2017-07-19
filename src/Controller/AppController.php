@@ -97,7 +97,7 @@ class AppController extends Controller
      */
     public function isAuthorized($user = null)
     {
-        if ($this->Users->get($user['id'])->account_status_id === \App\Model\Entity\AccountStatus::STATUS_DELETED) {
+        if ($this->Users->get($user['id'])->user_status_id === \App\Model\Entity\UserStatus::STATUS_DELETED) {
             $this->Auth->logout();
         }
 

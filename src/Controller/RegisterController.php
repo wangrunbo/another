@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\I18n\Time;
+use Cake\Network\Exception\BadRequestException;
 
 /**
  * Class RegisterController
@@ -35,25 +36,50 @@ class RegisterController extends AppController
             $user = $this->Users->newEntity();
 
             $result = $this->Data->validate($this->request->getData(), $user, function () use ($user) {
-                $user->updateSecret();
+                $user->generateUid();
+                $user->updateSecretKey();
                 $user->sex_id = \App\Model\Entity\Sex::NOT_SET;
-                $user->account_status_id = \App\Model\Entity\AccountStatus::STATUS_GENERAL;
-                $this->Data->completion($user, [
-                    'ignore' => array_keys($this->request->getData())
-                ]);
+                $user->user_status_id = \App\Model\Entity\UserStatus::STATUS_GENERAL;
+                $this->Data->completion($user);
             });
 
             if (empty($result['errors'])) {
-                if ($this->Users->save($user)) {
-                    $this->Auth->setUser($user->toArray());
+                $this->request->session()->write(SESSION_DEFAULT, ['username' => $user->username, 'email' => $user->email]);
+                $this->set(compact('user'));
 
-                    return $this->render('inactive');
-                } else {
-                    $this->Flash->error(__d('message', 'The server is busy!! Please try later.'));
-                }
+                return $this->render('confirm');
             }
 
             $this->set($result);
         }
+    }
+
+    public function inactive()
+    {
+        $this->request->allowMethod('post');
+
+        $user = $this->Users->newEntity([
+            'username' => $this->request->getData('username'),
+            'email' => $this->request->getData('email')
+        ]);
+
+        $user->generateUid();
+        $user->password = $this->request->getData('password');
+        $user->updateSecretKey();
+        $user->sex_id = \App\Model\Entity\Sex::NOT_SET;
+        $user->user_status_id = \App\Model\Entity\UserStatus::STATUS_GENERAL;
+        $this->Data->completion($user);
+
+        if ($this->Users->save($user)) {
+            $this->request->session()->delete(SESSION_DEFAULT);
+            $this->Auth->setUser($user->toArray());
+        } else {
+            throw new BadRequestException();
+        }
+    }
+
+    public function back()
+    {
+
     }
 }

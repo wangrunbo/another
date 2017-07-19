@@ -91,6 +91,8 @@ class AppView extends View
     }
 
     /**
+     * 设置页面标题
+     *
      * @param null $title
      * @return string
      */
@@ -119,5 +121,37 @@ class AppView extends View
         }
 
         $default += $data;
+    }
+
+    /**
+     * 表单开始
+     *
+     * @param null $context
+     * @param array $options
+     * @return string
+     */
+    public function form($context = null, array $options = [])
+    {
+        return $this->Form->create($context, $options);
+    }
+
+    /**
+     * 表单结束
+     *
+     * @param array $fields
+     * @param array $secureAttributes
+     * @return string
+     */
+    public function endForm(array $fields = [], array $secureAttributes = [])
+    {
+        foreach ($fields as $field => $value) {
+            if (is_null($value)) {
+                $this->Form->fields[] = $field;
+            } else {
+                $this->Form->fields[$field] = $value;
+            }
+        }
+
+        return $this->Form->end($secureAttributes);
     }
 }

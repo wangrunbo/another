@@ -2,23 +2,22 @@
 /**
  * @var \App\View\AppView $this
  * @var array $errors
- * @var array|null $default
+ * @var array $default
  */
 if (!isset($default)) {
-    $default = [
-        'username' => '',
-        'email' => ''
-    ];
+    $default = $this->request->session()->check(SESSION_DEFAULT)?
+        $this->request->session()->consume(SESSION_DEFAULT) :
+        ['username' => '', 'email' => ''];
 }
 
 $this->title(__('Register'))
 ?>
 <h3><?= h(__('Register')) ?></h3>
-<?= $this->Form->create() ?>
+<?= $this->form() ?>
     <dl>
         <dt><?= h(__('username')) ?></dt>
         <dd>
-            <?= $this->Form->control('username', ['type' => 'text', 'value' => $default['username']]) ?>
+            <input name="username" type="text" value="<?= $default['username'] ?>" title="<?= __('username') ?>" />
             <?php if (isset($errors['username'])): ?>
                 <?= $this->element('validation', ['field' => 'username', 'error' => $errors['username']]) ?>
             <?php endif; ?>
@@ -26,7 +25,7 @@ $this->title(__('Register'))
 
         <dt><?= h(__('email')) ?></dt>
         <dd>
-            <?= $this->Form->control('email', ['type' => 'text', 'value' => $default['email']]) ?>
+            <input name="email" type="text" value="<?= $default['email'] ?>" title="<?= __('email') ?>" />
             <?php if (isset($errors['email'])): ?>
                 <?= $this->element('validation', ['field' => 'email', 'error' => $errors['email']]) ?>
             <?php endif; ?>
@@ -34,7 +33,7 @@ $this->title(__('Register'))
 
         <dt><?= h(__('password')) ?></dt>
         <dd>
-            <?= $this->Form->control('password', ['type' => 'password', 'value' => '']) ?>
+            <input name="password" type="password" title="<?= __('password') ?>" />
             <?php if (isset($errors['password'])): ?>
                 <?= $this->element('validation', ['field' => 'password', 'error' => $errors['password']]) ?>
             <?php endif; ?>
@@ -42,11 +41,11 @@ $this->title(__('Register'))
 
         <dt><?= h(__('password_confirm')) ?></dt>
         <dd>
-            <?= $this->Form->control('password_confirm', ['type' => 'password', 'value' => '']) ?>
+            <input name="password_confirm" type="password" title="<?= __('password_confirm') ?>" />
             <?php if (isset($errors['password_confirm'])): ?>
                 <?= $this->element('validation', ['field' => 'password_confirm', 'error' => $errors['password_confirm']]) ?>
             <?php endif; ?>
         </dd>
     </dl>
     <button type="submit"><?= h(__('OK')) ?></button>
-<?= $this->Form->end() ?>
+<?= $this->endForm(['username' => null, 'email' => null, 'password' => null, 'password_confirm' => null]) ?>

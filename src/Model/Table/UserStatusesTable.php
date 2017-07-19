@@ -7,19 +7,21 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * AccountStatuses Model
+ * UserStatuses Model
  *
  * @property \Cake\ORM\Association\HasMany $Users
  *
- * @method \App\Model\Entity\AccountStatus get($primaryKey, $options = [])
- * @method \App\Model\Entity\AccountStatus newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\AccountStatus[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\AccountStatus|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\AccountStatus patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\AccountStatus[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\AccountStatus findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\UserStatus get($primaryKey, $options = [])
+ * @method \App\Model\Entity\UserStatus newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\UserStatus[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\UserStatus|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\UserStatus patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\UserStatus[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\UserStatus findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class AccountStatusesTable extends Table
+class UserStatusesTable extends Table
 {
 
     /**
@@ -32,12 +34,14 @@ class AccountStatusesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('account_statuses');
+        $this->setTable('user_statuses');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Timestamp');
+
         $this->hasMany('Users', [
-            'foreignKey' => 'account_status_id'
+            'foreignKey' => 'user_status_id'
         ]);
     }
 

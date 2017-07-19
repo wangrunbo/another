@@ -13,8 +13,14 @@ use ArrayObject;
  * Users Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Sex
- * @property \Cake\ORM\Association\BelongsTo $AccountStatuses
+ * @property \Cake\ORM\Association\BelongsTo $UserStatuses
+ * @property \Cake\ORM\Association\BelongsTo $Administrators
  * @property \Cake\ORM\Association\HasMany $Addresses
+ * @property \Cake\ORM\Association\HasMany $Cart
+ * @property \Cake\ORM\Association\HasMany $Favourites
+ * @property \Cake\ORM\Association\HasMany $LoginHistory
+ * @property \Cake\ORM\Association\HasMany $Orders
+ * @property \Cake\ORM\Association\HasMany $PointHistory
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -49,11 +55,29 @@ class UsersTable extends Table
             'foreignKey' => 'sex_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('AccountStatuses', [
-            'foreignKey' => 'account_status_id',
+        $this->belongsTo('UserStatuses', [
+            'foreignKey' => 'user_status_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Administrators', [
+            'foreignKey' => 'modifier_id'
+        ]);
         $this->hasMany('Addresses', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('Cart', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('Favourites', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('LoginHistory', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('Orders', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('PointHistory', [
             'foreignKey' => 'user_id'
         ]);
     }
@@ -165,9 +189,12 @@ class UsersTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
+        $validator
+            ->notEmpty('uid')
+            ->add('uid', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
         // 用户名
         $validator
-            ->requirePresence('username', 'create')
             ->notEmpty('username', __d($this->getValidationConfig('locale'), 'Username cannot be left empty!'))
             ->add('username', 'maxLength', [
                 'rule' => ['maxLength', $this->getValidationConfig('username.maxLength')],
@@ -183,7 +210,6 @@ class UsersTable extends Table
 
         // 邮箱
         $validator
-            ->requirePresence('email', 'create')
             ->notEmpty('email', __d($this->getValidationConfig('locale'), 'Email cannot be left empty!'))
             ->add('email', 'maxLength', [
                 'rule' => ['maxLength', $this->getValidationConfig('email.maxLength')],
@@ -202,9 +228,11 @@ class UsersTable extends Table
                 'message' => __d($this->getValidationConfig('locale'), 'This email cannot be used!')
             ]);
 
+        $validator
+            ->allowEmpty('target_email');
+
         // 密码
         $validator
-            ->requirePresence('password', 'create')
             ->notEmpty('password', __d($this->getValidationConfig('locale'), 'Password cannot be left empty!'))
             ->add('password', 'format', [
                 'rule' => ['custom', $this->getValidationConfig('password.format')],
@@ -223,13 +251,14 @@ class UsersTable extends Table
 
         // 密钥
         $validator
-            ->requirePresence('secret', 'create')
-            ->notEmpty('secret')
-            ->add('secret', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->notEmpty('secret_key')
+            ->add('secret_key', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
+            ->allowEmpty('tel_cert_code');
 
         // 姓名
         $validator
-            ->requirePresence('name', 'create')
             ->allowEmpty('name')
             ->add('name', 'maxLength', [
                 'rule' => ['maxLength', $this->getValidationConfig('name.maxLength')],
@@ -239,7 +268,6 @@ class UsersTable extends Table
 
         // 性别
         $validator
-            ->requirePresence('sex_id', 'create')
             ->add('sex_id', 'exist', [
                 'rule' => ['exist', 'Sex', 'id', 'active', []],
                 'provider' => 'table',
@@ -267,7 +295,6 @@ class UsersTable extends Table
 
         // 邮政编码
         $validator
-            ->requirePresence('postcode', 'create')
             ->allowEmpty('postcode')
             ->add('postcode', 'format', [
                 'rule' => ['custom', $this->getValidationConfig('postcode.format')],
@@ -277,7 +304,6 @@ class UsersTable extends Table
 
         // 地址
         $validator
-            ->requirePresence('address', 'create')
             ->allowEmpty('address')
             ->add('address', 'maxLength', [
                 'rule' => ['maxLength', $this->getValidationConfig('address.maxLength')],
@@ -287,13 +313,15 @@ class UsersTable extends Table
 
         // 电话号码
         $validator
-            ->requirePresence('tel', 'create')
             ->allowEmpty('tel')
             ->add('tel', 'format', [
                 'rule' => ['custom', $this->getValidationConfig('tel.format')],
                 'last' => true,
                 'message' => __d($this->getValidationConfig('locale'), 'Invalid tel format!')
             ]);
+
+        $validator
+            ->allowEmpty('note');
 
         return $validator;
     }
@@ -309,9 +337,11 @@ class UsersTable extends Table
     {
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));
-        $rules->add($rules->isUnique(['secret']));
+        $rules->add($rules->isUnique(['uid']));
+        $rules->add($rules->isUnique(['secret_key']));
         $rules->add($rules->existsIn(['sex_id'], 'Sex'));
-        $rules->add($rules->existsIn(['account_status_id'], 'AccountStatuses'));
+        $rules->add($rules->existsIn(['user_status_id'], 'UserStatuses'));
+        $rules->add($rules->existsIn(['modifier_id'], 'Administrators'));
 
         return $rules;
     }
@@ -320,6 +350,6 @@ class UsersTable extends Table
     {
         return parent::findAll($query, $options)
             ->select(['id', 'email', 'password'])
-            ->where(['Users.account_status_id' => \App\Model\Entity\AccountStatus::STATUS_GENERAL]);
+            ->where(['Users.account_status_id' => \App\Model\Entity\UserStatus::STATUS_GENERAL]);
     }
 }

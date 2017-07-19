@@ -14,7 +14,7 @@ if (!function_exists('random')) {
             $pattern = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         } elseif (strtolower($pattern) === 'integer' || strtolower($pattern) === 'int') {
             $pattern = "1234567890";
-        } elseif (strtolower($pattern) === 'string'){
+        } elseif (strtolower($pattern) === 'string') {
             $pattern = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         }
 
