@@ -327,6 +327,42 @@ class UsersTable extends Table
     }
 
     /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationPassword(Validator $validator)
+    {
+        // rules
+        $password = $this->validationDefault(clone $validator)->field('password')->rules();
+        $password_confirm = $this->validationDefault(clone $validator)->field('password_confirm')->rules();
+
+        $validator
+            ->requirePresence('former_password')
+            ->notEmpty('former_password', __d($this->getValidationConfig('locale'), 'Please entry the former password!'))
+            ->add('former_password', 'identify', [
+                'rule' => function ($value, $context) {
+                    return (new \Cake\Auth\DefaultPasswordHasher)->check($value, $this->get($context['data']['id'])->password);
+                },
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Incorrect password!')
+            ]);
+
+        $validator
+            ->requirePresence('password')
+            ->notEmpty('password', __d($this->getValidationConfig('locale'), 'Password cannot be left empty!'))
+            ->add('password', $password);
+
+        $validator
+            ->requirePresence('password_confirm')
+            ->notEmpty('password_confirm', __d($this->getValidationConfig('locale'), 'Please entry the password again!'))
+            ->add('password_confirm', $password_confirm);
+
+        return $validator;
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *

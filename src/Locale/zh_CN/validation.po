@@ -16,6 +16,12 @@ msgstr "邮箱须少于{length}字符！"
 #: src/Model/Table/UsersTable.php:198;204
 msgid "This email cannot be used!"
 msgstr "无法使用该邮箱！"
+#: src/Model/Table/UsersTable.php:342
+msgid "Please entry the former password!"
+msgstr "请输入原密码！"
+#: src/Model/Table/UsersTable.php:348
+msgid "Incorrect password!"
+msgstr "密码错误！"
 #: src/Model/Table/UsersTable.php:210
 msgid "Password cannot be left empty!"
 msgstr "密码不能为空！"

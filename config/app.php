@@ -342,6 +342,7 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
+        'timeout' => 0
     ],
 
     /**

@@ -25,6 +25,8 @@ class MypageController extends AppController
         $this->set(compact('user'));
     }
 
+    ################################# 基本信息 #################################
+
     public function myInfo()
     {
         $this->request->allowMethod(['get', 'put']);
@@ -56,8 +58,10 @@ class MypageController extends AppController
         $this->set(compact('user', 'sex'));
     }
 
+    ################################# 地址信息 #################################
+
     /**
-     * 我的地址
+     * 地址信息
      *
      * @param null|int $id
      * @return \Cake\Http\Response|null
@@ -129,5 +133,45 @@ class MypageController extends AppController
         $this->Addresses->softDelete($address);
 
         return $this->redirect(['action' => 'myAddresses']);
+    }
+
+    ################################# 账号安全 #################################
+
+    public function mySecurity()
+    {
+        $this->request->allowMethod(['get', 'post']);
+
+        if ($this->request->is(['post'])) {
+            $action = "_{$this->request->getData('action')}";
+
+            if (is_callable([$this, $action])) {
+                $this->{$action}();
+            } else {
+                throw new BadRequestException();
+            }
+        }
+    }
+
+    protected function _changePassword()
+    {
+        $user = $this->Users->get($this->Auth->user('id'));
+
+        $data = [
+            'former_password' => $this->request->getData('former_password'),
+            'password' => $this->request->getData('password'),
+            'password_confirm' => $this->request->getData('password_confirm'),
+        ];
+
+        $result = $this->Data->validate($data, $user, null, ['validate' => 'password']);
+
+        if (empty($result['errors'])) {
+            $this->Users->save($user);
+            $this->Auth->setUser($user->toArray());
+
+            return $this->redirect(['action' => 'mySecurity']);
+        } else {
+            $this->set('target', 'password');
+            $this->set($result);
+        }
     }
 }
