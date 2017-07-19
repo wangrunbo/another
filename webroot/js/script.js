@@ -69,19 +69,3 @@ function clearValidationErrors(form, fields) {
         })
     }
 }
-
-
-
-var a = [
-    {
-        "mainUrl":"https://images-na.ssl-images-amazon.com/images/I/91f9Uhj1HhL.jpg",
-        "dimensions":[1768,2508],
-        "thumbUrl":"https://images-na.ssl-images-amazon.com/images/I/91f9Uhj1HhL._AC_SX75_CR,0,0,75,75_.jpg"
-    },
-    {
-        "mainUrl":"https://images-na.ssl-images-amazon.com/images/I/51iBg6YNfvL.jpg",
-        "dimensions":[337,500],
-        "thumbUrl":"https://images-na.ssl-images-amazon.com/images/I/51iBg6YNfvL._AC_SX75_CR,0,0,75,75_.jpg"
-    }
-        ]
-

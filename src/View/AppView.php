@@ -114,10 +114,12 @@ class AppView extends View
      */
     public function patchDefault(&$default, $data, $options = [])
     {
-        if (isset($options['ignore'])) {
-            foreach ((array)$options['ignore'] as $key) {
-                unset($data[$key]);
-            }
+        $options += [
+            'ignore' => []
+        ];
+
+        foreach ((array)$options['ignore'] as $key) {
+            unset($data[$key]);
         }
 
         $default += $data;

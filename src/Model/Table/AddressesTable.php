@@ -13,6 +13,7 @@ use ArrayObject;
  * Addresses Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
+ * @property \Cake\ORM\Association\BelongsTo $Administrators
  *
  * @method \App\Model\Entity\Address get($primaryKey, $options = [])
  * @method \App\Model\Entity\Address newEntity($data = null, array $options = [])
@@ -46,6 +47,9 @@ class AddressesTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Administrators', [
+            'foreignKey' => 'modifier_id'
         ]);
     }
 
@@ -119,7 +123,6 @@ class AddressesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('label', 'create')
             ->notEmpty('label', __d($this->getValidationConfig('locale'), 'Label cannot be left empty!'))
             ->add('label', 'maxLength', [
                 'rule' => ['maxLength', $this->getValidationConfig('label.maxLength')],
@@ -128,7 +131,6 @@ class AddressesTable extends Table
             ]);
 
         $validator
-            ->requirePresence('name', 'create')
             ->notEmpty('name', __d($this->getValidationConfig('locale'), 'Name cannot be left empty!'))
             ->add('name', 'maxLength', [
                 'rule' => ['maxLength', $this->getValidationConfig('name.maxLength')],
@@ -137,7 +139,6 @@ class AddressesTable extends Table
             ]);
 
         $validator
-            ->requirePresence('postcode', 'create')
             ->notEmpty('postcode', __d($this->getValidationConfig('locale'), 'Postcode cannot be left empty!'))
             ->add('postcode', 'format', [
                 'rule' => ['custom', $this->getValidationConfig('postcode.format')],
@@ -146,7 +147,6 @@ class AddressesTable extends Table
             ]);
 
         $validator
-            ->requirePresence('address', 'create')
             ->notEmpty('address', __d($this->getValidationConfig('locale'), 'Address cannot be left empty!'))
             ->add('address', 'maxLength', [
                 'rule' => ['maxLength', $this->getValidationConfig('address.maxLength')],
@@ -155,13 +155,19 @@ class AddressesTable extends Table
             ]);
 
         $validator
-            ->requirePresence('tel', 'create')
             ->notEmpty('tel', __d($this->getValidationConfig('locale'), 'Tel cannot be left empty!'))
             ->add('tel', 'format', [
                 'rule' => ['custom', $this->getValidationConfig('tel.format')],
                 'last' => true,
                 'message' => __d($this->getValidationConfig('locale'), 'Invalid tel format!')
             ]);
+
+        $validator
+            ->allowEmpty('note');
+
+        $validator
+            ->dateTime('deleted')
+            ->allowEmpty('deleted');
 
         return $validator;
     }
@@ -176,6 +182,7 @@ class AddressesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['modifier_id'], 'Administrators'));
 
         return $rules;
     }

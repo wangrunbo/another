@@ -67,7 +67,7 @@ class ValidationBehavior extends Behavior
      * @param array $options
      * @return bool
      */
-    public function range($value, $min, $max, $options)
+    public function range($value, $min, $max, $options = [])
     {
         $options += [
             'minEqual' => true,
@@ -95,15 +95,15 @@ class ValidationBehavior extends Behavior
      * @param mixed $value
      * @param string $table
      * @param string $column
-     * @param string $find
+     * @param string $finder
      * @param array $options
      * @return bool
      */
-    public function exist($value, $table, $column, $find, $options)
+    public function exist($value, $table, $column, $finder, $options = [])
     {
         foreach ((array)$value as $v) {
             if (TableRegistry::get($table)
-                ->find($find, $options)
+                ->find($finder, $options)
                 ->where(["{$table}.{$column}" => $v])
                 ->isEmpty()
             ) {

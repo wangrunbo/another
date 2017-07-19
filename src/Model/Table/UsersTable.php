@@ -269,7 +269,7 @@ class UsersTable extends Table
         // 性别
         $validator
             ->add('sex_id', 'exist', [
-                'rule' => ['exist', 'Sex', 'id', 'active', []],
+                'rule' => ['exist', 'Sex', 'id', 'active'],
                 'provider' => 'table',
                 'last' => true,
                 'message' => __d($this->getValidationConfig('locale'), 'Please select your sex!')
@@ -287,7 +287,7 @@ class UsersTable extends Table
                 'message' => __d($this->getValidationConfig('locale'), 'Invalid date format!')
             ])
             ->add('birthday', 'range', [
-                'rule' => ['range', $this->getValidationConfig('birthday.min'), $this->getValidationConfig('birthday.max'), []],
+                'rule' => ['range', $this->getValidationConfig('birthday.min'), $this->getValidationConfig('birthday.max')],
                 'provider' => 'table',
                 'last' => true,
                 'message' => __d($this->getValidationConfig('locale'), 'Invalid date format!')
@@ -350,6 +350,6 @@ class UsersTable extends Table
     {
         return parent::findAll($query, $options)
             ->select(['id', 'email', 'password'])
-            ->where(['Users.account_status_id' => \App\Model\Entity\UserStatus::STATUS_GENERAL]);
+            ->where(['Users.user_status_id' => \App\Model\Entity\UserStatus::STATUS_GENERAL]);
     }
 }

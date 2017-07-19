@@ -43,6 +43,7 @@ class MypageController extends AppController
                 $this->Users->save($user);
                 return $this->redirect(['action' => 'myInfo']);
             } else {
+                $this->Data->reduction($user);
                 $result['default']['birthday'] = $this->request->getData('birthday');
 
                 $this->set($result);

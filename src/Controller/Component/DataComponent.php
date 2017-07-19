@@ -153,4 +153,19 @@ class DataComponent extends Component
             }
         }
     }
+
+    /**
+     * Entity数据还原
+     *
+     * @param \Cake\ORM\Entity $entity
+     * @param array $options
+     */
+    public function reduction($entity, $options = [])
+    {
+        $options += [];
+
+        foreach ($entity->getDirty() as $field) {
+            $entity->set($field, $entity->getOriginal($field));
+        }
+    }
 }

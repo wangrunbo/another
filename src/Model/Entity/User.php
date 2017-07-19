@@ -67,7 +67,13 @@ class User extends Entity
 
     protected function _setPassword($password)
     {
-        return (new DefaultPasswordHasher)->hash($password);
+        $DefaultPasswordHasher = new DefaultPasswordHasher;
+
+        if ($DefaultPasswordHasher->needsRehash($password)) {
+            return $DefaultPasswordHasher->hash($password);
+        } else {
+            return $password;
+        }
     }
 
     protected function _setPasswordConfirm($password_confirm)

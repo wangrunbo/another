@@ -13,10 +13,14 @@ use Cake\ORM\Entity;
  * @property string $address
  * @property string $tel
  * @property int $user_id
+ * @property string $note
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated
+ * @property int $modifier_id
+ * @property \Cake\I18n\Time $deleted
  *
  * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Administrator $administrator
  */
 class Address extends Entity
 {

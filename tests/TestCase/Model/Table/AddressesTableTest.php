@@ -27,7 +27,13 @@ class AddressesTableTest extends TestCase
         'app.addresses',
         'app.users',
         'app.sex',
-        'app.account_statuses'
+        'app.user_statuses',
+        'app.administrators',
+        'app.cart',
+        'app.favourites',
+        'app.login_history',
+        'app.orders',
+        'app.point_history'
     ];
 
     /**
