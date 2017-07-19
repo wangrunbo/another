@@ -160,7 +160,7 @@ class DataComponent extends Component
      * @param \Cake\ORM\Entity $entity
      * @param array $options
      */
-    public function reduction($entity, $options = [])
+    public function resume($entity, $options = [])
     {
         $options += [];
 

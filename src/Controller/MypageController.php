@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\I18n\Time;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\NotFoundException;
 use function PHPSTORM_META\type;
 
 /**
@@ -27,6 +28,7 @@ class MypageController extends AppController
     public function myInfo()
     {
         $this->request->allowMethod(['get', 'put']);
+
         $this->loadModel('Sex');
 
         $user = $this->Users->get($this->Auth->user('id'), [
@@ -43,7 +45,7 @@ class MypageController extends AppController
                 $this->Users->save($user);
                 return $this->redirect(['action' => 'myInfo']);
             } else {
-                $this->Data->reduction($user);
+                $this->Data->resume($user);
                 $result['default']['birthday'] = $this->request->getData('birthday');
 
                 $this->set($result);
@@ -54,9 +56,16 @@ class MypageController extends AppController
         $this->set(compact('user', 'sex'));
     }
 
+    /**
+     * 我的地址
+     *
+     * @param null|int $id
+     * @return \Cake\Http\Response|null
+     */
     public function myAddresses($id = null)
     {
         $this->request->allowMethod(['get', 'post', 'put']);
+
         $this->loadModel('Addresses');
 
         if ($this->request->is(['post', 'put'])) {
@@ -67,16 +76,12 @@ class MypageController extends AppController
                 $address = $this->Addresses->newEntity();
             } else {
                 // 地址编辑
-                $address = $this->Addresses->find('all', [
-                    'conditions' => [
-                        'Addresses.id' => $id,
-                        'Addresses.user_id' => $this->Auth->user('id')
-                    ]
+                $address = $this->Addresses->find('active')->where([
+                    'Addresses.id' => $id,
+                    'Addresses.user_id' => $this->Auth->user('id')
                 ])->first();
 
-                if (is_null($address)) {
-                    throw new BadRequestException();
-                }
+                if (is_null($address)) throw new BadRequestException();
 
                 $this->set('target', $address->id);
             }
@@ -84,9 +89,7 @@ class MypageController extends AppController
             $result = $this->Data->validate($data, $address, function () use ($address, $data) {
                 if ($address->isNew()) {
                     $address->user_id = $this->Auth->user('id');
-                    $this->Data->completion($address, [
-                        'ignore' => array_keys($data)
-                    ]);
+                    $this->Data->completion($address);
                 }
             });
 
@@ -98,12 +101,10 @@ class MypageController extends AppController
             }
         }
 
-        $addresses = $this->Addresses->find('all', [
-            'conditions' => [
-                'Addresses.user_id' => $this->Auth->user('id')
-            ],
-            'select' => ['label', 'name', 'postcode', 'address', 'tel']
-        ])->toArray();
+        $addresses = $this->Addresses->find('active')
+            ->where(['Addresses.user_id' => $this->Auth->user('id')])
+            ->orderAsc('Addresses.created')
+            ->toArray();
 
         $this->set(compact('addresses'));
     }
@@ -112,24 +113,20 @@ class MypageController extends AppController
     {
         $this->request->allowMethod('put');
         $this->autoRender = false;
+        if (is_null($id)) throw new BadRequestException();
+
         $this->loadModel('Addresses');
 
-        if (is_null($id)) {
-            throw new BadRequestException();
-        }
-
-        $address = $this->Addresses->find('all', [
-            'conditions' => [
-                'Addresses.id' => $id,
-                'Addresses.user_id' => $this->Auth->user('id')
-            ]
+        $address = $this->Addresses->find('active')->where([
+            'Addresses.id' => $id,
+            'Addresses.user_id' => $this->Auth->user('id')
         ])->first();
 
         if (is_null($address)) {
             throw new BadRequestException();
         }
 
-        $this->Addresses->delete($address);
+        $this->Addresses->softDelete($address);
 
         return $this->redirect(['action' => 'myAddresses']);
     }

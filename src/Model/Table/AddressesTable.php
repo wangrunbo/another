@@ -24,6 +24,7 @@ use ArrayObject;
  * @method \App\Model\Entity\Address findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \App\Model\Behavior\ValidationBehavior
+ * @mixin \App\Model\Behavior\SoftDeleteBehavior
  */
 class AddressesTable extends Table
 {
@@ -43,6 +44,7 @@ class AddressesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Validation');
+        $this->addBehavior('SoftDelete');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
