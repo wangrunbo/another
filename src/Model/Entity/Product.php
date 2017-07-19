@@ -39,6 +39,7 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\ProductInfo[] $product_info
  *
  * @property array $grouped_info
+ * @property \App\Model\Entity\ProductImage $product_image
  */
 class Product extends Entity
 {
@@ -76,5 +77,12 @@ class Product extends Entity
         }
 
         return $info;
+    }
+
+    protected function _getProductImage()
+    {
+        return TableRegistry::get('ProductImages')->find('active')->where([
+            'ProductImages.product_id' => $this->id
+        ])->first();
     }
 }

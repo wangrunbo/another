@@ -24,7 +24,19 @@ class ProductsController extends AppController
 
     public function index()
     {
-        return $this->render('not_exist');
+        $this->request->allowMethod('get');
+
+        $Products = $this->Products->find('active')
+            ->contain(['ProductImages'])
+            ->orderDesc('Products.bought_times')
+            ->orderDesc('Products.searched_times')
+            ->orderDesc('Products.updated');
+
+        $Products = $this->paginate($Products);
+
+        $products = $Products->toArray();
+
+        $this->set(compact('products'));
     }
 
     /**
@@ -71,7 +83,7 @@ class ProductsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $Product = $this->Products->find('active')->where(['Products.asin' => $asin]);
+        $Product = $this->Products->find()->where(['Products.asin' => $asin]);
 
         if ($Product->isEmpty()) {
             // 访问Amazon搜索商品

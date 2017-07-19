@@ -20,7 +20,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\ProductImage[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\ProductImage findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \App\Model\Behavior\SoftDeleteBehavior
  */
 class ProductImagesTable extends Table
 {
@@ -39,7 +39,7 @@ class ProductImagesTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
+        $this->addBehavior('SoftDelete');
 
         $this->belongsTo('Products', [
             'foreignKey' => 'product_id',
