@@ -6,7 +6,6 @@ use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
-use function PHPSTORM_META\type;
 
 /**
  * Class CartController
@@ -93,6 +92,12 @@ class CartController extends AppController
         }
     }
 
+    /**
+     * 修改商品数量
+     *
+     * @param null|int $id
+     * @return \Cake\Http\Response|null
+     */
     public function quantity($id = null)
     {
         $this->request->allowMethod(['ajax', 'put']);

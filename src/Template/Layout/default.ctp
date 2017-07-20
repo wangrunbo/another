@@ -37,8 +37,9 @@
             <?php if ($this->request->session()->check(SESSION_LOGIN)): ?>
                 <li><a href="<?= $this->Url->build(['controller' => 'Mypage', 'action' => 'index']) ?>"><?= h(__('Personal Info')) ?></a></li>
                 <li><a href="<?= $this->Url->build(['controller' => 'Products', 'action' => 'index']) ?>"><?= h(__('Products')) ?></a></li>
-                <li><a href="<?= $this->Url->build(['controller' => 'History']) ?>"><?= h(__('History')) ?></a></li>
-                <li><a href="<?= $this->Url->build(['controller' => 'Charge']) ?>"><?= h(__('Charge Center')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Favourites', 'action' => 'index']) ?>"><?= h(__('My Favourites')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'History', 'action' => 'index']) ?>"><?= h(__('History')) ?></a></li>
+                <li><a href="<?= $this->Url->build(['controller' => 'Charge', 'action' => 'index']) ?>"><?= h(__('Charge Center')) ?></a></li>
                 <li><a href="<?= $this->Url->build(['controller' => 'Top', 'action' => 'logout']) ?>"><?= h(__('Logout')) ?></a></li>
             <?php else: ?>
                 <li><a href="<?= $this->Url->build(['controller' => 'Register']) ?>"><?= h(__('Register')) ?></a></li>

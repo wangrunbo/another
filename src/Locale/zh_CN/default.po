@@ -9,20 +9,23 @@ msgstr "个人情报"
 msgid "Products"
 msgstr "商品一览"
 #: src/Template/Layout/default.ctp:40
+msgid "My Favourites"
+msgstr "我的收藏"
+#: src/Template/Layout/default.ctp:41
 msgid "History"
 msgstr "购入履历"
-#: src/Template/Layout/default.ctp:41
+#: src/Template/Layout/default.ctp:42
 msgid "Charge Center"
 msgstr "充值中心"
-#: src/Template/Layout/default.ctp:42
+#: src/Template/Layout/default.ctp:43
 #: src/Template/Element/Navi/mypage.ctp:13
 msgid "Logout"
 msgstr "登出"
-#: src/Template/Layout/default.ctp:44
+#: src/Template/Layout/default.ctp:45
 #: src/Template/Register/index.ctp:13;16
 msgid "Register"
 msgstr "会员注册"
-#: src/Template/Layout/default.ctp:45
+#: src/Template/Layout/default.ctp:46
 #: src/Template/Top/login.ctp:12;15
 msgid "Login"
 msgstr "会员登录"
