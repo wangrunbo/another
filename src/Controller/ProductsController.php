@@ -39,9 +39,7 @@ class ProductsController extends AppController
             ->orderDesc('Products.searched_times')
             ->orderDesc('Products.updated');
 
-        $Products = $this->paginate($Products);
-
-        $products = $Products->toArray();
+        $products = $this->paginate($Products)->toArray();
 
         $this->set(compact('products'));
     }

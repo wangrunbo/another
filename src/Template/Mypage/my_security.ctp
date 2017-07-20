@@ -4,6 +4,7 @@
  * @var string $target
  * @var array $errors
  * @var array $default
+ * @var \App\Model\Entity\LoginHistory[] $login_history
  */
 $blocks = ['password'];
 foreach ($blocks as $block) {
@@ -51,5 +52,27 @@ foreach ($blocks as $block) {
             <button type="submit"><?= h(__('OK')) ?></button>
             <button type="button" onclick="switchMode('view', $('#block-password')); resetForm($(this).closest('form')); clearValidationErrors($(this).closest('form'));"><?= h(__('Cancel')) ?></button>
         <?= $this->endForm(['former_password' => null, 'password' => null, 'password_confirm' => null, 'action' => 'changePassword']); ?>
+    </div>
+
+    <div>
+        <h2>登录历史</h2>
+        <table>
+            <tr>
+                <th>登录时间</th>
+                <th>IP</th>
+                <th>系统</th>
+                <th>浏览器</th>
+                <th>语言</th>
+            </tr>
+            <?php foreach ($login_history as $history): ?>
+                <tr>
+                    <td><?= $history->time->format(app_config('Display.format.datetime')) ?></td>
+                    <td><?= $history->ip ?></td>
+                    <td><?= $history->os ?></td>
+                    <td><?= $history->browser ?></td>
+                    <td><?= $history->language ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
     </div>
 </div>

@@ -12,6 +12,7 @@ use function PHPSTORM_META\type;
  * @package App\Controller
  * @property \App\Model\Table\AddressesTable $Addresses
  * @property \App\Model\Table\SexTable $Sex
+ * @property \App\Model\Table\LoginHistoryTable $LoginHistory
  */
 class MypageController extends AppController
 {
@@ -135,11 +136,20 @@ class MypageController extends AppController
         return $this->redirect(['action' => 'myAddresses']);
     }
 
+    ################################# 私信 #################################
+
+    public function myMessage()
+    {
+
+    }
+
     ################################# 账号安全 #################################
 
     public function mySecurity()
     {
         $this->request->allowMethod(['get', 'post']);
+
+        $this->loadModel('LoginHistory');
 
         if ($this->request->is(['post'])) {
             $action = "_{$this->request->getData('action')}";
@@ -150,6 +160,16 @@ class MypageController extends AppController
                 throw new BadRequestException();
             }
         }
+
+        $LoginHistory = $this->LoginHistory->find('active')
+            ->where([
+                'LoginHistory.user_id' => $this->Auth->user('id')
+            ])
+            ->orderDesc('LoginHistory.created');
+
+        $login_history = $this->paginate($LoginHistory)->toArray();
+
+        $this->set(compact('login_history'));
     }
 
     protected function _changePassword()

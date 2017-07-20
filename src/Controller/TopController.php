@@ -3,10 +3,13 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\I18n\Time;
 
 /**
  * Class TopController
  * @package App\Controller
+ *
+ * @property \App\Model\Table\LoginHistoryTable $LoginHistory
  */
 class TopController extends AppController
 {
@@ -38,6 +41,21 @@ class TopController extends AppController
 
             if ($user) {
                 $this->Auth->setUser($user);
+
+                // 记录登录历史
+                $this->loadModel('LoginHistory');
+
+                $user_agent= $this->request->getHeader('User-Agent')[0];
+                $login_history = $this->LoginHistory->newEntity([
+                    'user_id' => $this->Auth->user('id'),
+                    'time' => Time::now(),
+                    'ip' => $this->request->clientIp(),
+                    'os' => $this->LoginHistory->getOS($user_agent),
+                    'browser' => $this->LoginHistory->getBrowser($user_agent),
+                    'user_agent' => $user_agent,
+                    'language' => \Cake\I18n\I18n::locale()
+                ]);
+                $this->LoginHistory->save($login_history);
 
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
