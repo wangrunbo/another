@@ -68,11 +68,14 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['controller' => 'Products', 'action' => 'view'],
         ['pass' => ['asin']]
     );
+    $routes->connect('/checkout', ['controller' => 'Orders', 'action' => 'checkout']);
+    $routes->connect('/buy', ['controller' => 'Orders', 'action' => 'buy']);
 
     /**
      * Disabled routes
      */
     $routes->connect('/products/view/*', ['controller' => 'Error']);
+    $routes->connect('/orders/checkout/*', ['controller' => 'Error']);
 
     /**
      * Connect catchall routes for all controllers.

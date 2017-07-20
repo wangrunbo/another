@@ -44,7 +44,8 @@ class ErrorController extends AppController
     {
         $routes = [
             '/top/*',
-            '/products/view/*'
+            '/products/view/*',
+            '/orders/checkout/*'
         ];
 
         if (in_array($this->request->getParam('_matchedRoute'), $routes)) {

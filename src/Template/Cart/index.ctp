@@ -3,9 +3,11 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Cart[] $cart
  */
+$total = 0;
 ?>
 <div>
     <?php foreach ($cart as $item): ?>
+        <?php $total += $item->product->price * $item->quantity ?>
         <a href="<?= $this->Url->build(['controller' => 'Products', 'action' => 'view', $item->product->asin]) ?>">
             <img src="<?= $item->product->product_image->main ?>" />
         </a>
@@ -13,8 +15,10 @@
         <br />
 
         <a href="<?= $this->Url->build(['controller' => 'Products', 'action' => 'view', $item->product->asin]) ?>">
-            <?= $item->product->name ?>
+            <?= h($item->product->name) ?>
         </a>
+
+        价格：<?= h($item->product->price) ?>
 
         <?= $this->form($item, ['url' => ['controller' => 'Cart', 'action' => 'quantity']]) ?>
             <p>
@@ -30,4 +34,11 @@
         </p>
         <?= $this->endForm() ?>
     <?php endforeach; ?>
+</div>
+
+<div>
+    总价：<?= h($total) ?>
+    <?= $this->form(null, ['url' => ['controller' => 'Orders', 'action' => 'checkout']]) ?>
+        <button type="submit">前往支付</button>
+    <?= $this->endForm() ?>
 </div>
