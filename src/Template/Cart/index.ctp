@@ -23,5 +23,11 @@
                 <button type="submit">变更</button>
             </p>
         <?= $this->endForm(['quantity' => null]) ?>
+
+        <?= $this->form($item, ['url' => ['controller' => 'Cart', 'action' => 'remove']]) ?>
+        <p>
+            <button type="submit">删除</button>
+        </p>
+        <?= $this->endForm() ?>
     <?php endforeach; ?>
 </div>

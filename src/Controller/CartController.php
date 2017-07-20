@@ -117,4 +117,22 @@ class CartController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function remove($id = null)
+    {
+        $this->request->allowMethod(['ajax', 'put']);
+        $this->autoRender = false;
+
+        /** @var \App\Model\Entity\Cart $cart */
+        $cart = $this->Cart->find()->where([
+            'Cart.id' => $id,
+            'user_id' => $this->Auth->user('id')
+        ])->first();
+
+        if (is_null($cart)) throw new BadRequestException();
+
+        $this->Cart->delete($cart);
+
+        return $this->redirect(['action' => 'index']);
+    }
 }
