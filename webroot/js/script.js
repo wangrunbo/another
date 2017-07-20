@@ -69,3 +69,12 @@ function clearValidationErrors(form, fields) {
         })
     }
 }
+
+function initQuantity(field) {
+    var value = $(field).val().match(/^\d+/);
+    if (value === null) {
+        value = 1;
+    }
+
+    $(field).val(value);
+}

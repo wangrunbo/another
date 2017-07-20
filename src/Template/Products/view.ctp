@@ -2,7 +2,12 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Product $product
+ * @var int $quantity
  */
+if (!isset($quantity)) {
+    $quantity = 1;
+}
+
 $this->title($product->name);
 $this->Html->script('Products/view', ['block' => true]);
 ?>
@@ -11,7 +16,7 @@ $this->Html->script('Products/view', ['block' => true]);
         <ul>
             <?php foreach ($product->product_images as $index => $product_image): ?>
                 <div>
-                    <img src="<?= $product_image->sub ?>" onclick="switchImage(<?= $index ?>)" />
+                    <img src="<?= $product_image->sub ?>" />
                 </div>
             <?php endforeach; ?>
         </ul>
@@ -65,6 +70,15 @@ $this->Html->script('Products/view', ['block' => true]);
             <hr />
             推荐：<?= $product->introduction ?>
         <?php endif; ?>
+    </div>
+
+    <div>
+        <?= $this->form(null, ['url' => ['controller' => 'Cart', 'action' => 'add']]) ?>
+            <input name="asin" type="hidden" value="<?= $product->asin ?>" />
+            数量：
+            <input name="quantity" type="number" value="<?= $quantity ?>" min="1" step="1" onchange="initQuantity(this)" title="数量" />
+            <button type="submit">加入购物车</button>
+        <?= $this->endForm(['asin' => $product->asin, 'quantity' => null]) ?>
     </div>
 
     <hr />

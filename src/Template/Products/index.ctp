@@ -7,10 +7,13 @@
 <div>
     <?php foreach ($products as $product): ?>
         <div>
-            <img src="<?= @$product->product_image->main ?>" />
-            <p>
+            <a href="<?= $this->Url->build(['controller' => 'Products', 'action' => 'view', $product->asin]) ?>" target="_blank">
+                <img src="<?= @$product->product_image->main ?>" />
+            </a>
+
+            <a href="<?= $this->Url->build(['controller' => 'Products', 'action' => 'view', $product->asin]) ?>" target="_blank">
                 <?= $product->name ?>
-            </p>
+            </a>
         </div>
     <?php endforeach; ?>
 

@@ -77,9 +77,4 @@ class RegisterController extends AppController
             throw new BadRequestException();
         }
     }
-
-    public function back()
-    {
-
-    }
 }

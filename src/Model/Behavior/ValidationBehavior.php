@@ -56,6 +56,11 @@ class ValidationBehavior extends Behavior
         return true;
     }
 
+    public function isNaturalNumber($value)
+    {
+        return preg_match("/^[1-9]\d*$/", $value);
+    }
+
     ################################# rules #################################
 
     /**

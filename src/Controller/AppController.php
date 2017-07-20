@@ -74,6 +74,25 @@ class AppController extends Controller
         $this->paginate = app_config('Display.pagination.default');
     }
 
+    public function beforeFilter(Event $event)
+    {
+        // Set Flash
+        if ($this->request->session()->check(SESSION_FLASH_SUCCESS)) {
+            $this->Flash->success($this->request->session()->consume(SESSION_FLASH_SUCCESS));
+        }
+
+        if ($this->request->session()->check(SESSION_FLASH_ERROR)) {
+            $this->Flash->error($this->request->session()->consume(SESSION_FLASH_ERROR));
+        }
+
+        // Set ViewVars
+        if ($this->request->session()->check(SESSION_VARS)) {
+            $this->viewVars += $this->request->session()->consume(SESSION_VARS);
+        }
+
+        return parent::beforeFilter($event);
+    }
+
     /**
      * Before render callback.
      *
@@ -102,5 +121,53 @@ class AppController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * Set Success Flash
+     *
+     * @param string $message
+     */
+    protected function _success($message)
+    {
+        $this->request->session()->write(SESSION_FLASH_SUCCESS, $message);
+    }
+
+    /**
+     * Set Error Flash
+     *
+     * @param string $message
+     */
+    protected function _error($message)
+    {
+        $this->request->session()->write(SESSION_FLASH_ERROR, $message);
+    }
+
+    /**
+     * Set Redirect ViewVars
+     *
+     * @param string|array $name
+     * @param null|string|array $value
+     * @return $this
+     */
+    protected function _set($name, $value = null)
+    {
+        if (is_array($name)) {
+            if (is_array($value)) {
+                $data = array_combine($name, $value);
+            } else {
+                $data = $name;
+            }
+        } else {
+            $data = [$name => $value];
+        }
+
+        if ($this->request->session()->check(SESSION_VARS)) {
+            $data += $this->request->session()->read(SESSION_VARS);
+        }
+
+        $this->request->session()->write(SESSION_VARS, $data);
+
+        return $this;
     }
 }
