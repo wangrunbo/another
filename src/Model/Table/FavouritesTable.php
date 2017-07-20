@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -19,8 +20,6 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Favourite patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Favourite[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Favourite findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class FavouritesTable extends Table
 {
@@ -38,8 +37,6 @@ class FavouritesTable extends Table
         $this->setTable('favourites');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-
-        $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
@@ -79,5 +76,14 @@ class FavouritesTable extends Table
         $rules->add($rules->existsIn(['product_id'], 'Products'));
 
         return $rules;
+    }
+
+    public function findActive(Query $query, array $options)
+    {
+        return $query->find('all', $options)->matching('Products', function (Query $q) {
+            return $q->where(function (QueryExpression $exp) {
+                return $exp->isNull('Products.deleted');
+            });
+        });
     }
 }

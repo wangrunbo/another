@@ -45,13 +45,16 @@ class SoftDeleteBehavior extends Behavior
             throw new RecordNotFoundException(__('exception', 'This record dose not exist.'));
         }
 
+        $result = false;
         $field = $this->getSoftDeleteField();
         if (is_null($entity->get($field))) {
             $entity->set($field, Time::now());
-            $this->getTable()->save($entity);
+            if ($this->getTable()->save($entity)) {
+                $result = true;
+            }
         }
 
-        return true;
+        return $result;
     }
 
     /**

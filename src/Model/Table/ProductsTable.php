@@ -2,10 +2,13 @@
 namespace App\Model\Table;
 
 use ArrayObject;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -190,5 +193,27 @@ class ProductsTable extends Table
         $rules->add($rules->existsIn(['modifier_id'], 'Administrators'));
 
         return $rules;
+    }
+
+    public function softDelete(\App\Model\Entity\Product $product)
+    {
+        if ($product->isNew()) {
+            throw new RecordNotFoundException(__('exception', 'This record dose not exist.'));
+        }
+
+        return $this->getConnection()->transactional(function () use ($product) {
+            // 删除所有相关收藏
+            TableRegistry::get('Favourites')->deleteAll(['Favourites.product_id' => $product->id]);
+
+            // 删除商品
+            $product->deleted = Time::now();
+            $result = $this->save($product);
+
+            if ($result === false) {
+                return false;
+            }
+
+            return true;
+        });
     }
 }

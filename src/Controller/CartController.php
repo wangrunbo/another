@@ -80,9 +80,9 @@ class CartController extends AppController
                 }
 
                 if ($this->Cart->save($cart)) {
-                    $this->_success(__('Successfully added product to cart.'));
+                    $this->_success(__d('message', 'Successfully added product to cart.'));
                 } else {
-                    $this->_error(__('Fail to added product to cart!'));
+                    $this->_error(__d('message', 'Fail to added product to cart!'));
                 }
 
                 $this->_set(compact('quantity'));

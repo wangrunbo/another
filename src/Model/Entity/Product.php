@@ -3,6 +3,7 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 /**
  * Product Entity
@@ -84,5 +85,13 @@ class Product extends Entity
         return TableRegistry::get('ProductImages')->find('active')->where([
             'ProductImages.product_id' => $this->id
         ])->first();
+    }
+
+    public function isFavourite()
+    {
+        return !TableRegistry::get('Favourites')->find()->where([
+            'user_id' => Router::getRequest()->session()->read(SESSION_LOGIN)['id'],
+            'product_id' => $this->id
+        ])->isEmpty();
     }
 }

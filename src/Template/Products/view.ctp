@@ -81,6 +81,12 @@ $this->Html->script('Products/view', ['block' => true]);
         <?= $this->endForm(['asin' => $product->asin, 'quantity' => null]) ?>
     </div>
 
+    <div>
+        <a href="<?= $this->Url->build(['controller' => 'Favourites', 'action' => 'add', '?' => ['asin' => $product->asin]]) ?>" <?php if ($product->isFavourite()): ?>onclick="return false;"<?php endif; ?>>
+            加入收藏
+        </a>
+    </div>
+
     <hr />
 
     <a href="<?= AMAZON_PRODUCT_PAGE_1.$product->asin.AMAZON_PRODUCT_PAGE_2 ?>" target="_blank">去Amazon确认</a>
