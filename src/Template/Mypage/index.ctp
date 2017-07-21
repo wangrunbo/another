@@ -8,5 +8,7 @@
     <dl>
         <dt>用户名</dt>
         <dd><?= h($user->username) ?></dd>
+        <dt>余额</dt>
+        <dd><?= h($user->point) ?></dd>
     </dl>
 </div>

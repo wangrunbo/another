@@ -21,3 +21,10 @@ if (!function_exists('random')) {
         return array_reduce(range(1, $length), function ($p) use ($pattern) { return $p.str_shuffle($pattern)[0]; });
     }
 }
+
+if (!function_exists('price')) {
+    function price($price)
+    {
+        return \Cake\I18n\Number::format((string)$price);
+    }
+}

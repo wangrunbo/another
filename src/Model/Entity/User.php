@@ -37,6 +37,8 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\LoginHistory[] $login_history
  * @property \App\Model\Entity\Order[] $orders
  * @property \App\Model\Entity\PointHistory[] $point_history
+ *
+ * @property int $point
  */
 class User extends Entity
 {
@@ -79,6 +81,28 @@ class User extends Entity
     protected function _setPasswordConfirm($password_confirm)
     {
         return (new DefaultPasswordHasher)->hash($password_confirm);
+    }
+
+    protected function _getPoint()
+    {
+        /** @var \App\Model\Entity\PointHistory[] $points */
+        $points = TableRegistry::get('PointHistory')->find('active')
+            ->select(['point', 'point_calculation_id'])
+            ->where([
+                'user_id' => $this->id
+            ])
+            ->toArray();
+
+        $total = 0;
+        foreach ($points as $point) {
+            if ($point->point_calculation_id === \App\Model\Entity\PointCalculation::PLUS) {
+                $total += $point->point;
+            } elseif ($point->point_calculation_id === \App\Model\Entity\PointCalculation::MINUS) {
+                $total -= $point->point;
+            }
+        }
+
+        return $total;
     }
 
     public function updateSecretKey()

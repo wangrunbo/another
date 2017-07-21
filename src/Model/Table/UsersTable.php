@@ -382,6 +382,22 @@ class UsersTable extends Table
         return $rules;
     }
 
+    public function find($type = 'all', $options = [])
+    {
+        $Points = $this->PointHistory->find('active');
+
+        $query = parent::find($type, $options)
+            ->select($this)
+//            ->select(['total' => $this->query()->func()->sum('PointHistory.')])
+            ->leftJoinWith('PointHistory', function (Query $q) {
+                return $q->select(['PointHistory.point']);
+            });
+
+        dump($query->toArray());exit;
+
+        return $query;
+    }
+
     public function findAuth(Query $query, array $options)
     {
         return parent::findAll($query, $options)
