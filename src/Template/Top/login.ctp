@@ -4,11 +4,6 @@
  * @var array $default
  * @var string $error
  */
-if (!isset($default)) {
-    $default = [
-        'email' => ''
-    ];
-}
 
 $this->title(__('Login'))
 ?>
@@ -21,7 +16,7 @@ $this->title(__('Login'))
 <?php endif; ?>
 
 <?= $this->Form->create() ?>
-    <?= $this->Form->control('email', ['type' => 'text', 'value' => $default['email'], 'placeholder' => __('email')]) ?>
+    <?= $this->Form->control('email', ['type' => 'text', 'value' => @$default['email'], 'placeholder' => __('email')]) ?>
     <?= $this->Form->control('password', ['type' => 'password', 'value' => "", 'placeholder' => __('password')]) ?>
     <button type="submit"><?= h(__('login')) ?></button>
 <?= $this->Form->end() ?>

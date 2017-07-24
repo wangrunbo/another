@@ -39,7 +39,7 @@ class RegisterController extends AppController
                 $user->generateUid();
                 $user->updateSecretKey();
                 $user->sex_id = \App\Model\Entity\Sex::NOT_SET;
-                $user->user_status_id = \App\Model\Entity\UserStatus::STATUS_GENERAL;
+                $user->user_status_id = \App\Model\Entity\UserStatus::GENERAL;
                 $this->Data->completion($user);
             });
 
@@ -67,7 +67,7 @@ class RegisterController extends AppController
         $user->password = $this->request->getData('password');
         $user->updateSecretKey();
         $user->sex_id = \App\Model\Entity\Sex::NOT_SET;
-        $user->user_status_id = \App\Model\Entity\UserStatus::STATUS_GENERAL;
+        $user->user_status_id = \App\Model\Entity\UserStatus::GENERAL;
         $this->Data->completion($user);
 
         if ($this->Users->save($user)) {

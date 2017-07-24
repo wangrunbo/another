@@ -18,25 +18,10 @@ use Cake\ORM\Entity;
 class UserStatus extends Entity
 {
 
-    /**
-     * 未激活
-     */
-    const STATUS_INACTIVE = 1;
-
-    /**
-     * 一般会员
-     */
-    const STATUS_GENERAL = 2;
-
-    /**
-     * 锁定
-     */
-    const STATUS_LOCKED = 3;
-
-    /**
-     * 删除
-     */
-    const STATUS_DELETED = 4;
+    const INACTIVE = 1;  // 未激活
+    const GENERAL = 2;  // 一般会员
+    const LOCKED = 3;  // 锁定
+    const DELETED = 4;  // 删除
 
 
     /**

@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\PointCalculationsTable;
+use App\Model\Table\DeliveryTypesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\PointCalculationsTable Test Case
+ * App\Model\Table\DeliveryTypesTable Test Case
  */
-class PointCalculationsTableTest extends TestCase
+class DeliveryTypesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\PointCalculationsTable
+     * @var \App\Model\Table\DeliveryTypesTable
      */
-    public $PointCalculations;
+    public $DeliveryTypes;
 
     /**
      * Fixtures
@@ -24,8 +24,26 @@ class PointCalculationsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.point_calculations',
-        'app.point_history'
+        'app.delivery_types',
+        'app.orders',
+        'app.users',
+        'app.sex',
+        'app.user_statuses',
+        'app.administrators',
+        'app.addresses',
+        'app.cart',
+        'app.products',
+        'app.product_types',
+        'app.order_details',
+        'app.favourites',
+        'app.product_images',
+        'app.product_info',
+        'app.product_info_types',
+        'app.login_history',
+        'app.point_history',
+        'app.point_types',
+        'app.order_statuses',
+        'app.posts'
     ];
 
     /**
@@ -36,8 +54,8 @@ class PointCalculationsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('PointCalculations') ? [] : ['className' => 'App\Model\Table\PointCalculationsTable'];
-        $this->PointCalculations = TableRegistry::get('PointCalculations', $config);
+        $config = TableRegistry::exists('DeliveryTypes') ? [] : ['className' => 'App\Model\Table\DeliveryTypesTable'];
+        $this->DeliveryTypes = TableRegistry::get('DeliveryTypes', $config);
     }
 
     /**
@@ -47,7 +65,7 @@ class PointCalculationsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->PointCalculations);
+        unset($this->DeliveryTypes);
 
         parent::tearDown();
     }

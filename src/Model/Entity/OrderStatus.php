@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Sex Entity
+ * OrderStatus Entity
  *
  * @property int $id
  * @property string $name
@@ -13,14 +13,15 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $updated
  * @property \Cake\I18n\Time $deleted
  *
- * @property \App\Model\Entity\User[] $users
+ * @property \App\Model\Entity\Order[] $orders
  */
-class Sex extends Entity
+class OrderStatus extends Entity
 {
 
-    const NOT_SET = 1;  // 未设定
-    const MALE = 2;  // 男性
-    const FEMALE = 3;  // 女性
+    const CASHING = 1;  // 未支付
+    const FINISH = 2;  // 交易完成
+    const FAIL = 3;  // 交易失败
+    const TIME_OUT = 4;  // 交易超时
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

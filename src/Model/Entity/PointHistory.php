@@ -9,7 +9,6 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $user_id
  * @property int $point
- * @property int $point_calculation_id
  * @property int $point_type_id
  * @property int $order_id
  * @property string $note
@@ -19,7 +18,6 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $deleted
  *
  * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\PointCalculation $point_calculation
  * @property \App\Model\Entity\PointType $point_type
  * @property \App\Model\Entity\Order $order
  * @property \App\Model\Entity\Administrator $administrator

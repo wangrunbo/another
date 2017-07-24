@@ -40,8 +40,10 @@ class OrdersTableTest extends TestCase
         'app.product_info_types',
         'app.login_history',
         'app.point_history',
-        'app.order_statuses',
-        'app.posts'
+        'app.point_types',
+        'app.delivery_types',
+        'app.posts',
+        'app.order_statuses'
     ];
 
     /**

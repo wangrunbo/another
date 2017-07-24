@@ -2,36 +2,38 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
- * Order Entity
+ * OrderDetail Entity
  *
  * @property int $id
- * @property int $user_id
+ * @property int $order_id
+ * @property int $product_id
+ * @property string $asin
  * @property string $name
- * @property string $postcode
- * @property string $address
- * @property string $tel
- * @property int $total_price
- * @property int $amazon_postage
- * @property int $delivery_type_id
- * @property int $order_status_id
- * @property int $post_id
+ * @property int $price
+ * @property string $standard
+ * @property string $image
+ * @property int $product_type_id
+ * @property \Cake\I18n\Time $sale_start_date
+ * @property bool $restrict_flg
+ * @property string $amazon_order_code
+ * @property int $quantity
  * @property string $note
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $updated
  * @property int $modifier_id
  * @property \Cake\I18n\Time $deleted
  *
- * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\DeliveryType $delivery_type
- * @property \App\Model\Entity\OrderStatus $order_status
- * @property \App\Model\Entity\Post $post
+ * @property \App\Model\Entity\Order $order
+ * @property \App\Model\Entity\Product $product
+ * @property \App\Model\Entity\ProductType $product_type
  * @property \App\Model\Entity\Administrator $administrator
- * @property \App\Model\Entity\OrderDetail[] $order_details
- * @property \App\Model\Entity\PointHistory[] $point_history
+ *
+ * @property string $product_type
  */
-class Order extends Entity
+class OrderDetail extends Entity
 {
 
     /**
@@ -47,4 +49,9 @@ class Order extends Entity
         '*' => true,
         'id' => false
     ];
+
+    protected function _getProductType()
+    {
+        return TableRegistry::get('ProductTypes')->get($this->product_type_id)->name;
+    }
 }

@@ -22,7 +22,6 @@ class MypageController extends AppController
         $this->request->allowMethod('get');
 
         $user = $this->Users->get($this->Auth->user('id'), ['contain' => ['Addresses']]);
-        dump($user);exit;
 
         $this->set(compact('user'));
     }

@@ -36,9 +36,9 @@ $total = 0;
     <?php endforeach; ?>
 </div>
 
-<div>
-    总价：<?= h($total) ?>
-    <?= $this->form(null, ['url' => ['controller' => 'Orders', 'action' => 'checkout']]) ?>
-        <button type="submit">前往支付</button>
-    <?= $this->endForm() ?>
-</div>
+<?php if (!empty($cart)): ?>
+    <div>
+        总价：<?= h($total) ?>
+        <a href="<?= $this->Url->build(['controller' => 'Orders', 'action' => 'checkout']) ?>">前往支付</a>
+    </div>
+<?php endif; ?>

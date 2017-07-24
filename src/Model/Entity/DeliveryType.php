@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * PointCalculation Entity
+ * DeliveryType Entity
  *
  * @property int $id
  * @property string $name
@@ -13,20 +13,16 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $updated
  * @property \Cake\I18n\Time $deleted
  *
- * @property \App\Model\Entity\PointHistory[] $point_history
+ * @property \App\Model\Entity\Order[] $orders
+ * @property \App\Model\Entity\Post[] $posts
  */
-class PointCalculation extends Entity
+class DeliveryType extends Entity
 {
 
-    /**
-     * 加算
-     */
-    const PLUS = 1;
-
-    /**
-     * 减算
-     */
-    const MINUS = 1;
+    const EMS = 1;  // EMS
+    const AIR = 2;  // 空运
+    const SAL = 3;  // SAL
+    const SEA = 4;  // 海运
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

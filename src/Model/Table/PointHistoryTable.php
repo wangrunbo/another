@@ -10,7 +10,6 @@ use Cake\Validation\Validator;
  * PointHistory Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $PointCalculations
  * @property \Cake\ORM\Association\BelongsTo $PointTypes
  * @property \Cake\ORM\Association\BelongsTo $Orders
  * @property \Cake\ORM\Association\BelongsTo $Administrators
@@ -46,10 +45,6 @@ class PointHistoryTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
-        ]);
-        $this->belongsTo('PointCalculations', [
-            'foreignKey' => 'point_calculation_id',
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('PointTypes', [
@@ -101,7 +96,6 @@ class PointHistoryTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['point_calculation_id'], 'PointCalculations'));
         $rules->add($rules->existsIn(['point_type_id'], 'PointTypes'));
         $rules->add($rules->existsIn(['order_id'], 'Orders'));
         $rules->add($rules->existsIn(['modifier_id'], 'Administrators'));

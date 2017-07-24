@@ -7,21 +7,21 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * PointCalculations Model
+ * OrderStatuses Model
  *
- * @property \Cake\ORM\Association\HasMany $PointHistory
+ * @property \Cake\ORM\Association\HasMany $Orders
  *
- * @method \App\Model\Entity\PointCalculation get($primaryKey, $options = [])
- * @method \App\Model\Entity\PointCalculation newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\PointCalculation[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\PointCalculation|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\PointCalculation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\PointCalculation[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\PointCalculation findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\OrderStatus get($primaryKey, $options = [])
+ * @method \App\Model\Entity\OrderStatus newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\OrderStatus[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\OrderStatus|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\OrderStatus patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\OrderStatus[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\OrderStatus findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class PointCalculationsTable extends Table
+class OrderStatusesTable extends Table
 {
 
     /**
@@ -34,14 +34,14 @@ class PointCalculationsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('point_calculations');
+        $this->setTable('order_statuses');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('PointHistory', [
-            'foreignKey' => 'point_calculation_id'
+        $this->hasMany('Orders', [
+            'foreignKey' => 'order_status_id'
         ]);
     }
 

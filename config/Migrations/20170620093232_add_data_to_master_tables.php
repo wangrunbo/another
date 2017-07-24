@@ -11,10 +11,10 @@ class AddDataToMasterTables extends AbstractMigration
     {
         $order_statuses = $this->table('order_statuses');
         $order_statuses->insert([
-            ['name' => '采购中', 'sort' => 1],
-            ['name' => '未支付', 'sort' => 2],
-            ['name' => '支付成功', 'sort' => 3],
-            ['name' => '支付失败', 'sort' => 4]
+            ['name' => '未支付', 'sort' => 1],
+            ['name' => '交易完成', 'sort' => 2],
+            ['name' => '交易失败', 'sort' => 3],
+            ['name' => '交易过期', 'sort' => 4]
         ])->saveData();
 
         $point_calculations = $this->table('point_calculations');

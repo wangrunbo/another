@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use ArrayObject;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -10,6 +12,7 @@ use Cake\Validation\Validator;
  * Orders Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
+ * @property \Cake\ORM\Association\BelongsTo $DeliveryTypes
  * @property \Cake\ORM\Association\BelongsTo $OrderStatuses
  * @property \Cake\ORM\Association\BelongsTo $Posts
  * @property \Cake\ORM\Association\BelongsTo $Administrators
@@ -24,7 +27,8 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Order[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Order findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \App\Model\Behavior\ValidationBehavior
+ * @mixin \App\Model\Behavior\SoftDeleteBehavior
  */
 class OrdersTable extends Table
 {
@@ -43,10 +47,15 @@ class OrdersTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
+        $this->addBehavior('Validation');
+        $this->addBehavior('SoftDelete');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('DeliveryTypes', [
+            'foreignKey' => 'delivery_type_id',
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('OrderStatuses', [
@@ -60,11 +69,64 @@ class OrdersTable extends Table
             'foreignKey' => 'modifier_id'
         ]);
         $this->hasMany('OrderDetails', [
-            'foreignKey' => 'order_id'
+            'foreignKey' => 'order_id',
+            'dependent' => true
         ]);
         $this->hasMany('PointHistory', [
             'foreignKey' => 'order_id'
         ]);
+    }
+
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        if ($options['validate']) {
+            $this->setValidationConfig([
+                'label' => [
+                    'maxLength' => 20
+                ],
+                'name' => [
+                    'maxLength' => 20
+                ],
+                'postcode' => [
+                    'format' => '/^\d{6}$/'
+                ],
+                'address' => [
+                    'maxLength' => 100
+                ],
+                'tel' => [
+                    'format' => '/^\d{1,20}$/'
+                ]
+            ]);
+        }
+
+        // 姓名
+        if (array_key_exists('name', $data)) {
+            // 全角字母空格转半角
+            $data['name'] = mb_convert_kana($data['name'], "rs");
+        }
+
+        // 邮政编码
+        if (array_key_exists('postcode', $data)) {
+            // 全角数字转半角
+            $data['postcode'] = mb_convert_kana($data['postcode'], "n");
+
+            // 短横杠、空格删除
+            $data['postcode'] = preg_replace('/[-\s]/', '', $data['postcode']);
+        }
+
+        // 地址
+        if (array_key_exists('address', $data)) {
+
+        }
+
+        // 电话号码
+        if (array_key_exists('tel', $data)) {
+            // 全角数字转半角
+            $data['tel'] = mb_convert_kana($data['tel'], "n");
+
+            // 短横杠、空格删除
+            $data['tel'] = preg_replace('/[-\s]/', '', $data['tel']);
+        }
     }
 
     /**
@@ -80,30 +142,44 @@ class OrdersTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->notEmpty('name', __d($this->getValidationConfig('locale'), 'Name cannot be left empty!'))
+            ->add('name', 'maxLength', [
+                'rule' => ['maxLength', $this->getValidationConfig('name.maxLength')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Name cannot be longer then {length} words!', ['length' => $this->getValidationConfig('name.maxLength')])
+            ]);
 
         $validator
-            ->requirePresence('postcode', 'create')
-            ->notEmpty('postcode');
+            ->notEmpty('postcode', __d($this->getValidationConfig('locale'), 'Postcode cannot be left empty!'))
+            ->add('postcode', 'format', [
+                'rule' => ['custom', $this->getValidationConfig('postcode.format')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Please enter 6-digit half-size number!')
+            ]);
 
         $validator
-            ->requirePresence('address', 'create')
-            ->notEmpty('address');
+            ->notEmpty('address', __d($this->getValidationConfig('locale'), 'Address cannot be left empty!'))
+            ->add('address', 'maxLength', [
+                'rule' => ['maxLength', $this->getValidationConfig('address.maxLength')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Address cannot be longer then {length} words!', ['length' => $this->getValidationConfig('address.maxLength')])
+            ]);
 
         $validator
-            ->requirePresence('tel', 'create')
-            ->notEmpty('tel');
+            ->notEmpty('tel', __d($this->getValidationConfig('locale'), 'Tel cannot be left empty!'))
+            ->add('tel', 'format', [
+                'rule' => ['custom', $this->getValidationConfig('tel.format')],
+                'last' => true,
+                'message' => __d($this->getValidationConfig('locale'), 'Invalid tel format!')
+            ]);
 
         $validator
             ->integer('total_price')
-            ->requirePresence('total_price', 'create')
-            ->notEmpty('total_price');
+            ->allowEmpty('total_price');
 
         $validator
             ->integer('amazon_postage')
-            ->requirePresence('amazon_postage', 'create')
-            ->notEmpty('amazon_postage');
+            ->allowEmpty('amazon_postage');
 
         $validator
             ->allowEmpty('note');
@@ -125,6 +201,7 @@ class OrdersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['delivery_type_id'], 'DeliveryTypes'));
         $rules->add($rules->existsIn(['order_status_id'], 'OrderStatuses'));
         $rules->add($rules->existsIn(['post_id'], 'Posts'));
         $rules->add($rules->existsIn(['modifier_id'], 'Administrators'));

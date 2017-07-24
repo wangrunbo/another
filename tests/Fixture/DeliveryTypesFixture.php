@@ -4,10 +4,10 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * PointCalculationsFixture
+ * DeliveryTypesFixture
  *
  */
-class PointCalculationsFixture extends TestFixture
+class DeliveryTypesFixture extends TestFixture
 {
 
     /**
@@ -45,9 +45,9 @@ class PointCalculationsFixture extends TestFixture
             'id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
             'sort' => 1,
-            'created' => 1500625324,
-            'updated' => 1500625324,
-            'deleted' => 1500625324
+            'created' => 1500881277,
+            'updated' => 1500881277,
+            'deleted' => 1500881277
         ],
     ];
 }

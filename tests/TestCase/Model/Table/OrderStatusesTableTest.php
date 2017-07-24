@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\PointHistoryTable;
+use App\Model\Table\OrderStatusesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\PointHistoryTable Test Case
+ * App\Model\Table\OrderStatusesTable Test Case
  */
-class PointHistoryTableTest extends TestCase
+class OrderStatusesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\PointHistoryTable
+     * @var \App\Model\Table\OrderStatusesTable
      */
-    public $PointHistory;
+    public $OrderStatuses;
 
     /**
      * Fixtures
@@ -24,7 +24,8 @@ class PointHistoryTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.point_history',
+        'app.order_statuses',
+        'app.orders',
         'app.users',
         'app.sex',
         'app.user_statuses',
@@ -39,10 +40,9 @@ class PointHistoryTableTest extends TestCase
         'app.product_info',
         'app.product_info_types',
         'app.login_history',
-        'app.orders',
-        'app.order_statuses',
-        'app.posts',
-        'app.point_types'
+        'app.point_history',
+        'app.point_types',
+        'app.posts'
     ];
 
     /**
@@ -53,8 +53,8 @@ class PointHistoryTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('PointHistory') ? [] : ['className' => 'App\Model\Table\PointHistoryTable'];
-        $this->PointHistory = TableRegistry::get('PointHistory', $config);
+        $config = TableRegistry::exists('OrderStatuses') ? [] : ['className' => 'App\Model\Table\OrderStatusesTable'];
+        $this->OrderStatuses = TableRegistry::get('OrderStatuses', $config);
     }
 
     /**
@@ -64,7 +64,7 @@ class PointHistoryTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->PointHistory);
+        unset($this->OrderStatuses);
 
         parent::tearDown();
     }
