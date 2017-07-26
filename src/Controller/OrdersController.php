@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\I18n\Time;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 
@@ -14,6 +15,7 @@ use Cake\Network\Exception\NotFoundException;
  * @property \App\Model\Table\AddressesTable $Addresses
  * @property \App\Model\Table\DeliveryTypesTable $DeliveryTypes
  * @property \App\Model\Table\PointHistoryTable $PointHistory
+ * @property \App\Model\Table\ProductsTable $Products
  */
 class OrdersController extends AppController
 {
@@ -165,13 +167,17 @@ class OrdersController extends AppController
         $this->autoRender = false;
 
         $this->loadModel('PointHistory');
+        $this->loadModel('Products');
 
         /** @var \App\Model\Entity\Order $order */
-        $order = $this->Orders->find('active')->where([
-            'Orders.user_id' => $this->Auth->user('id'),
-            'Orders.id' => $id,
-            'Orders.order_status_id' => \App\Model\Entity\OrderStatus::CASHING
-        ])->first();
+        $order = $this->Orders->find('active')
+            ->where([
+                'Orders.user_id' => $this->Auth->user('id'),
+                'Orders.id' => $id,
+                'Orders.order_status_id' => \App\Model\Entity\OrderStatus::CASHING
+            ])
+            ->contain(['OrderDetails'])
+            ->first();
 
         if (is_null($order)) {
             // 用户变更、交易过期等情况导致无法确认注文的情况下，返回购物车
@@ -220,7 +226,18 @@ class OrdersController extends AppController
         }
 
         $order->order_status_id = \App\Model\Entity\OrderStatus::FINISH;
+        $order->finish = Time::now();
         $this->Orders->save($order);
+
+        // 商品被购买次数增加
+        foreach ($order->order_details as $order_detail) {
+            /** @var \App\Model\Entity\Product $product */
+            $product = $this->Products->find()->where(['asin' => $order_detail->asin])->first();
+            if (!is_null($product)) {
+                $product->bought_times += 1;
+                $this->Products->save($product);
+            }
+        }
 
         // 清空购物车
         $this->Cart->deleteAll(['Cart.user_id' => $this->Auth->user('id')]);
@@ -251,6 +268,7 @@ class OrdersController extends AppController
     private function fail(\App\Model\Entity\Order $order)
     {
         $order->order_status_id = \App\Model\Entity\OrderStatus::FAIL;
+        $order->finish = Time::now();
         $this->Orders->save($order);
 
         $this->request->session()->write(SESSION_FROM_ORDER, true);

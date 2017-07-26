@@ -17,6 +17,7 @@ use Cake\ORM\TableRegistry;
  * @property int $amazon_postage
  * @property int $delivery_type_id
  * @property int $order_status_id
+ * @property \Cake\I18n\Time $finish
  * @property int $post_id
  * @property string $note
  * @property \Cake\I18n\Time $created
@@ -32,6 +33,7 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\OrderDetail[] $order_details
  * @property \App\Model\Entity\PointHistory[] $point_history
  *
+ * @property int $postage 运费
  * @property int $total 总价（亚马逊小计 + 亚马逊运费 + 运费）
  */
 class Order extends Entity
@@ -51,7 +53,7 @@ class Order extends Entity
         'id' => false
     ];
 
-    protected function _getTotal()
+    protected function _getPostage()
     {
         if ($this->isFreeShipping()) {
             $postage = 0;
@@ -66,7 +68,12 @@ class Order extends Entity
             }
         }
 
-        return $this->total_price + $postage;
+        return $postage;
+    }
+
+    protected function _getTotal()
+    {
+        return $this->total_price + $this->postage;
     }
 
     /**

@@ -24,9 +24,10 @@ class OrdersFixture extends TestFixture
         'address' => ['type' => 'text', 'length' => null, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '地址', 'precision' => null],
         'tel' => ['type' => 'string', 'length' => 20, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '联系电话', 'precision' => null, 'fixed' => null],
         'total_price' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'Amazon付款总价（包含运费）', 'precision' => null, 'autoIncrement' => null],
-        'amazon_postage' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => '0', 'comment' => 'Amazon运费', 'precision' => null, 'autoIncrement' => null],
+        'amazon_postage' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'Amazon运费', 'precision' => null, 'autoIncrement' => null],
         'delivery_type_id' => ['type' => 'integer', 'length' => 6, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => 'FK.希望的邮寄方法', 'precision' => null, 'autoIncrement' => null],
         'order_status_id' => ['type' => 'integer', 'length' => 6, 'unsigned' => false, 'null' => false, 'default' => '1', 'comment' => 'FK.交易状态', 'precision' => null, 'autoIncrement' => null],
+        'finish' => ['type' => 'timestamp', 'length' => null, 'null' => true, 'default' => null, 'comment' => '交易完成时间', 'precision' => null],
         'post_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'FK.邮寄信息', 'precision' => null, 'autoIncrement' => null],
         'note' => ['type' => 'text', 'length' => null, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '备注', 'precision' => null],
         'created' => ['type' => 'timestamp', 'length' => null, 'null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间', 'precision' => null],
@@ -34,10 +35,10 @@ class OrdersFixture extends TestFixture
         'modifier_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'FK.最近更新者', 'precision' => null, 'autoIncrement' => null],
         'deleted' => ['type' => 'timestamp', 'length' => null, 'null' => true, 'default' => null, 'comment' => 'FLG.已删除', 'precision' => null],
         '_indexes' => [
-            'user_id' => ['type' => 'index', 'columns' => ['user_id'], 'length' => []],
             'modifier_id' => ['type' => 'index', 'columns' => ['modifier_id'], 'length' => []],
             'order_status_id' => ['type' => 'index', 'columns' => ['order_status_id'], 'length' => []],
             'post_id' => ['type' => 'index', 'columns' => ['post_id'], 'length' => []],
+            'user_id' => ['type' => 'index', 'columns' => ['user_id'], 'length' => []],
             'delivery_type_id' => ['type' => 'index', 'columns' => ['delivery_type_id'], 'length' => []],
         ],
         '_constraints' => [
@@ -72,12 +73,13 @@ class OrdersFixture extends TestFixture
             'amazon_postage' => 1,
             'delivery_type_id' => 1,
             'order_status_id' => 1,
+            'finish' => 1501059728,
             'post_id' => 1,
             'note' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'created' => 1500881325,
-            'updated' => 1500881325,
+            'created' => 1501059728,
+            'updated' => 1501059728,
             'modifier_id' => 1,
-            'deleted' => 1500881325
+            'deleted' => 1501059728
         ],
     ];
 }

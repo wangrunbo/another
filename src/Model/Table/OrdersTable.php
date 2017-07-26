@@ -179,6 +179,10 @@ class OrdersTable extends Table
             ->allowEmpty('amazon_postage');
 
         $validator
+            ->dateTime('finish')
+            ->allowEmpty('finish');
+
+        $validator
             ->allowEmpty('note');
 
         $validator
