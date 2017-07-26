@@ -19,6 +19,9 @@ define('SESSION_FLASH_ERROR', 'Flash.Error');
 define('SESSION_LOGIN', 'Auth.User');
 define('SESSION_DEFAULT', 'Default');
 define('SESSION_VARS', 'ViewVars');
+// 重定向请求页面
+define('SESSION_FROM', 'From');
+define('SESSION_FROM_ORDER', 'From.Order');
 
 /**
  * 常量设定

@@ -225,17 +225,21 @@ class OrdersController extends AppController
         // 清空购物车
         $this->Cart->deleteAll(['Cart.user_id' => $this->Auth->user('id')]);
 
+        $this->request->session()->write(SESSION_FROM_ORDER, true);
+
         return $this->redirect(['action' => 'success']);
     }
 
     public function success()
     {
         $this->request->allowMethod('get');
+        if (!$this->request->session()->consume(SESSION_FROM_ORDER)) throw new NotFoundException();
     }
 
     public function error()
     {
         $this->request->allowMethod('get');
+        if (!$this->request->session()->consume(SESSION_FROM_ORDER)) throw new NotFoundException();
     }
 
     /**
@@ -248,6 +252,8 @@ class OrdersController extends AppController
     {
         $order->order_status_id = \App\Model\Entity\OrderStatus::FAIL;
         $this->Orders->save($order);
+
+        $this->request->session()->write(SESSION_FROM_ORDER, true);
 
         return $this->redirect('error');
     }
