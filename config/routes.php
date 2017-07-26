@@ -69,7 +69,9 @@ Router::scope('/', function (RouteBuilder $routes) {
         ['pass' => ['asin']]
     );
     $routes->connect('/checkout', ['controller' => 'Orders', 'action' => 'checkout']);
-    $routes->connect('/buy', ['controller' => 'Orders', 'action' => 'buy']);
+    $routes->connect('/buy/success', ['controller' => 'Orders', 'action' => 'success']);
+    $routes->connect('/buy/fail', ['controller' => 'Orders', 'action' => 'fail']);
+    $routes->connect('/buy/*', ['controller' => 'Orders', 'action' => 'buy']);
 
     /**
      * Disabled routes

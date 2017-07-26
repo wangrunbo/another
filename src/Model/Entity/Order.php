@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * Order Entity
@@ -30,6 +31,8 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Administrator $administrator
  * @property \App\Model\Entity\OrderDetail[] $order_details
  * @property \App\Model\Entity\PointHistory[] $point_history
+ *
+ * @property int $total 总价（亚马逊小计 + 亚马逊运费 + 运费）
  */
 class Order extends Entity
 {
@@ -47,4 +50,32 @@ class Order extends Entity
         '*' => true,
         'id' => false
     ];
+
+    protected function _getTotal()
+    {
+        if ($this->isFreeShipping()) {
+            $postage = 0;
+        } else {
+            $Post = TableRegistry::get('Posts')->find('active')->where(['Posts.id' => $this->post_id]);
+
+            if ($Post->isEmpty()) {
+                // 商品尚未发送，取默认邮费
+                $postage = 0;
+            } else {
+                $postage = $Post->first()->postage;
+            }
+        }
+
+        return $this->total_price + $postage;
+    }
+
+    /**
+     * 该交易是否免运费
+     *
+     * @return bool
+     */
+    public function isFreeShipping()
+    {
+        return false;
+    }
 }

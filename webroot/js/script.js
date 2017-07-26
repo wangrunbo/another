@@ -70,6 +70,10 @@ function clearValidationErrors(form, fields) {
     }
 }
 
+/**
+ * 数量输入栏限制
+ * @param field
+ */
 function initQuantity(field) {
     var value = $(field).val().match(/^\d+/);
     if (value === null) {

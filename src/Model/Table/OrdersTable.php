@@ -62,7 +62,7 @@ class OrdersTable extends Table
             'foreignKey' => 'order_status_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Posts', [
+        $this->hasOne('Posts', [
             'foreignKey' => 'post_id'
         ]);
         $this->belongsTo('Administrators', [
@@ -81,9 +81,6 @@ class OrdersTable extends Table
     {
         if ($options['validate']) {
             $this->setValidationConfig([
-                'label' => [
-                    'maxLength' => 20
-                ],
                 'name' => [
                     'maxLength' => 20
                 ],

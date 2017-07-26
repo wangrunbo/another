@@ -23,3 +23,4 @@ define('SESSION_VARS', 'ViewVars');
 /**
  * 常量设定
  */
+define('REDIRECT_COUNTER', 5);  // 跳转页面前倒数秒数

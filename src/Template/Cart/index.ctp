@@ -18,7 +18,7 @@ $total = 0;
             <?= h($item->product->name) ?>
         </a>
 
-        价格：<?= h($item->product->price) ?>
+        价格：<?= h(price($item->product->price)) ?> 日元
 
         <?= $this->form($item, ['url' => ['controller' => 'Cart', 'action' => 'quantity']]) ?>
             <p>
