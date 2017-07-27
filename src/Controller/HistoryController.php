@@ -25,14 +25,10 @@ class HistoryController extends AppController
         $this->request->allowMethod('get');
 
         $orders = $this->Orders->find('active')
-            ->where(function (QueryExpression $exp, Query $q) {
-                return $exp
-                    ->eq('Orders.user_id', $this->Auth->user('id'))
-                    ->or_([
-                        $q->newExpr()->eq('Orders.order_status_id', \App\Model\Entity\OrderStatus::FINISH),
-                        $q->newExpr()->eq('Orders.order_status_id', \App\Model\Entity\OrderStatus::FAIL)
-                    ]);
-            })
+            ->where([
+                'Orders.user_id' => $this->Auth->user('id'),
+                'Orders.order_status_id' => \App\Model\Entity\OrderStatus::FINISH
+            ])
             ->contain(['OrderDetails'])
             ->orderDesc('Orders.finish')
             ->toArray();

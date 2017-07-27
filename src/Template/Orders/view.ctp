@@ -14,7 +14,7 @@
         <?= h(price($order_detail->price)) ?> 日元<br />
         数量：<?= h($order_detail->quantity) ?><br />
         <?= h($order_detail->standard) ?><br />
-        <?= h($order_detail->product_type) ?><br />
+        <?= h($order_detail->product_type_name) ?><br />
         <?php if (!is_null($order_detail->sale_start_date)): ?>
             开始贩卖日：<?= h($order_detail->sale_start_date->format(app_config('Display.format.date'))) ?>
         <?php endif; ?>

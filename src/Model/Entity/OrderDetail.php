@@ -31,7 +31,7 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\ProductType $product_type
  * @property \App\Model\Entity\Administrator $administrator
  *
- * @property string $product_type
+ * @property string $product_type_name
  */
 class OrderDetail extends Entity
 {
@@ -50,7 +50,7 @@ class OrderDetail extends Entity
         'id' => false
     ];
 
-    protected function _getProductType()
+    protected function _getProductTypeName()
     {
         return TableRegistry::get('ProductTypes')->get($this->product_type_id)->name;
     }

@@ -25,7 +25,22 @@
         <div>
             <h4>详细</h4>
             <div>
-                <?php ($order->order_details) ?>
+                <?php foreach ($order->order_details as $order_detail): ?>
+                    <a href="<?= $this->Url->build(['controller' => 'Products', 'action' => 'search', '?' => ['asin' => $order_detail->asin]]) ?>">
+                        <img src="<?= $order_detail->image ?>" />
+                    </a>
+                    <br />
+                    <a href="<?= $this->Url->build(['controller' => 'Products', 'action' => 'search', '?' => ['asin' => $order_detail->asin]]) ?>">
+                        <?= h($order_detail->name) ?>
+                    </a>
+                    <br />
+                    <?= h($order_detail->product_type_name) ?><br />
+                    <?php if (!is_null($order_detail->standard)): ?>
+                        <?= h($order_detail->standard) ?><br />
+                    <?php endif; ?>
+                    价格：<?= h(price($order_detail->price)) ?> 日元<br />
+                    数量：<?= h(price($order_detail->quantity)) ?><br />
+                <?php endforeach; ?>
             </div>
         </div>
     <?php endforeach; ?>
