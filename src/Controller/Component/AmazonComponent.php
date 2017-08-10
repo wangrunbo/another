@@ -163,6 +163,11 @@ class AmazonComponent extends Component
         return $product;
     }
 
+    public function cart()
+    {
+
+    }
+
     /**
      * 使用ASIN CODE抓取Amazon商品页面
      *

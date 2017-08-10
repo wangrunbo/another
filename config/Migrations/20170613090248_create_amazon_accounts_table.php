@@ -34,7 +34,7 @@ class CreateAmazonAccountsTable extends AbstractMigration
             ->addColumn('password', 'string', ['limit' => 100, 'null' => false, 'comment' => '密码'])
             ->addColumn('balance', 'integer', ['limit' => 11, 'null' => false, 'default' => 0, 'comment' => '余额'])
             ->addColumn('amazon_account_status_id', 'integer', ['limit' => \Phinx\Db\Adapter\MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.帐号状态'])
-            ->addColumn('creator_id', 'integer', ['limit' => 11, 'null' => true, 'comment' => 'FK.添加者（管理员ID）'])
+            ->addColumn('creator_id', 'integer', ['limit' => 11, 'null' => false, 'comment' => 'FK.添加者（管理员ID）'])
             ->addColumn('note', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR, 'null' => true, 'default' => null, 'comment' => '备注'])
             ->addColumn('created', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '生成时间'])
             ->addColumn('updated', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'comment' => '修改时间'])
