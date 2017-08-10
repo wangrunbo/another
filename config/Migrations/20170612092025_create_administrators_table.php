@@ -30,7 +30,7 @@ class CreateAdministratorsTable extends AbstractMigration
     {
         $administrators = $this->table('administrators', ['comment' => '管理员']);
         $administrators
-            ->addColumn('password', 'string', ['limit' => 20, 'null' => false, 'comment' => '密码'])
+            ->addColumn('password', 'string', ['limit' => 100, 'null' => false, 'comment' => '密码'])
             ->addColumn('name', 'string', ['limit' => 100, 'null' => true, 'comment' => '姓名'])
             ->addColumn('email', 'string', ['limit' => 100, 'null' => false, 'comment' => '邮箱'])
             ->addColumn('sex_id', 'integer', ['limit' => MysqlAdapter::INT_SMALL, 'null' => false, 'default' => 1, 'comment' => 'FK.性别'])
