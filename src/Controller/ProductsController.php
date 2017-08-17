@@ -79,6 +79,7 @@ class ProductsController extends AppController
     {
         $this->request->allowMethod('get');
         $this->autoRender = false;
+
         $this->loadComponent('Amazon');
 
         $search = $this->request->getQuery('s');

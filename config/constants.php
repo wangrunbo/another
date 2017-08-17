@@ -12,6 +12,15 @@ const AMAZON_PRODUCT_PAGE_1 = 'https://www.amazon.co.jp/dp/';
 const AMAZON_PRODUCT_PAGE_2 = '/ref=twister_dp_update?_encoding=UTF8&psc=1';
 
 /**
+ * 机器人接口
+ */
+define('BOT_PROTOCOL', 'http');
+define('BOT_IP', 'localhost');
+define('BOT_PORT', 5000);
+define('BOT_CART', BOT_PROTOCOL.'://'.BOT_IP.':'.BOT_PORT.'/cart');
+define('BOT_CHECKOUT', BOT_PROTOCOL.'://'.BOT_IP.':'.BOT_PORT.'/checkout');
+
+/**
  * Session信息
  */
 define('SESSION_FLASH_SUCCESS', 'Flash.Success');

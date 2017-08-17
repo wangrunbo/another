@@ -13,6 +13,7 @@ use Cake\ORM\TableRegistry;
  * @property string $postcode
  * @property string $address
  * @property string $tel
+ * @property string $amazon_account
  * @property int $total_price
  * @property int $amazon_postage
  * @property int $delivery_type_id

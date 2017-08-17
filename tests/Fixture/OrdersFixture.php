@@ -23,6 +23,7 @@ class OrdersFixture extends TestFixture
         'postcode' => ['type' => 'string', 'length' => 6, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '邮编', 'precision' => null, 'fixed' => null],
         'address' => ['type' => 'text', 'length' => null, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '地址', 'precision' => null],
         'tel' => ['type' => 'string', 'length' => 20, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '联系电话', 'precision' => null, 'fixed' => null],
+        'amazon_account' => ['type' => 'string', 'length' => 30, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'total_price' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'Amazon付款总价（包含运费）', 'precision' => null, 'autoIncrement' => null],
         'amazon_postage' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'Amazon运费', 'precision' => null, 'autoIncrement' => null],
         'delivery_type_id' => ['type' => 'integer', 'length' => 6, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => 'FK.希望的邮寄方法', 'precision' => null, 'autoIncrement' => null],
@@ -69,17 +70,18 @@ class OrdersFixture extends TestFixture
             'postcode' => 'Lore',
             'address' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'tel' => 'Lorem ipsum dolor ',
+            'amazon_account' => 'Lorem ipsum dolor sit amet',
             'total_price' => 1,
             'amazon_postage' => 1,
             'delivery_type_id' => 1,
             'order_status_id' => 1,
-            'finish' => 1501059728,
+            'finish' => 1502681802,
             'post_id' => 1,
             'note' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'created' => 1501059728,
-            'updated' => 1501059728,
+            'created' => 1502681802,
+            'updated' => 1502681802,
             'modifier_id' => 1,
-            'deleted' => 1501059728
+            'deleted' => 1502681802
         ],
     ];
 }

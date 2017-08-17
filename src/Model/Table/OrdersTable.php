@@ -171,6 +171,9 @@ class OrdersTable extends Table
             ]);
 
         $validator
+            ->notEmpty('amazon_account');
+
+        $validator
             ->integer('total_price')
             ->allowEmpty('total_price');
 

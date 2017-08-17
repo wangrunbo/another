@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Exception\BotException;
 use Cake\I18n\Time;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
@@ -12,10 +13,13 @@ use Cake\Network\Exception\NotFoundException;
  * @property \App\Model\Table\OrdersTable $Orders
  * @property \App\Model\Table\OrderDetailsTable $OrderDetails
  * @property \App\Model\Table\CartTable $Cart
+ * @property \App\Model\Table\AmazonAccountsTable $AmazonAccounts
  * @property \App\Model\Table\AddressesTable $Addresses
  * @property \App\Model\Table\DeliveryTypesTable $DeliveryTypes
  * @property \App\Model\Table\PointHistoryTable $PointHistory
  * @property \App\Model\Table\ProductsTable $Products
+ *
+ * @property \App\Controller\Component\AmazonComponent $Amazon
  */
 class OrdersController extends AppController
 {
@@ -26,6 +30,11 @@ class OrdersController extends AppController
 
         $this->loadModel('OrderDetails');
         $this->loadModel('Cart');
+        $this->loadModel('AmazonAccounts');
+
+        $this->loadComponent('Amazon');
+
+        $this->Auth->allow(['test']);
     }
 
     public function checkout()
@@ -35,14 +44,15 @@ class OrdersController extends AppController
         $this->loadModel('Addresses');
         $this->loadModel('DeliveryTypes');
 
-        /** @var \App\Model\Entity\Cart[] $cart */
-        $cart = $this->Cart->find()
+        $Cart = $this->Cart->find()
             ->where(['Cart.user_id' => $this->Auth->user('id')])
             ->contain(['Products' => ['ProductImages']])
-            ->orderAsc('Cart.created')
-            ->toArray();
+            ->orderAsc('Cart.created');
 
-        if (empty($cart)) throw new NotFoundException();
+        if ($Cart->isEmpty()) throw new NotFoundException();
+
+        /** @var \App\Model\Entity\Cart[] $cart */
+        $cart = $Cart->toArray();
 
         // 未支付订单，如果存在将自动填写地址
         $Cashing = $this->Orders->find()->where([
@@ -51,10 +61,11 @@ class OrdersController extends AppController
         ]);
 
         if ($this->request->is('post')) {
-            // 同一时间同一用户只能存在一件未支付订单，重复的POST请求将清除当前所有该用户的未支付订单
-            foreach ($Cashing->toArray() as $cashing) {
-                $this->Orders->delete($cashing);
-            }
+            // 送往Bot端的商品数据
+            $data = [
+                'amazon_account' => null,
+                'order_details' => []
+            ];
 
             // 生成新订单
             $order = $this->Orders->newEntity();
@@ -112,27 +123,139 @@ class OrdersController extends AppController
                     'amazon_order_code' => null,
                     'quantity' => $item->quantity
                 ]);
+
+                $data['order_details'][] = [
+                    $product->asin => [
+                        'price' => $product->price,
+                        'quantity' => $item->quantity
+                    ]
+                ];
             }
 
-            $this->Data->completion($order);
+            $this->Data->completion($order, ['ignore' => 'amazon_account']);
 
-            if ($order = $this->Orders->save($order)) {
-                // TODO send Request
+            /** @var \App\Model\Entity\AmazonAccount $amazon_account */
+            if ($Cashing->isEmpty()) {
+                // 新注文，选择一个新Amazon账号
+                $amazon_account = $this->AmazonAccounts->find()
+                    ->where(['AmazonAccounts.amazon_account_status_id' => \App\Model\Entity\AmazonAccountStatus::IDLE])
+                    ->orderDesc('AmazonAccounts.balance')
+                    ->first();
+            } else {
+                // 二次注文，使用原有Amazon账号
+                $amazon_account = $this->AmazonAccounts->find()
+                    ->where([
+                        'AmazonAccounts.email' => $Cashing->first()->amazon_account,
+                        'AmazonAccounts.amazon_account_status_id' => \App\Model\Entity\AmazonAccountStatus::USING
+                    ])
+                    ->first();
+            }
 
-                $order->total_price = 0;  // TODO
-                $order->amazon_postage = 0;  // TODO
+            // 若没有可用的Amazon账号，则要求排队
+            if (is_null($amazon_account)) {
+                return $this->render('busy');
+            }
 
-                if ($this->Orders->save($order)) {
-                    // 确认画面
-                    $this->set(compact('order'));
-
-                    return $this->render('view');
-                } else {
-                    throw new BadRequestException();
-                }
+            // 立刻上锁账号
+            $amazon_account->amazon_account_status_id = \App\Model\Entity\AmazonAccountStatus::USING;
+            if ($this->AmazonAccounts->save($amazon_account)) {
+                $order->amazon_account = $data['amazon_account'] = $amazon_account->email;
             } else {
                 throw new BadRequestException();
             }
+
+            // 同一时间同一用户只能存在一件未支付订单，重复的POST请求将清除当前所有该用户的未支付订单
+            foreach ($Cashing->toArray() as $cashing) {
+                $this->Orders->delete($cashing);
+            }
+
+            try {
+                // Bot加入购物车
+                $response = $this->Amazon->bot(BOT_CART, $data);
+
+                if (
+                    @$response['result']
+                    && count(@$response['products']) === count($data)
+                    && empty(array_diff_key(@$response['products'], $data))
+                ) {
+                    $divergence = [];
+                    $cart = [];
+                    foreach ($response['products'] as $asin => $product) {
+                        // 原价格和数量
+                        $price = $data[$asin]['price'];
+                        $quantity = $data[$asin]['quantity'];
+
+                        // Amazon价格和数量
+                        $amazon_price = $product['price'];
+                        $amazon_quantity = $product['quantity'];
+
+                        if ($amazon_price === $price && $amazon_quantity === $quantity) {
+                            continue;
+                        } else {
+                            $divergence[$asin] = [
+                                'price' => $price,
+                                'amazon_price' => $amazon_price,
+                                'quantity' => $quantity,
+                                'amazon_quantity' => $amazon_quantity
+                            ];
+
+                            /** @var \App\Model\Entity\Cart $item */
+                            $item = $Cart->find('all')->where(['Products.asin' => $asin])->firstOrFail();
+
+                            // 价格变化
+                            if ($amazon_price !== $price) {
+                                if ($item->product->price !== $amazon_price) {
+                                    $item->product->price = $amazon_price;
+                                }
+                            }
+
+                            // 数量不足
+                            if ($amazon_quantity !== $quantity) {
+                                $item->quantity = $amazon_quantity;
+                            }
+
+                            if ($item->isDirty()) {
+                                $cart[] = $item;
+                            }
+                        }
+                    }
+
+                    // 保存价格有变化的商品的最新价格，数量修改为可购买的最大数量
+                    if (!empty($cart)) {
+                        $this->Cart->saveMany($cart);
+                    }
+                } else {
+                    $this->_handleError($response);
+                }
+
+                // Bot填写地址
+                $response = $this->Amazon->bot(BOT_CHECKOUT, ['amazon_account' => $order->amazon_account]);
+
+                if (@$response['result']) {
+                    $order->total_price = $response['price'];
+                    $order->amazon_postage = $response['postage'];
+                } else {
+                    $this->_handleError($response);
+                }
+
+                $order = $this->Orders->save($order);
+
+                if (!$order) {
+                    // TODO send mail including order data
+                    throw new BotException();
+                }
+
+                $this->set(compact('order', 'divergence'));
+
+                return $this->render('view');
+
+            } catch (\Exception $e) {
+                $amazon_account->amazon_account_status_id = \App\Model\Entity\AmazonAccountStatus::IDLE;
+                $this->AmazonAccounts->save($amazon_account);
+
+                throw $e;
+            }
+
         } else {
             // 存在未支付注文时，自动填写其地址
             if (!$Cashing->isEmpty()) {
@@ -212,7 +335,7 @@ class OrdersController extends AppController
 
         // 扣款失败
         if ($this->PointHistory->saveMany($point_history) === false) {
-            $this->fail($order);
+            $this->_fail($order);
         }
 
         // TODO send Request
@@ -222,7 +345,7 @@ class OrdersController extends AppController
             // 失败返款
             $this->PointHistory->deleteAll(['PointHistory.order_id' => $order->id]);
 
-            $this->fail($order);
+            $this->_fail($order);
         }
 
         $order->order_status_id = \App\Model\Entity\OrderStatus::FINISH;
@@ -253,7 +376,7 @@ class OrdersController extends AppController
         if (!$this->request->session()->consume(SESSION_FROM_ORDER)) throw new NotFoundException();
     }
 
-    public function error()
+    public function fail()
     {
         $this->request->allowMethod('get');
         if (!$this->request->session()->consume(SESSION_FROM_ORDER)) throw new NotFoundException();
@@ -265,7 +388,7 @@ class OrdersController extends AppController
      * @param \App\Model\Entity\Order $order
      * @return \Cake\Http\Response
      */
-    private function fail(\App\Model\Entity\Order $order)
+    private function _fail(\App\Model\Entity\Order $order)
     {
         $order->order_status_id = \App\Model\Entity\OrderStatus::FAIL;
         $order->finish = Time::now();
@@ -273,6 +396,22 @@ class OrdersController extends AppController
 
         $this->request->session()->write(SESSION_FROM_ORDER, true);
 
-        return $this->redirect('error');
+        return $this->redirect('fail');
+    }
+
+    /**
+     * Bot端Error处理
+     * @param $response
+     * @throws \Exception
+     */
+    private function _handleError($response)
+    {
+        $error_message = null;
+
+        if (@$response['result'] === false) {
+            $error_message = $response['message'];
+        }
+        // TODO send Mail
+        throw new BotException($error_message);
     }
 }

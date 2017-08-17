@@ -163,9 +163,35 @@ class AmazonComponent extends Component
         return $product;
     }
 
-    public function cart()
+    /**
+     * 自动操作
+     * @param $url
+     * @param $data
+     * @return mixed
+     */
+    public function bot($url, $data = null)
     {
+        $ch = curl_init($url);
 
+        if (!is_null($data)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+
+        try {
+            set_time_limit(0);
+            $response = json_decode(curl_exec($ch), true);
+        } catch (\Cake\Error\FatalErrorException $e) {
+            $response = false;
+        } finally {
+            curl_close($ch);
+        }
+
+        return $response;
     }
 
     /**
@@ -200,29 +226,33 @@ class AmazonComponent extends Component
             $curl[$asin] = $ch;
         }
 
-        $active = null;
-        do {
-            curl_multi_exec($mh, $active);
-        } while ($active);
+        try {
+            $active = null;
+            do {
+                curl_multi_exec($mh, $active);
+            } while ($active);
 
-        foreach ($curl as $asin => $ch) {
-            if (is_array($asins)) {
-                $result[$asin] = [
-                    'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
-                    'html' => curl_multi_getcontent($ch)
-                ];
-            } else {
-                $result = [
-                    'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
-                    'html' => curl_multi_getcontent($ch)
-                ];
+            foreach ($curl as $asin => $ch) {
+                try {
+                    if (is_array($asins)) {
+                        $result[$asin] = [
+                            'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+                            'html' => curl_multi_getcontent($ch)
+                        ];
+                    } else {
+                        $result = [
+                            'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+                            'html' => curl_multi_getcontent($ch)
+                        ];
+                    }
+                } finally {
+                    curl_multi_remove_handle($mh, $ch);
+                    curl_close($ch);
+                }
             }
-
-            curl_multi_remove_handle($mh, $ch);
-            curl_close($ch);
+        } finally {
+            curl_multi_close($mh);
         }
-
-        curl_multi_close($mh);
 
         return $result;
     }

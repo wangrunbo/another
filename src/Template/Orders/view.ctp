@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Order $order
+ * @var array $divergence
  */
 ?>
 <div>
@@ -20,6 +21,10 @@
         <?php endif; ?>
         <hr />
     <?php endforeach; ?>
+
+    <?php if (!empty($divergence)): ?>
+        <?= $this->element('Modal/divergence', ['divergence' => $divergence]) ?>
+    <?php endif; ?>
 
     <div>
         小计；<?= h(price($order->total_price - $order->amazon_postage)) ?>

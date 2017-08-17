@@ -45,4 +45,20 @@ class AmazonAccount extends Entity
     protected $_hidden = [
         'password'
     ];
+
+    protected function _setAmazonAccountStatusId($amazon_account_status_id)
+    {
+        $current = $this->amazon_account_status_id;
+
+        if (
+            ($amazon_account_status_id === \App\Model\Entity\AmazonAccountStatus::IDLE
+                || $amazon_account_status_id === \App\Model\Entity\AmazonAccountStatus::USING)
+            && ($current === \App\Model\Entity\AmazonAccountStatus::STOPPED
+                || $current === \App\Model\Entity\AmazonAccountStatus::ERROR)
+        ) {
+            return $current;
+        }
+
+        return $amazon_account_status_id;
+    }
 }
