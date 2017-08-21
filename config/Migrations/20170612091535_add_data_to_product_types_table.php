@@ -11,9 +11,9 @@ class AddDataToProductTypesTable extends AbstractMigration
     {
         $product_types = $this->table('product_types');
         $product_types->insert([
-            ['name' => '通常商品', 'sort' => 1],
-            ['name' => '予約商品', 'sort' => 2],
-            ['name' => 'あわせ買い商品', 'sort' => 3]
+            ['id' => 1, 'name' => '通常商品', 'sort' => 1],
+            ['id' => 2, 'name' => '予約商品', 'sort' => 2],
+            ['id' => 3, 'name' => 'あわせ買い商品', 'sort' => 3]
         ])->saveData();
     }
 

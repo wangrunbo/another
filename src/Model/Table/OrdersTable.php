@@ -17,6 +17,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Posts
  * @property \Cake\ORM\Association\BelongsTo $Administrators
  * @property \Cake\ORM\Association\HasMany $OrderDetails
+ * @property \Cake\ORM\Association\HasMany $OrderSummaries
  * @property \Cake\ORM\Association\HasMany $PointHistory
  *
  * @method \App\Model\Entity\Order get($primaryKey, $options = [])
@@ -69,6 +70,10 @@ class OrdersTable extends Table
             'foreignKey' => 'modifier_id'
         ]);
         $this->hasMany('OrderDetails', [
+            'foreignKey' => 'order_id',
+            'dependent' => true
+        ]);
+        $this->hasMany('OrderSummaries', [
             'foreignKey' => 'order_id',
             'dependent' => true
         ]);
@@ -176,10 +181,6 @@ class OrdersTable extends Table
         $validator
             ->integer('total_price')
             ->allowEmpty('total_price');
-
-        $validator
-            ->integer('amazon_postage')
-            ->allowEmpty('amazon_postage');
 
         $validator
             ->dateTime('finish')

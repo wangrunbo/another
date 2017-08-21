@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\OrdersTable;
+use App\Model\Table\OrderSummariesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\OrdersTable Test Case
+ * App\Model\Table\OrderSummariesTable Test Case
  */
-class OrdersTableTest extends TestCase
+class OrderSummariesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\OrdersTable
+     * @var \App\Model\Table\OrderSummariesTable
      */
-    public $Orders;
+    public $OrderSummaries;
 
     /**
      * Fixtures
@@ -24,6 +24,7 @@ class OrdersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'app.order_summaries',
         'app.orders',
         'app.users',
         'app.sex',
@@ -43,8 +44,7 @@ class OrdersTableTest extends TestCase
         'app.point_types',
         'app.delivery_types',
         'app.posts',
-        'app.order_statuses',
-        'app.order_summaries'
+        'app.order_statuses'
     ];
 
     /**
@@ -55,8 +55,8 @@ class OrdersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Orders') ? [] : ['className' => 'App\Model\Table\OrdersTable'];
-        $this->Orders = TableRegistry::get('Orders', $config);
+        $config = TableRegistry::exists('OrderSummaries') ? [] : ['className' => 'App\Model\Table\OrderSummariesTable'];
+        $this->OrderSummaries = TableRegistry::get('OrderSummaries', $config);
     }
 
     /**
@@ -66,7 +66,7 @@ class OrdersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Orders);
+        unset($this->OrderSummaries);
 
         parent::tearDown();
     }

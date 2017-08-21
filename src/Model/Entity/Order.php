@@ -15,7 +15,6 @@ use Cake\ORM\TableRegistry;
  * @property string $tel
  * @property string $amazon_account
  * @property int $total_price
- * @property int $amazon_postage
  * @property int $delivery_type_id
  * @property int $order_status_id
  * @property \Cake\I18n\Time $finish
@@ -32,6 +31,7 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\Post $post
  * @property \App\Model\Entity\Administrator $administrator
  * @property \App\Model\Entity\OrderDetail[] $order_details
+ * @property \App\Model\Entity\OrderSummary[] $order_summaries
  * @property \App\Model\Entity\PointHistory[] $point_history
  *
  * @property int $postage 运费

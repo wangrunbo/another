@@ -11,18 +11,18 @@ class AddDataToAmazonAccountStatusesAndDeliveryTypesTable extends AbstractMigrat
     {
         $amazon_account_statuses = $this->table('amazon_account_statuses');
         $amazon_account_statuses->insert([
-            ['name' => '停止', 'sort' => 1],
-            ['name' => '未使用', 'sort' => 2],
-            ['name' => '使用中', 'sort' => 3],
-            ['name' => '错误', 'sort' => 4]
+            ['id' => 1, 'name' => '停止', 'sort' => 1],
+            ['id' => 2, 'name' => '未使用', 'sort' => 2],
+            ['id' => 3, 'name' => '使用中', 'sort' => 3],
+            ['id' => 4, 'name' => '错误', 'sort' => 4]
         ])->saveData();
 
         $delivery_types = $this->table('delivery_types');
         $delivery_types->insert([
-            ['name' => 'EMS', 'sort' => 1],
-            ['name' => '空运', 'sort' => 2],
-            ['name' => 'SAL', 'sort' => 3],
-            ['name' => '船运', 'sort' => 4]
+            ['id' => 1, 'name' => 'EMS', 'sort' => 1],
+            ['id' => 2, 'name' => '空运', 'sort' => 2],
+            ['id' => 3, 'name' => 'SAL', 'sort' => 3],
+            ['id' => 4, 'name' => '船运', 'sort' => 4]
         ])->saveData();
     }
 

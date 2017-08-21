@@ -16,6 +16,7 @@ use Cake\Network\Exception\NotFoundException;
  * @property \App\Model\Table\AmazonAccountsTable $AmazonAccounts
  * @property \App\Model\Table\AddressesTable $Addresses
  * @property \App\Model\Table\DeliveryTypesTable $DeliveryTypes
+ * @property \App\Model\Table\OrderSummariesTable $OrderSummaries
  * @property \App\Model\Table\PointHistoryTable $PointHistory
  * @property \App\Model\Table\ProductsTable $Products
  *
@@ -43,6 +44,7 @@ class OrdersController extends AppController
 
         $this->loadModel('Addresses');
         $this->loadModel('DeliveryTypes');
+        $this->loadModel('OrderSummaries');
 
         $Cart = $this->Cart->find()
             ->where(['Cart.user_id' => $this->Auth->user('id')])
@@ -124,11 +126,9 @@ class OrdersController extends AppController
                     'quantity' => $item->quantity
                 ]);
 
-                $data['order_details'][] = [
-                    $product->asin => [
-                        'price' => $product->price,
-                        'quantity' => $item->quantity
-                    ]
+                $data['order_details'][$product->asin] = [
+                    'price' => $product->price,
+                    'quantity' => $item->quantity
                 ];
             }
 
@@ -175,15 +175,15 @@ class OrdersController extends AppController
 
                 if (
                     @$response['result']
-                    && count(@$response['products']) === count($data)
-                    && empty(array_diff_key(@$response['products'], $data))
+                    && count(@$response['products']) === count($data['order_details'])
+                    && empty(array_diff_key(@$response['products'], $data['order_details']))
                 ) {
                     $divergence = [];
                     $cart = [];
                     foreach ($response['products'] as $asin => $product) {
                         // 原价格和数量
-                        $price = $data[$asin]['price'];
-                        $quantity = $data[$asin]['quantity'];
+                        $price = $data['order_details'][$asin]['price'];
+                        $quantity = $data['order_details'][$asin]['quantity'];
 
                         // Amazon价格和数量
                         $amazon_price = $product['price'];
@@ -200,12 +200,13 @@ class OrdersController extends AppController
                             ];
 
                             /** @var \App\Model\Entity\Cart $item */
-                            $item = $Cart->find('all')->where(['Products.asin' => $asin])->firstOrFail();
+                            $item = (clone $Cart)->where(['Products.asin' => $asin])->firstOrFail();
 
                             // 价格变化
                             if ($amazon_price !== $price) {
                                 if ($item->product->price !== $amazon_price) {
                                     $item->product->price = $amazon_price;
+                                    $item->setDirty('product', true);
                                 }
                             }
 
@@ -233,7 +234,7 @@ class OrdersController extends AppController
 
                 if (@$response['result']) {
                     $order->total_price = $response['price'];
-                    $order->amazon_postage = $response['postage'];
+                    $order->order_summaries = $this->OrderSummaries->newEntities($response['summaries']);
                 } else {
                     $this->_handleError($response);
                 }
