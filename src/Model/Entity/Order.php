@@ -63,7 +63,7 @@ class Order extends Entity
 
             if ($Post->isEmpty()) {
                 // 商品尚未发送，取默认邮费
-                $postage = 0;
+                $postage = POSTAGE;
             } else {
                 $postage = $Post->first()->postage;
             }

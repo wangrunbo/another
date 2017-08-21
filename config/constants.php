@@ -4,6 +4,8 @@
  */
 const SITE = 'お兄ちゃんの萌屋';
 
+const POSTAGE = 4000;  # 发送前的默认邮费
+
 /**
  * Amazon信息
  */

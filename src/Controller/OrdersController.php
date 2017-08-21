@@ -328,7 +328,7 @@ class OrdersController extends AppController
         if (!$order->isFreeShipping()) {
             $point_history[] = $this->PointHistory->newEntity([
                 'user_id' => $this->Auth->user('id'),
-                'point' => -0,
+                'point' => -POSTAGE,
                 'point_type_id' => \App\Model\Entity\PointType::POSTAGE,
                 'order_id' => $order->id
             ]);
@@ -351,7 +351,14 @@ class OrdersController extends AppController
 
         $order->order_status_id = \App\Model\Entity\OrderStatus::FINISH;
         $order->finish = Time::now();
-        $this->Orders->save($order);
+        $order = $this->Orders->save($order);
+
+        if ($order === false) {
+            // TODO send admin mail
+        } else {
+            // TODO send get Order Code request
+            // TODO send Order Success mail to User
+        }
 
         // 商品被购买次数增加
         foreach ($order->order_details as $order_detail) {
