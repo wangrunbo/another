@@ -51,7 +51,9 @@
                     <button type="submit"><?= h(__('search')) ?></button>
                 <?= $this->Form->end(); ?>
             </li>
-            <li><a href="<?= $this->Url->build(['controller' => 'Cart']) ?>"><?= h(__('Cart')) ?></a></li>
+            <?php if ($this->request->session()->check(SESSION_LOGIN)): ?>
+                <li><a href="<?= $this->Url->build(['controller' => 'Cart']) ?>"><?= h(__('Cart')) ?></a></li>
+            <?php endif; ?>
         </ul>
     </div>
 </header>
